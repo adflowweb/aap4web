@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <title>Insert title here</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://hashmask.googlecode.com/svn-history/r2/trunk/jquery.sha1.js"></script>
+    <script>
+
+        function lengthInUtf8Bytes(str) {
+            // Matches only the 10.. bytes that are non-initial characters in a multi-byte sequence.
+            var m = encodeURIComponent(str).match(/%[89ABab]/g);
+            return str.length + (m ? m.length : 0);
+        }
+
+        function testCode()
+        {
+            var str = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
+            var length = lengthInUtf8Bytes(str);
+            var hex = '';
+            console.log(str.length + " characters, " + length + " bytes");
+            for(var i=0;i<length;i++) {
+                hex += str.charCodeAt(i).toString(16);
+                //console.log('hex : ', hex);
+            }
+            console.log('hex string : ', hex);
+            console.log('hash : ', $.sha1(hex));
+        }
+
+        $().ready( function(){
+
+            $("h3").append("Login Example");
+            $("#submitBtn").on("click" , function(){
+
+                var inputdata  = {
+                    usernameTxt : $("#usernameTxt").val() ,
+                    passwordTxt: $("#passwordTxt").val()
+                };
+                $.ajax( {
+                    url : 'TestServlet',
+                    type : 'POST',
+                    data : inputdata,
+                    dataType : 'json',
+                    success: function(data) {
+                        console.log(data.validUser);
+                        if ( data.validUser =='true'){
+                            $("#msg").text("Validation Success");
+
+                            $("#dynamicTable").append("<caption>"+data.tabletitle+"</caption>");
+                            $("#dynamicTable").append("<tbody>");
+                            $("#dynamicTable").append("<tr>");
+                            $("#dynamicTable").append("<td>A</td>");
+                            $("#dynamicTable").append("<td>B</td>");
+                            $("#dynamicTable").append("<td>C</td>");
+                            $("#dynamicTable").append("</tr>");
+                            $("#dynamicTable").append("<tr>");
+                            $("#dynamicTable").append("<td>D</td>");
+                            $("#dynamicTable").append("<td>E</td>");
+                            $("#dynamicTable").append("<td>F</td>");
+                            $("#dynamicTable").append("</tr>");
+                            $("#dynamicTable").append("<tr>");
+                            $("#dynamicTable").append("<td>G</td>");
+                            $("#dynamicTable").append("<td>H</td>");
+                            $("#dynamicTable").append("<td>I</td>");
+                            $("#dynamicTable").append("</tr>");
+                            $("#dynamicTable").append("</tbody>");
+
+                        }else{
+                            $("#msg").text("Validation Failure");
+
+
+                        }
+                        testCode();
+                    }
+                });
+            });
+            //console.log(document.documentElement.innerHTML);
+            var html = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
+            console.log('html : ', html);
+            //console.log('hash : ', $.sha1($('head').html().replace(/[\n\r]/g, '').replace(/\s+/g, '')));
+            testCode();
+            //console.log('hash : ', $.sha1("this is test"));
+        });
+    </script>
+</head>
+<body>
+<h3></h3>
+
+<div id="msg" >
+</div>
+<input type="text" id="usernameTxt" placeholder="Username" > <br/>
+<input type="password" id="passwordTxt" placeholder="Password" > <br/>
+<input type="button" id="submitBtn" value="createTable" > <br/>
+<div id="dynamicTable"></div>
+<table id="tabletest"></table>
+
+</body>
+
+</html>

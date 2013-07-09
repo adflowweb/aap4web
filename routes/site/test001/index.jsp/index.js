@@ -9,13 +9,13 @@ var parser = require('cheerio'),
     crypto = require('crypto');
 
 exports.post = function (req, res, client) {
-    console.log('req.headers : ', req.headers);
+    console.log('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
     //var xhr = req.headers['x-requested-with'];
     console.log('req.xhr : ', req.xhr);
     $("h3").append("Login Example");
     console.log('user id : ', req.params.id);
-    client.set(req.params.id, '<html>' + $('html').html() + '</html>', redis.print);
+    client.set(req.params.id, '<html>' + $('html').html() + '</html>', client.print);
     var responseData = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
     console.log('response data : ', responseData);
     console.log('----------------------------------------------');
