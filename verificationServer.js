@@ -7,8 +7,21 @@
  */
 var express = require('express')
     , virtualpages = require('./routes/virtualpages')
+    , verificationuri = require('./routes/verificationuri')
     , http = require('http')
+    , redisClient = require('redis').createClient()
     , path = require('path');
+
+
+//redis error
+redisClient.on('error', function (err) {
+    console.log("Error " + err);
+});
+
+//redis ready
+redisClient.on('ready', function () {
+    console.log("redis server ready");
+});
 
 var app = express();
 
@@ -27,12 +40,35 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 }
 
-//route
-var PATH = '/v1/virtualpages/:id';
-app.post(PATH, virtualpages.post);
-app.put(PATH, virtualpages.put);
-app.get(PATH, virtualpages.get);
-app.delete(PATH, virtualpages.delete);
+//route virtualpages
+var VIRTUALPAGES_PATH = '/v1/virtualpages/:id';
+app.post(VIRTUALPAGES_PATH, function (req, res) {
+    virtualpages.post(req, res, redisClient);
+});
+app.put(VIRTUALPAGES_PATH, function (req, res) {
+    virtualpages.put(req, res, redisClient);
+});
+app.get(VIRTUALPAGES_PATH, function (req, res) {
+    virtualpages.get(req, res, redisClient);
+});
+app.delete(VIRTUALPAGES_PATH, function (req, res) {
+    virtualpages.delete(req, res, redisClient);
+});
+
+//route verificationuri
+var VERIFICATIONURI_PATH = '/v1/verificationuri';
+app.post(VERIFICATIONURI_PATH, function (req, res) {
+    verificationuri.post(req, res, redisClient);
+});
+app.put(VERIFICATIONURI_PATH, function (req, res) {
+    verificationuri.put(req, res, redisClient);
+});
+app.get(VERIFICATIONURI_PATH, function (req, res) {
+    verificationuri.get(req, res, redisClient);
+});
+app.delete(VERIFICATIONURI_PATH, function (req, res) {
+    verificationuri.delete(req, res, redisClient);
+});
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('verification server listening on port ' + app.get('port'));
