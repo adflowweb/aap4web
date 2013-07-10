@@ -35,7 +35,7 @@ describe('Routing', function() {
             // POST on /api/profiles and we want to send some info
             // We do this using the request object, requiring supertest!
             request(url)
-                .post('/v1/virtualpages/12345')
+                .post('/v1/virtualpages/1234567890')
                 .set('request_uri_origin','/test001/index.jsp')
                 .attach('nadir', './test/test.html')
                 //.send(profile)
