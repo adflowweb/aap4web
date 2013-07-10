@@ -12,14 +12,19 @@ module.exports = function () {
             console.log('path : ', path);
             require(path).post(req, res, redisClient);
         } else {
-            res.send( "Not found", 404 );
+            res.send("Not found", 404);
         }
     };
 
     this.put = function (req, res, redisClient) {
-        var path = '../routes/site' + req.headers['request_uri_origin'];
-        console.log('path : ', path);
-        require(path).put(req, res, redisClient);
+        if (req.headers['request_uri_origin']) {
+            var path = '../routes/site' + req.headers['request_uri_origin'];
+            console.log('path : ', path);
+            require(path).put(req, res, redisClient);
+        }
+        else {
+            res.send("Not found", 404);
+        }
     };
 
     this.delete = function (req, res, redisClient) {

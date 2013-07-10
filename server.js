@@ -13,7 +13,6 @@ var express = require('express')
     , redisClient = require('redis').createClient()
     , path = require('path');
 
-
 //redis error
 redisClient.on('error', function (err) {
     console.log("Error " + err);
@@ -53,7 +52,6 @@ function rawBody(req, res, next) {
     });
 }
 
-var User = require('./handlers/User');
 var handlers = {
     virtualpages:  new virtualPageHandler(),
     verificationuri: new verificationURIHandler()

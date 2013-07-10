@@ -19,18 +19,19 @@ exports.post = function (req, res, client) {
     var responseData = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
     console.log('response data : ', responseData);
     console.log('----------------------------------------------');
+    var enc = encodeURIComponent(responseData);
     //var key = 'abcdeg'
     //console.log('hash : ', crypto.createHash('sha1').update('this is test').digest('hex'));
-    var bytes = Buffer.byteLength(responseData, 'utf8');
-    var hex = '';
-    console.log(responseData.length + " characters, " + bytes + " bytes");
-    for (var i = 0; i < bytes; i++) {
-        hex += responseData.charCodeAt(i).toString(16);
-        //console.log('hex : ', hex);
-    }
-    console.log('encoded string : ', hex);
+    //var bytes = Buffer.byteLength(responseData, 'utf8');
+    //var hex = '';
+    //console.log(responseData.length + " characters, " + bytes + " bytes");
+    //for (var i = 0; i < bytes; i++) {
+    //    hex += responseData.charCodeAt(i).toString(16);
+    //    //console.log('hex : ', hex);
+    //}
+    console.log('encoded string : ', enc);
     //console.log('hash : ', crypto.createHmac('sha1', key).update('<html>'+$('html').html()+'</html>').digest('hex'));
-    console.log('hash : ', crypto.createHash('sha1').update(hex).digest('hex'));
+    console.log('hash : ', crypto.createHash('sha1').update(enc).digest('hex'));
     //res.end('<html>'+$('html').html()+'</html>');
     res.end('ok');
 };
