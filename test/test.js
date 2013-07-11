@@ -14,6 +14,8 @@ var config = require('../config');
 
 describe('Routing', function () {
     var url = 'http://127.0.0.1:3000';
+var url = 'http://127.0.0.1:3000';
+describe('Routing', function() {
     // within before() you can run all the operations that are needed to setup your tests. In this case
     // I want to create a connection with the database, and when I'm done, I call done().
     before(function (done) {
