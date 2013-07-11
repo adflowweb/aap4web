@@ -11,6 +11,13 @@ var winston = require('winston');
 //var mongoose = require('mongoose');
 var server = require('./server');
 
+// Exception Handler 등록
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ' + err.stack);
+    // 추후 trace를 하게 위해서 err.stack 을 사용하여 logging하시기 바랍니다.
+    // Published story에서 beautifule logging winston 참조
+});
+
 // We will log normal api operations into api.log
 console.log("starting logger...");
 winston.add(winston.transports.File, {
