@@ -19,7 +19,7 @@ function setup(app, handlers, redisClient) {
         handlers.virtualpages.get(req, res, redisClient);
     });
     app.delete(VIRTUALPAGES_PATH, function (req, res) {
-        handlers.virtualpages.del(req, res, redisClient);
+        handlers.virtualpages.delete(req, res, redisClient);
     });
 
     //route verificationuri
