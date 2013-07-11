@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 var parser = require('cheerio'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    util = require('util');
 
 module.exports = function () {
     this.post = function (req, res, redisClient) {
@@ -60,10 +61,29 @@ module.exports = function () {
     };
 
     this.delete = function (req, res, redisClient) {
-        res.send({id: req.params.id, name: "The Name", description: "description"});
+        //res.send({id: req.params.id, name: "The Name", description: "description"});
+        console.log('key : ', req.params.id);
+        redisClient.del(req.params.id, function () {
+            console.log('key deleted just to be sure');
+            //console.log(util.inspect(arguments))
+            res.end('ok')
+        });
+
+
     };
     this.get = function (req, res, redisClient) {
-        res.send({id: req.params.id, name: "The Name", description: "description"});
+        //res.send({id: req.params.id, name: "The Name", description: "description"});
+        console.log('key : ', req.params.id);
+        redisClient.get(req.params.id, function (err, reply) {
+            // reply is null when the key is missing
+            //console.log('reply : ', reply);
+            //var $ = parser.load(reply);
+            if (reply == null) {
+                res.send("Not found", 404);
+                return;
+            }
+            res.end('ok');
+        });
     };
 
     function testHtml(html) {
