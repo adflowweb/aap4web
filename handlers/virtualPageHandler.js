@@ -18,7 +18,7 @@ module.exports = function () {
             //set page
             redisClient.set(req.params.id, val, redisClient.print);
             //testCode
-            testHtml(val);
+            //testHtml(val);
             res.end('ok');
         } else {
             res.send("Not found", 404);
@@ -54,7 +54,7 @@ module.exports = function () {
                 return;
             }
             //testCode
-            testHtml(val);
+            //testHtml(val);
             res.end('ok');
         });
     };
