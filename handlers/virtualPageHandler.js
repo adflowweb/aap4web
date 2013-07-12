@@ -10,7 +10,7 @@ var parser = require('cheerio'),
     util = require('util');
 
 module.exports = function () {
-    this.post = function (req, res, redisClient) {
+    this.post = function (req, res, client) {
 
         //nonExistFunctionCall();
 
@@ -20,7 +20,7 @@ module.exports = function () {
             var val = require(path).post(req, res);
             //console.log('ret : ',ret);
             //set page
-            redisClient.set(req.params.id, val, redisClient.print);
+            client.set(req.params.id, val, client.print);
             //testCode
             //testHtml(val);
             res.end('ok');
@@ -29,7 +29,7 @@ module.exports = function () {
         }
     };
 
-    this.put = function (req, res, redisClient) {
+    this.put = function (req, res, client) {
         if (!req.headers['request_uri_origin']) {
             res.send("Not found", 404);
             return;
@@ -37,7 +37,7 @@ module.exports = function () {
 
         var path = '../routes/site' + req.headers['request_uri_origin'];
         console.log('path : ', path);
-        redisClient.get(req.params.id, function (err, reply) {
+        client.get(req.params.id, function (err, reply) {
             // reply is null when the key is missing
             //console.log('reply : ', reply);
             //var $ = parser.load(reply);
@@ -50,7 +50,7 @@ module.exports = function () {
             //console.log('response data : ', val);
             //console.log('<html>' + $('html').html() + '</html>');
             try {
-                redisClient.set(req.params.id, val, redisClient.print);
+                client.set(req.params.id, val, client.print);
             }
             catch (err) {
                 console.log('err', err);
@@ -63,10 +63,10 @@ module.exports = function () {
         });
     };
 
-    this.delete = function (req, res, redisClient) {
+    this.delete = function (req, res, client) {
         //res.send({id: req.params.id, name: "The Name", description: "description"});
         console.log('key : ', req.params.id);
-        redisClient.del(req.params.id, function () {
+        client.del(req.params.id, function () {
             console.log('key deleted just to be sure');
             //console.log(util.inspect(arguments))
             res.end('ok')
@@ -74,10 +74,10 @@ module.exports = function () {
 
 
     };
-    this.get = function (req, res, redisClient) {
+    this.get = function (req, res, client) {
         //res.send({id: req.params.id, name: "The Name", description: "description"});
         console.log('key : ', req.params.id);
-        redisClient.get(req.params.id, function (err, reply) {
+        client.get(req.params.id, function (err, reply) {
             // reply is null when the key is missing
             //console.log('reply : ', reply);
             //var $ = parser.load(reply);

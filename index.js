@@ -13,7 +13,7 @@ var server = require('./server');
 
 // Exception Handler 등록
 process.on('uncaughtException', function (err) {
-    console.log('Caught exception: ' + err.stack);
+    console.log('uncaughtException : ' + err.stack);
     // 추후 trace를 하게 위해서 err.stack 을 사용하여 logging하시기 바랍니다.
     // Published story에서 beautifule logging winston 참조
 });
