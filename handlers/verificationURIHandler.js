@@ -17,7 +17,7 @@ module.exports = function () {
                     return;
                 }
                 console.log('key set just to be sure');
-                res.end();
+                res.send(200);
             } catch (e) {
                 console.log(e.stack);
                 res.send(e.message, 500);
@@ -35,7 +35,7 @@ module.exports = function () {
                     return;
                 }
                 console.log('key set just to be sure');
-                res.end();
+                res.send(200);
             } catch (e) {
                 console.log(e.stack);
                 res.send(e.message, 500);

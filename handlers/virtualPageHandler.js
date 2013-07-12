@@ -11,68 +11,112 @@ var parser = require('cheerio'),
 
 module.exports = function () {
     this.post = function (req, res, client) {
-
         //nonExistFunctionCall();
+        if (!req.headers['request_uri_origin']) {
+            res.send(404);
+            return;
+        }
 
-        if (req.headers['request_uri_origin']) {
+        try {
             var path = '../routes/site' + req.headers['request_uri_origin'];
             console.log('path : ', path);
             var val = require(path).post(req, res);
             //console.log('ret : ',ret);
             //set page
-            client.set(req.params.id, val, client.print);
-            //testCode
-            //testHtml(val);
-            res.end('ok');
-        } else {
-            res.send("Not found", 404);
+            client.set(req.params.id, val, function (err) {
+                try {
+                    if (err) {
+                        console.log('error : ', err);
+                        res.send(err.message, 500);
+                        return;
+                    }
+                    //testCode
+                    //testHtml(val);
+                    res.send(200);
+                } catch (e) {
+                    console.log(e.stack);
+                    res.send(e.message, 500);
+                }
+            });
+        } catch (e) {
+            console.log(e.stack);
+            res.send(e.message, 500);
         }
     };
 
     this.put = function (req, res, client) {
         if (!req.headers['request_uri_origin']) {
-            res.send("Not found", 404);
+            res.send(404);
             return;
         }
 
-        var path = '../routes/site' + req.headers['request_uri_origin'];
-        console.log('path : ', path);
-        client.get(req.params.id, function (err, reply) {
-            // reply is null when the key is missing
-            //console.log('reply : ', reply);
-            //var $ = parser.load(reply);
-            if (reply == null) {
-                res.send("Not found", 404);
-                return;
-            }
+        try {
+            var path = '../routes/site' + req.headers['request_uri_origin'];
+            console.log('path : ', path);
+            client.get(req.params.id, function (err, reply) {
+                // reply is null when the key is missing
+                //console.log('reply : ', reply);
+                //var $ = parser.load(reply);
+                try {
+                    if (err) {
+                        console.log('error : ', err);
+                        res.send(err.message, 500);
+                        return;
+                    }
+                    if (reply == null) {
+                        res.send(404);
+                        return;
+                    }
+                    //res.send(200);
+                    var val = require(path).put(req, res, reply);
+                    //console.log('response data : ', val);
+                    //console.log('<html>' + $('html').html() + '</html>');
+                    client.set(req.params.id, val, function (err) {
+                        try {
+                            if (err) {
+                                console.log('error : ', err);
+                                res.send(err.message, 500);
+                                return;
+                            }
+                            //testCode
+                            //testHtml(val);
+                            res.send(200);
+                        } catch (e) {
+                            console.log(e.stack);
+                            res.send(e.message, 500);
+                        }
+                    });
+                } catch (e) {
+                    console.log(e.stack);
+                    res.send(e.message, 500);
+                }
+            });
+        } catch (e) {
+            console.log(e.stack);
+            res.send(e.message, 500);
+        }
 
-            var val = require(path).put(req, res, reply);
-            //console.log('response data : ', val);
-            //console.log('<html>' + $('html').html() + '</html>');
-            try {
-                client.set(req.params.id, val, client.print);
-            }
-            catch (err) {
-                console.log('err', err);
-                res.send("Error", 500);
-                return;
-            }
-            //testCode
-            //testHtml(val);
-            res.end('ok');
-        });
+
     };
 
     this.delete = function (req, res, client) {
         //res.send({id: req.params.id, name: "The Name", description: "description"});
         console.log('key : ', req.params.id);
-        client.del(req.params.id, function () {
-            console.log('key deleted just to be sure');
+        client.del(req.params.id, function (err) {
             //console.log(util.inspect(arguments))
-            res.end('ok')
+            try {
+                if (err) {
+                    console.log('error : ', err);
+                    res.send(err.message, 500);
+                    return;
+                }
+                console.log('key deleted just to be sure');
+                res.send(200);
+            } catch (e) {
+                console.log(e.stack);
+                res.send(e.message, 500);
+            }
         });
-
-
     };
     this.get = function (req, res, client) {
         //res.send({id: req.params.id, name: "The Name", description: "description"});
@@ -81,11 +125,22 @@ module.exports = function () {
             // reply is null when the key is missing
             //console.log('reply : ', reply);
             //var $ = parser.load(reply);
-            if (reply == null) {
-                res.send("Not found", 404);
-                return;
+            try {
+                if (err) {
+                    console.log('error : ', err);
+                    res.send(err.message, 500);
+                    return;
+                }
+                if (reply == null) {
+                    res.send(404);
+                    return;
+                }
+                //console.log('reponse : ', reply);
+                res.send(reply);
+            } catch (e) {
+                console.log(e.stack);
+                res.send(e.message, 500);
             }
-            res.end('ok');
         });
     };
 

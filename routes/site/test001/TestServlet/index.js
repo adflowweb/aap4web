@@ -9,8 +9,8 @@ var parser = require('cheerio'),
     crypto = require('crypto');
 
 exports.put = function (req, res, data) {
-    console.log('req.headers : ', req.headers);
-    console.log('----------------------------------------------');
+    //console.log('req.headers : ', req.headers);
+    //console.log('----------------------------------------------');
     var $ = parser.load(data);
 
     $("#msg").text("Validation Success");
