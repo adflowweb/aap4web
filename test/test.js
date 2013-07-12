@@ -129,4 +129,50 @@ describe('Routing', function () {
 //                });
 //        });
     });
+
+    describe('verificationURI', function () {
+        it('should return code 200 trying to create verificationURI', function (done) {
+            var body = {
+                uri: [
+                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value'}},
+                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value'}}
+                ]
+            };
+
+            request(url)
+                .post('/v1/verificationuri')
+                .send(body)
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('should return code 200 trying to modify verificationURI', function (done) {
+            var body = {
+                uri: [
+                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value&key2=value2'}},
+                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value&key3=value3'}}
+                ]
+            };
+
+            request(url)
+                .put('/v1/verificationuri')
+                .send(body)
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
 });
