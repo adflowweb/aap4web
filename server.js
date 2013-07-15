@@ -10,17 +10,18 @@ var express = require('express')
     , verificationURIHandler = require('./handlers/verificationURIHandler')
     , routes = require('./routes')
     , http = require('http')
-    , redisClient = require('redis').createClient()
-    , path = require('path');
+    , redis = require('redis').createClient()
+    , path = require('path')
+    , logger = require('./logger');
 
 //redis error
-redisClient.on('error', function (err) {
-    console.log("Error " + err);
+redis.on('error', function (err) {
+    logger.error(err.stack);
 });
 
 //redis ready
-redisClient.on('ready', function () {
-    console.log("redis server ready");
+redis.on('ready', function () {
+    logger.info('redis server ready');
 });
 
 var app = express();
@@ -53,17 +54,17 @@ function rawBody(req, res, next) {
 }
 
 var handlers = {
-    virtualpages:  new virtualPageHandler(),
+    virtualpages: new virtualPageHandler(),
     verificationuri: new verificationURIHandler()
 };
 
 function start() {
-//    console.log('virtualpages : ', handlers.virtualpages);
-//    console.log('verificationuri : ', handlers.verificationuri);
-    routes.setup(app, handlers, redisClient);
+    //    console.log('virtualpages : ', handlers.virtualpages);
+    //    console.log('verificationuri : ', handlers.verificationuri);
+    routes.setup(app, handlers, redis);
     var port = process.env.PORT || 3000;
     app.listen(port);
-    console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+    logger.info("Express server listening on port %d in %s mode", port, app.settings.env);
 }
 
 exports.start = start;

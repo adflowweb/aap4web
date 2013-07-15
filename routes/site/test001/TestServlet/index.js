@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 var parser = require('cheerio'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    logger = require('../../../../logger');
 
 exports.put = function (req, res, data) {
     //console.log('req.headers : ', req.headers);

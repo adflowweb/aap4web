@@ -6,15 +6,16 @@
  * To change this template use File | Settings | File Templates.
  */
 var parser = require('cheerio'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    logger = require('../../../../logger');
 
 exports.post = function (req, res) {
     //console.log('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
     //var xhr = req.headers['x-requested-with'];
-    console.log('req.xhr : ', req.xhr);
+    logger.debug('req.xhr : ', req.xhr);
     $("h3").append("Login Example");
-    console.log('user id : ', req.params.id);
+    logger.debug('user id : ', req.params.id);
     //client.set(req.params.id, '<html>' + $('html').html() + '</html>', client.print);
     return '<html>' + $('html').html() + '</html>';
 };

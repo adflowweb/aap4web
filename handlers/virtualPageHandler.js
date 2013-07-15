@@ -7,7 +7,8 @@
  */
 var parser = require('cheerio'),
     crypto = require('crypto'),
-    util = require('util');
+    util = require('util'),
+    logger = require('../logger');
 
 module.exports = function () {
     this.post = function (req, res, client) {
@@ -19,14 +20,14 @@ module.exports = function () {
 
         try {
             var path = '../routes/site' + req.headers['request_uri_origin'];
-            console.log('path : ', path);
+            logger.debug('path : ', path);
             var val = require(path).post(req, res);
             //console.log('ret : ',ret);
             //set page
             client.set(req.params.id, val, function (err) {
                 try {
                     if (err) {
-                        console.log('error : ', err);
+                        logger.error('error : ', err);
                         res.send(err.message, 500);
                         return;
                     }
@@ -34,12 +35,12 @@ module.exports = function () {
                     //testHtml(val);
                     res.send(200);
                 } catch (e) {
-                    console.log(e.stack);
+                    logger.error(e.stack);
                     res.send(e.message, 500);
                 }
             });
         } catch (e) {
-            console.log(e.stack);
+            logger.error(e.stack);
             res.send(e.message, 500);
         }
     };
@@ -52,14 +53,14 @@ module.exports = function () {
 
         try {
             var path = '../routes/site' + req.headers['request_uri_origin'];
-            console.log('path : ', path);
+            logger.debug('path : ', path);
             client.get(req.params.id, function (err, reply) {
                 // reply is null when the key is missing
                 //console.log('reply : ', reply);
                 //var $ = parser.load(reply);
                 try {
                     if (err) {
-                        console.log('error : ', err);
+                        logger.error('error : ', err);
                         res.send(err.message, 500);
                         return;
                     }
@@ -74,7 +75,7 @@ module.exports = function () {
                     client.set(req.params.id, val, function (err) {
                         try {
                             if (err) {
-                                console.log('error : ', err);
+                                logger.error('error : ', err);
                                 res.send(err.message, 500);
                                 return;
                             }
@@ -82,17 +83,17 @@ module.exports = function () {
                             //testHtml(val);
                             res.send(200);
                         } catch (e) {
-                            console.log(e.stack);
+                            logger.error(e.stack);
                             res.send(e.message, 500);
                         }
                     });
                 } catch (e) {
-                    console.log(e.stack);
+                    logger.error(e.stack);
                     res.send(e.message, 500);
                 }
             });
         } catch (e) {
-            console.log(e.stack);
+            logger.error(e.stack);
             res.send(e.message, 500);
         }
 
@@ -101,33 +102,33 @@ module.exports = function () {
 
     this.delete = function (req, res, client) {
         //res.send({id: req.params.id, name: "The Name", description: "description"});
-        console.log('key : ', req.params.id);
+        logger.debug('key : ', req.params.id);
         client.del(req.params.id, function (err) {
             //console.log(util.inspect(arguments))
             try {
                 if (err) {
-                    console.log('error : ', err);
+                    logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
-                console.log('key deleted just to be sure');
+                logger.debug('key deleted just to be sure');
                 res.send(200);
             } catch (e) {
-                console.log(e.stack);
+                logger.error(e.stack);
                 res.send(e.message, 500);
             }
         });
     };
     this.get = function (req, res, client) {
         //res.send({id: req.params.id, name: "The Name", description: "description"});
-        console.log('key : ', req.params.id);
+        logger.debug('key : ', req.params.id);
         client.get(req.params.id, function (err, reply) {
             // reply is null when the key is missing
             //console.log('reply : ', reply);
             //var $ = parser.load(reply);
             try {
                 if (err) {
-                    console.log('error : ', err);
+                    logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
@@ -138,7 +139,7 @@ module.exports = function () {
                 //console.log('reponse : ', reply);
                 res.send(reply);
             } catch (e) {
-                console.log(e.stack);
+                logger.error(e.stack);
                 res.send(e.message, 500);
             }
         });
@@ -147,8 +148,8 @@ module.exports = function () {
     function testHtml(html) {
         var $ = parser.load(html);
         var responseData = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
-        console.log('response data : ', responseData);
-        console.log('----------------------------------------------');
+        logger.debug('response data : ', responseData);
+        logger.debug('----------------------------------------------');
         var enc = encodeURIComponent(responseData);
         //var key = 'abcdeg'
         //console.log('hash : ', crypto.createHash('sha1').update('this is test').digest('hex'));
@@ -159,9 +160,9 @@ module.exports = function () {
         //    hex += responseData.charCodeAt(i).toString(16);
         //    //console.log('hex : ', hex);
         //}
-        console.log('encoded string : ', enc);
+        logger.debug('encoded string : ', enc);
         //console.log('hash : ', crypto.createHmac('sha1', key).update('<html>'+$('html').html()+'</html>').digest('hex'));
-        console.log('hash : ', crypto.createHash('sha1').update(enc).digest('hex'));
+        logger.debug('hash : ', crypto.createHash('sha1').update(enc).digest('hex'));
         //res.end('<html>'+$('html').html()+'</html>');
     }
 }

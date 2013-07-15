@@ -5,39 +5,40 @@
  * Time: 오전 10:27
  * To change this template use File | Settings | File Templates.
  */
+var logger = require('../logger');
 var VERIFICATIONURI = 'verificationURI';
 module.exports = function () {
     this.post = function (req, res, client) {
-        console.log('req.rawBody : ', req.rawBody);
+        logger.debug('req.rawBody : ', req.rawBody);
         client.set(VERIFICATIONURI, req.rawBody, function (err) {
             try {
                 if (err) {
-                    console.log('error : ', err);
+                    logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
-                console.log('key set just to be sure');
+                logger.debug('key set just to be sure');
                 res.send(200);
             } catch (e) {
-                console.log(e.stack);
+                logger.error(e.stack);
                 res.send(e.message, 500);
             }
         });
     };
 
     this.put = function (req, res, client) {
-        console.log('req.rawBody : ', req.rawBody);
+        logger.debug('req.rawBody : ', req.rawBody);
         client.set(VERIFICATIONURI, req.rawBody, function (err) {
             try {
                 if (err) {
-                    console.log('error : ', err);
+                    logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
-                console.log('key set just to be sure');
+                logger.debug('key set just to be sure');
                 res.send(200);
             } catch (e) {
-                console.log(e.stack);
+                logger.error(e.stack);
                 res.send(e.message, 500);
             }
         });
@@ -48,15 +49,15 @@ module.exports = function () {
         client.del(VERIFICATIONURI, function (err) {
             try {
                 if (err) {
-                    console.log('error : ', err);
+                    logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
-                console.log('key deleted just to be sure');
+                logger.debug('key deleted just to be sure');
                 //console.log(util.inspect(arguments))
                 res.send(200);
             } catch (e) {
-                console.log(e.stack);
+                logger.error(e.stack);
                 res.send(e.message, 500);
             }
         });
@@ -66,7 +67,7 @@ module.exports = function () {
         client.get(VERIFICATIONURI, function (err, reply) {
             try {
                 if (err) {
-                    console.log('error : ', err);
+                    logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
@@ -74,10 +75,10 @@ module.exports = function () {
                     res.send(404);
                     return;
                 }
-                console.log('reponse : ', reply);
+                logger.debug('reponse : ', reply);
                 res.send(reply);
             } catch (e) {
-                console.log(e.stack);
+                logger.debug(e.stack);
                 res.send(e.message, 500);
             }
         });

@@ -7,7 +7,7 @@
  */
 //var config = require('./Config-debug');
 var config = require('./config');
-var winston = require('winston');
+var logger = require('./logger');
 //var mongoose = require('mongoose');
 var server = require('./server');
 
@@ -19,16 +19,19 @@ process.on('uncaughtException', function (err) {
 });
 
 // We will log normal api operations into api.log
-console.log("starting logger...");
-winston.add(winston.transports.File, {
-    filename: config.logger.api
-});
+//winston.info("starting logger...");
+//winston.add(winston.transports.File, {
+//    filename: config.logger.api, level: 'debug'
+//});
+
+//winston.setLevels(winston.config.syslog.levels);
+
 // We will log all uncaught exceptions into exceptions.log
-winston.handleExceptions(new winston.transports.File({
-    filename: config.logger.exception
-}));
+//winston.handleExceptions(new winston.transports.File({
+//    filename: config.logger.exception
+//}));
 //console.log("logger started. Connecting to MongoDB...");
 //mongoose.connect(config.db.mongodb);
 //console.log("Successfully connected to MongoDB. Starting web server...");
 server.start();
-console.log("Successfully started web server. Waiting for incoming connections...");
+logger.info("Successfully started web server. Waiting for incoming connections...");
