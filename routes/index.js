@@ -36,6 +36,21 @@ function setup(app, handlers, client) {
     app.delete(VERIFICATIONURI_PATH, function (req, res) {
         handlers.verificationuri.delete(req, res, client);
     });
+
+    //route verify
+    var VERIFY_PATH = '/v1/verify/:id';
+    app.post(VERIFY_PATH, function (req, res) {
+        handlers.verifyHandler.post(req, res, client);
+    });
+    app.put(VERIFY_PATH, function (req, res) {
+        res.send(405);
+    });
+    app.get(VERIFY_PATH, function (req, res) {
+        res.send(405);
+    });
+    app.delete(VERIFY_PATH, function (req, res) {
+        res.send(405);
+    });
 }
 
 exports.setup = setup;

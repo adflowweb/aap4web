@@ -8,6 +8,7 @@
 var express = require('express')
     , virtualPageHandler = require('./handlers/virtualPageHandler')
     , verificationURIHandler = require('./handlers/verificationURIHandler')
+    , verifyHandler = require('./handlers/verifyHandler')
     , routes = require('./routes')
     , http = require('http')
     , redis = require('redis').createClient()
@@ -55,7 +56,8 @@ function rawBody(req, res, next) {
 
 var handlers = {
     virtualpages: new virtualPageHandler(),
-    verificationuri: new verificationURIHandler()
+    verificationuri: new verificationURIHandler(),
+    verifyHandler: new verifyHandler()
 };
 
 function start() {
