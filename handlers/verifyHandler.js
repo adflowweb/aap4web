@@ -22,7 +22,7 @@ module.exports = function () {
                         return;
                     }
 
-                    if (reply == null) {
+                    if (!reply) {
                         res.send(404);
                     } else {
                         //검증하기
