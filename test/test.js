@@ -207,4 +207,45 @@ describe('Routing', function () {
                 });
         });
     });
+
+    describe('verify', function () {
+        it('should return code 200 trying to create virtualpage', function (done) {
+            request(url)
+                .post('/v1/virtualpages/1234567890')
+                .set('request_uri_origin', '/test001/index.jsp')
+                .attach('nadir', './test/test.html')
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('should return code 200 trying to verifiy', function (done) {
+            var body = {
+                uri: [
+                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value'}},
+                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value'}}
+                ]
+            };
+
+            request(url)
+                .post('/v1/verify/1234567890')
+                .set('hash', '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9')
+                .send(body)
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
 });
