@@ -13,8 +13,8 @@ var virtualPageHandler = function () {
 
 virtualPageHandler.prototype.post = function (req, res, client) {
     //nonExistFunctionCall();
-    if (!req.headers['request_uri_origin']) {
-        res.send(404);
+    if (!req.headers['virtual_page_uri']) {
+        res.send("{'errorMessage':'virtual_page_uri header not found'}", 400);
         return;
     }
 
@@ -46,8 +46,8 @@ virtualPageHandler.prototype.post = function (req, res, client) {
 };
 
 virtualPageHandler.prototype.put = function (req, res, client) {
-    if (!req.headers['request_uri_origin']) {
-        res.send(404);
+    if (!req.headers['virtual_page_uri']) {
+        res.send("{'errorMessage':'virtual_page_uri header not found'}", 400);
         return;
     }
 
@@ -99,7 +99,6 @@ virtualPageHandler.prototype.put = function (req, res, client) {
 };
 
 virtualPageHandler.prototype.delete = function (req, res, client) {
-    //res.send({id: req.params.id, name: "The Name", description: "description"});
     logger.debug('key : ', req.params.id);
     client.del(req.params.id, function (err) {
         //console.log(util.inspect(arguments))
@@ -119,12 +118,9 @@ virtualPageHandler.prototype.delete = function (req, res, client) {
 };
 
 virtualPageHandler.prototype.get = function (req, res, client) {
-    //res.send({id: req.params.id, name: "The Name", description: "description"});
     logger.debug('key : ', req.params.id);
     client.get(req.params.id, function (err, reply) {
         // reply is null when the key is missing
-        //console.log('reply : ', reply);
-        //var $ = parser.load(reply);
         try {
             if (err) {
                 logger.error('error : ', err);
@@ -132,7 +128,6 @@ virtualPageHandler.prototype.get = function (req, res, client) {
                 return;
             }
             if (reply) {
-                //console.log('reponse : ', reply);
                 res.send(reply);
             } else {
                 res.send(404);

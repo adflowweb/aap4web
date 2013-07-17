@@ -35,8 +35,7 @@ verifyHandler.prototype.post = function (req, res, client) {
 
                     if (serverHash == clientHash) {
                         res.send(200);
-                    }
-                    else {
+                    } else {
                         res.send(505);
                     }
                 }

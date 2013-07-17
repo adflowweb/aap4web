@@ -47,7 +47,6 @@ verificationUri.prototype.put = function (req, res, client) {
 };
 
 verificationUri.prototype.delete = function (req, res, client) {
-//    res.send({id: req.params.id, name: "The Name", description: "description"});
     client.del(VERIFICATIONURI, function (err) {
         try {
             if (err) {
