@@ -36,7 +36,7 @@ describe('Routing', function () {
             // We do this using the request object, requiring supertest!
             request(url)
                 .post('/v1/virtualpages/1234567890')
-                .set('request_uri_origin', '/test001/index.jsp')
+                .set('virtual_page_uri', '/test001/index.jsp')
                 .attach('nadir', './test/test.html')
                 //.send(profile)
                 // end handles the response
@@ -44,6 +44,8 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -57,13 +59,14 @@ describe('Routing', function () {
             // We do this using the request object, requiring supertest!
             request(url)
                 .put('/v1/virtualpages/1234567890')
-                .set('request_uri_origin', '/test001/TestServlet')
+                .set('virtual_page_uri', '/test001/TestServlet')
                 //.send(profile)
                 // end handles the response
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -82,6 +85,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -100,6 +104,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -147,6 +152,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -169,6 +175,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -187,6 +194,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -201,6 +209,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -212,13 +221,14 @@ describe('Routing', function () {
         it('should return code 200 trying to create virtualpage', function (done) {
             request(url)
                 .post('/v1/virtualpages/1234567890')
-                .set('request_uri_origin', '/test001/index.jsp')
+                .set('virtual_page_uri', '/test001/index.jsp')
                 .attach('nadir', './test/test.html')
                 // end handles the response
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -242,6 +252,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
+                    //console.log('response : ',res.text);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();

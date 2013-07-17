@@ -19,7 +19,7 @@ virtualPageHandler.prototype.post = function (req, res, client) {
     }
 
     try {
-        var path = '../routes/site' + req.headers['request_uri_origin'];
+        var path = '../routes/site' + req.headers['virtual_page_uri'];
         logger.debug('path : ', path);
         var val = require(path).post(req, res);
         //set page
@@ -52,7 +52,7 @@ virtualPageHandler.prototype.put = function (req, res, client) {
     }
 
     try {
-        var path = '../routes/site' + req.headers['request_uri_origin'];
+        var path = '../routes/site' + req.headers['virtual_page_uri'];
         logger.debug('path : ', path);
         client.get(req.params.id, function (err, reply) {
             // reply is null when the key is missing
