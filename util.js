@@ -1,6 +1,6 @@
 /**
  * Created with JetBrains WebStorm.
- * User: nadir93
+ * User: @nadir93
  * Date: 13. 7. 16.
  * Time: 오후 5:07
  * To change this template use File | Settings | File Templates.
@@ -12,8 +12,8 @@ var parser = require('cheerio'),
 exports.normalize = function (html) {
     var $ = parser.load(html);
     var responseData = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
-    logger.debug('response data : ', responseData);
-    logger.debug('----------------------------------------------');
+    //logger.debug('response data : ', responseData);
+    //logger.debug('----------------------------------------------');
     var enc = encodeURIComponent(responseData);
     //var key = 'abcdeg'
     //console.log('hash : ', crypto.createHash('sha1').update('this is test').digest('hex'));
@@ -24,7 +24,7 @@ exports.normalize = function (html) {
     //    hex += responseData.charCodeAt(i).toString(16);
     //    //console.log('hex : ', hex);
     //}
-    logger.debug('encoded string : ', enc);
+    //logger.debug('encoded string : ', enc);
     //console.log('hash : ', crypto.createHmac('sha1', key).update('<html>'+$('html').html()+'</html>').digest('hex'));
     var hash = crypto.createHash('sha1').update(enc).digest('hex');
     logger.debug('hash : ', hash);

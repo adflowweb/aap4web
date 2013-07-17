@@ -1,6 +1,6 @@
 /**
  * Created with JetBrains WebStorm.
- * User: nadir
+ * User: @nadir93
  * Date: 13. 7. 5
  * Time: 오후 12:18
  * To change this template use File | Settings | File Templates.
@@ -12,13 +12,13 @@ var virtualPageHandler = function () {
 };
 
 virtualPageHandler.prototype.post = function (req, res, client) {
-    //nonExistFunctionCall();
-    if (!req.headers['virtual_page_uri']) {
-        res.send("{'errorMessage':'virtual_page_uri header not found'}", 400);
-        return;
-    }
-
     try {
+        //nonExistFunctionCall();
+        if (!req.headers['virtual_page_uri']) {
+            res.send('{"errorMessage":"virtual_page_uri header not found"}', 400);
+            return;
+        }
+
         var path = '../routes/site' + req.headers['virtual_page_uri'];
         logger.debug('path : ', path);
         var val = require(path).post(req, res);
@@ -28,12 +28,7 @@ virtualPageHandler.prototype.post = function (req, res, client) {
                 if (err) {
                     logger.error('error : ', err);
                     res.send(err.message, 500);
-                    return;
-                }
-                //testCode
-                //normalize(val);
-                //testHtml(val);
-                res.send(200);
+                } else res.send(200);
             } catch (e) {
                 logger.error(e.stack);
                 res.send(e.message, 500);
@@ -46,47 +41,41 @@ virtualPageHandler.prototype.post = function (req, res, client) {
 };
 
 virtualPageHandler.prototype.put = function (req, res, client) {
-    if (!req.headers['virtual_page_uri']) {
-        res.send("{'errorMessage':'virtual_page_uri header not found'}", 400);
-        return;
-    }
-
     try {
+        if (!req.headers['virtual_page_uri']) {
+            res.send('{"errorMessage":"virtual_page_uri header not found"}', 400);
+            return;
+        }
+
         var path = '../routes/site' + req.headers['virtual_page_uri'];
         logger.debug('path : ', path);
         client.get(req.params.id, function (err, reply) {
-            // reply is null when the key is missing
-            //console.log('reply : ', reply);
-            //var $ = parser.load(reply);
             try {
                 if (err) {
                     logger.error('error : ', err);
                     res.send(err.message, 500);
                     return;
                 }
+
+                // reply is null when the key is missing
                 if (!reply) {
                     res.send(404);
                     return;
                 }
-                //res.send(200);
+
                 var val = require(path).put(req, res, reply);
-                //console.log('response data : ', val);
-                //console.log('<html>' + $('html').html() + '</html>');
                 client.set(req.params.id, val, function (err) {
                     try {
                         if (err) {
                             logger.error('error : ', err);
                             res.send(err.message, 500);
-                            return;
-                        }
-                        //testCode
-                        //testHtml(val);
-                        res.send(200);
+                        } else res.send(200);
                     } catch (e) {
                         logger.error(e.stack);
                         res.send(e.message, 500);
                     }
                 });
+
             } catch (e) {
                 logger.error(e.stack);
                 res.send(e.message, 500);
@@ -99,44 +88,54 @@ virtualPageHandler.prototype.put = function (req, res, client) {
 };
 
 virtualPageHandler.prototype.delete = function (req, res, client) {
-    logger.debug('key : ', req.params.id);
-    client.del(req.params.id, function (err) {
-        //console.log(util.inspect(arguments))
-        try {
-            if (err) {
-                logger.error('error : ', err);
-                res.send(err.message, 500);
-                return;
+    try {
+        logger.debug('key : ', req.params.id);
+        client.del(req.params.id, function (err) {
+            //console.log(util.inspect(arguments))
+            try {
+                if (err) {
+                    logger.error('error : ', err);
+                    res.send(err.message, 500);
+                } else {
+                    logger.debug('key deleted just to be sure');
+                    res.send(200);
+                }
+            } catch (e) {
+                logger.error(e.stack);
+                res.send(e.message, 500);
             }
-            logger.debug('key deleted just to be sure');
-            res.send(200);
-        } catch (e) {
-            logger.error(e.stack);
-            res.send(e.message, 500);
-        }
-    });
+        });
+    } catch (e) {
+        logger.error(e.stack);
+        res.send(e.message, 500);
+    }
 };
 
 virtualPageHandler.prototype.get = function (req, res, client) {
-    logger.debug('key : ', req.params.id);
-    client.get(req.params.id, function (err, reply) {
-        // reply is null when the key is missing
-        try {
-            if (err) {
-                logger.error('error : ', err);
-                res.send(err.message, 500);
-                return;
+    try {
+        logger.debug('key : ', req.params.id);
+        client.get(req.params.id, function (err, reply) {
+            try {
+                if (err) {
+                    logger.error('error : ', err);
+                    res.send(err.message, 500);
+                    return;
+                }
+
+                // reply is null when the key is missing
+                if (reply) {
+                    res.send(reply);
+                } else res.send(404);
+            } catch (e) {
+                logger.error(e.stack);
+                res.send(e.message, 500);
             }
-            if (reply) {
-                res.send(reply);
-            } else {
-                res.send(404);
-            }
-        } catch (e) {
-            logger.error(e.stack);
-            res.send(e.message, 500);
-        }
-    });
+        });
+    } catch (e) {
+        logger.error(e.stack);
+        res.send(e.message, 500);
+    }
+
 };
 
 module.exports = virtualPageHandler;

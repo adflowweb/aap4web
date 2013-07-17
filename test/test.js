@@ -1,6 +1,6 @@
 /**
  * Created with JetBrains WebStorm.
- * User: nadir
+ * User: @nadir93
  * Date: 13. 7. 8
  * Time: 오후 5:26
  * To change this template use File | Settings | File Templates.
@@ -252,7 +252,7 @@ describe('Routing', function () {
                     if (err) {
                         throw err;
                     }
-                    //console.log('response : ',res.text);
+                    //console.log('response : ',res);
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
