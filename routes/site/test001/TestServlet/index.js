@@ -1,9 +1,7 @@
 /**
- * Created with JetBrains WebStorm.
  * User: nadir
  * Date: 13. 7. 5
  * Time: 오후 2:57
- * To change this template use File | Settings | File Templates.
  */
 var parser = require('cheerio'),
     crypto = require('crypto'),

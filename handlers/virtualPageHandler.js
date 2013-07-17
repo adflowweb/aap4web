@@ -1,9 +1,7 @@
 /**
- * Created with JetBrains WebStorm.
  * User: @nadir93
  * Date: 13. 7. 5
  * Time: 오후 12:18
- * To change this template use File | Settings | File Templates.
  */
 var util = require('util'),
     logger = require('../logger');
@@ -15,7 +13,8 @@ virtualPageHandler.prototype.post = function (req, res, client) {
     try {
         //nonExistFunctionCall();
         if (!req.headers['virtual_page_uri']) {
-            res.send('{"errorMessage":"virtual_page_uri header not found"}', 400);
+            //reponseCode 400 : bad request
+            res.send('{"error":{"code":400,"message":"virtual_page_uri header not found"}}', 400);
             return;
         }
 
@@ -43,7 +42,8 @@ virtualPageHandler.prototype.post = function (req, res, client) {
 virtualPageHandler.prototype.put = function (req, res, client) {
     try {
         if (!req.headers['virtual_page_uri']) {
-            res.send('{"errorMessage":"virtual_page_uri header not found"}', 400);
+            //reponseCode 400 : bad request
+            res.send('{"error":{"code":400,"message":"virtual_page_uri header not found"}}', 400);
             return;
         }
 

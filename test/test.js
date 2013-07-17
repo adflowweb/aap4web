@@ -1,9 +1,7 @@
 /**
- * Created with JetBrains WebStorm.
  * User: @nadir93
  * Date: 13. 7. 8
  * Time: 오후 5:26
- * To change this template use File | Settings | File Templates.
  */
 var should = require('should');
 var assert = require('assert');

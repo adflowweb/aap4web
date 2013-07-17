@@ -1,9 +1,7 @@
 /**
- * Created with JetBrains WebStorm.
  * User: @nadir93
  * Date: 13. 7. 9
  * Time: 오전 10:27
- * To change this template use File | Settings | File Templates.
  */
 var logger = require('../logger');
 var VERIFICATIONURI = 'verificationURI';

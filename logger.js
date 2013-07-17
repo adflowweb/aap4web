@@ -1,9 +1,7 @@
 /**
- * Created with JetBrains WebStorm.
  * User: @nadir93
  * Date: 13. 7. 15
  * Time: 오후 1:42
- * To change this template use File | Settings | File Templates.
  */
 var winston = require('winston');
 //require('winston-riak').Riak;
