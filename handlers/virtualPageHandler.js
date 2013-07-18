@@ -9,6 +9,7 @@ var util = require('util'),
 var virtualPageHandler = function () {
 };
 
+//create virtualPage
 virtualPageHandler.prototype.post = function (req, res, client) {
     try {
         //nonExistFunctionCall();
@@ -39,6 +40,7 @@ virtualPageHandler.prototype.post = function (req, res, client) {
     }
 };
 
+//modify virtualPage
 virtualPageHandler.prototype.put = function (req, res, client) {
     try {
         if (!req.headers['virtual_page_uri']) {
@@ -87,6 +89,7 @@ virtualPageHandler.prototype.put = function (req, res, client) {
     }
 };
 
+//delete virtualPage
 virtualPageHandler.prototype.delete = function (req, res, client) {
     try {
         logger.debug('key : ', req.params.id);
@@ -111,6 +114,7 @@ virtualPageHandler.prototype.delete = function (req, res, client) {
     }
 };
 
+//read virtualPage
 virtualPageHandler.prototype.get = function (req, res, client) {
     try {
         logger.debug('key : ', req.params.id);

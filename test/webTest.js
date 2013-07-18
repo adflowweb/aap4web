@@ -5,46 +5,59 @@
  */
 var should = require('should')
     , request = require('supertest')
-    , url = 'http://192.168.1.19:8080';
+    , httpUrl = 'http://192.168.1.19:8080'
+    , verificationUrl = 'http://192.168.1.19:3000'
+    , cookie;
 
 describe('webTest', function () {
     before(function (done) {
         // In our tests we use the test db
         done();
     });
-    var cookie;
 
-    describe('create', function () {
+    describe('verity', function () {
         it('should return code 200 trying to create virtualPage', function (done) {
             //var verificationData = {
             //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
             //};
 
-            request(url)
+            request(httpUrl)
                 .get('/notice_list.do')
                 // end handles the response
                 .end(function (err, res) {
                     if (err) {
                         throw err;
                     }
+                    //console.log('cookie : ', res.headers['set-cookie']);
                     cookie = res.headers['set-cookie'];
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
                 });
         });
-    });
 
-    describe('verify', function () {
         it('should return code 200 trying to verify hashValue', function (done) {
-            //var verificationData = {
-            //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
-            //};
-
-            request(url)
+            request(httpUrl)
                 .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
                 .set('cookie', cookie)
                 .set('hash', 'fe8a4261f96a7fb71f1d88b05478acf469fdf10f')
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('should return code 200 trying to delete virtualPage', function (done) {
+            //get sessionID
+            var sessionID = cookie[0].split(';')[0].split('=')[1];
+            //console.log('sessionID : ', sessionID);
+            request(verificationUrl)
+                .del('/v1/virtualpages/' + sessionID)
                 // end handles the response
                 .end(function (err, res) {
                     if (err) {
