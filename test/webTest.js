@@ -41,7 +41,7 @@ describe('webTest', function () {
 
             request(url)
                 .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
-                .set('hash', '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9')
+                .set('hash', '196a6cb103d8ae81928ef706f75497e7ffd7cdc1')
                 // end handles the response
                 .end(function (err, res) {
                     if (err) {
