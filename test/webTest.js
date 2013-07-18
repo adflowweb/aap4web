@@ -12,6 +12,26 @@ describe('webTest', function () {
         done();
     });
 
+    describe('createVirtualPage', function () {
+        it('should return code 200 trying to create virtualPage', function (done) {
+            //var verificationData = {
+            //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
+            //};
+
+            request(url)
+                .get('/notice_list.do')
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
+
     describe('verify', function () {
         it('should return code 200 trying to verify', function (done) {
             //var verificationData = {
