@@ -1,7 +1,7 @@
 /**
- * User: @nadir93
- * Date: 13. 7. 8
- * Time: 오후 5:26
+ * User: nadir93
+ * Date: 13. 7. 18.
+ * Time: 오전 9:50
  */
 var should = require('should');
 var assert = require('assert');

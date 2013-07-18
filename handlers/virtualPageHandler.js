@@ -135,7 +135,6 @@ virtualPageHandler.prototype.get = function (req, res, client) {
         logger.error(e.stack);
         res.send(e.message, 500);
     }
-
 };
 
 module.exports = virtualPageHandler;
