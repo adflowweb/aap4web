@@ -15,7 +15,7 @@ describe('webTest', function () {
         done();
     });
 
-    describe('verity', function () {
+    describe('create', function () {
         it('should return code 200 trying to create virtualPage', function (done) {
             //var verificationData = {
             //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
@@ -35,7 +35,9 @@ describe('webTest', function () {
                     done();
                 });
         });
+    });
 
+    describe('verify', function () {
         it('should return code 200 trying to verify hashValue', function (done) {
             request(httpUrl)
                 .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
@@ -51,9 +53,10 @@ describe('webTest', function () {
                     done();
                 });
         });
+    });
 
+    describe('delete', function () {
         it('should return code 200 trying to delete virtualPage', function (done) {
-            //get sessionID
             var sessionID = cookie[0].split(';')[0].split('=')[1];
             //console.log('sessionID : ', sessionID);
             request(verificationUrl)
