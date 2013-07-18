@@ -11,6 +11,7 @@ var should = require('should')
 
 describe('webTest', function () {
     before(function (done) {
+        console.log('before');
         request(httpUrl)
             .get('/notice_list.do')
             // end handles the response
@@ -22,11 +23,13 @@ describe('webTest', function () {
                 cookie = res.headers['set-cookie'];
                 // this is should.js syntax, very clear
                 res.should.have.status(200);
+                console.log('before done');
                 done();
             });
     });
 
     after(function (done) {
+        console.log('after');
         var sessionID = cookie[0].split(';')[0].split('=')[1];
         //console.log('sessionID : ', sessionID);
         request(verificationUrl)
@@ -38,11 +41,13 @@ describe('webTest', function () {
                 }
                 // this is should.js syntax, very clear
                 res.should.have.status(200);
+                console.log('after done');
                 done();
             });
     });
 
     describe('verify', function () {
+        console.log('verify');
         it('should return code 200 trying to verify hashValue', function (done) {
             request(httpUrl)
                 .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
@@ -55,6 +60,7 @@ describe('webTest', function () {
                     }
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
+                    console.log('verify done');
                     done();
                 });
         });
