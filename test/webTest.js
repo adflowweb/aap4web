@@ -3,8 +3,9 @@
  * Date: 13. 7. 18.
  * Time: 오전 9:50
  */
-var request = require('supertest');
-var url = 'http://127.0.0.1:8080';
+var should = require('should')
+    , request = require('supertest')
+    , url = 'http://192.168.1.19:8080';
 
 describe('webTest', function () {
     before(function (done) {
@@ -12,7 +13,7 @@ describe('webTest', function () {
         done();
     });
 
-    describe('createVirtualPage', function () {
+    describe('create', function () {
         it('should return code 200 trying to create virtualPage', function (done) {
             //var verificationData = {
             //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
@@ -33,7 +34,7 @@ describe('webTest', function () {
     });
 
     describe('verify', function () {
-        it('should return code 200 trying to verify', function (done) {
+        it('should return code 200 trying to verify hashValue', function (done) {
             //var verificationData = {
             //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
             //};
