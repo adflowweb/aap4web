@@ -12,6 +12,7 @@ describe('webTest', function () {
         // In our tests we use the test db
         done();
     });
+    var cookie;
 
     describe('create', function () {
         it('should return code 200 trying to create virtualPage', function (done) {
@@ -26,6 +27,7 @@ describe('webTest', function () {
                     if (err) {
                         throw err;
                     }
+                    cookie = res.headers['set-cookie'];
                     // this is should.js syntax, very clear
                     res.should.have.status(200);
                     done();
@@ -41,6 +43,7 @@ describe('webTest', function () {
 
             request(url)
                 .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
+                .set('cookie', cookie)
                 .set('hash', '196a6cb103d8ae81928ef706f75497e7ffd7cdc1')
                 // end handles the response
                 .end(function (err, res) {
