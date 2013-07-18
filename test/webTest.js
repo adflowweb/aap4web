@@ -11,6 +11,7 @@ var should = require('should')
 
 describe('webTest', function () {
     before(function (done) {
+        //sync
         console.log('before');
         request(httpUrl)
             .get('/notice_list.do')
@@ -48,21 +49,26 @@ describe('webTest', function () {
 
     describe('verify', function () {
         console.log('verify');
+
+
         it('should return code 200 trying to verify hashValue', function (done) {
-            request(httpUrl)
-                .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
-                .set('cookie', cookie)
-                .set('hash', 'fe8a4261f96a7fb71f1d88b05478acf469fdf10f')
-                // end handles the response
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    // this is should.js syntax, very clear
-                    res.should.have.status(200);
-                    console.log('verify done');
-                    done();
-                });
+
+            setTimeout(function () {
+                request(httpUrl)
+                    .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
+                    .set('cookie', cookie)
+                    .set('hash', 'fe8a4261f96a7fb71f1d88b05478acf469fdf10f')
+                    // end handles the response
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // this is should.js syntax, very clear
+                        res.should.have.status(200);
+                        console.log('verify done');
+                        done();
+                    });
+            }, 500);
         });
     });
 });
