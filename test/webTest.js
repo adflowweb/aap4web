@@ -3,3 +3,33 @@
  * Date: 13. 7. 18.
  * Time: 오전 9:50
  */
+var request = require('supertest');
+var url = 'http://127.0.0.1:8080';
+
+describe('webTest', function () {
+    before(function (done) {
+        // In our tests we use the test db
+        done();
+    });
+
+    describe('verify', function () {
+        it('should return code 200 trying to verify', function (done) {
+            //var verificationData = {
+            //    url: '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9'
+            //};
+
+            request(url)
+                .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
+                .set('hash', '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9')
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
+});
