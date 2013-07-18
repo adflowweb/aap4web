@@ -12,6 +12,8 @@ var verifyHandler = function () {
 verifyHandler.prototype.post = function (req, res, client) {
     try {
         logger.debug('key : ', req.params.id);
+        var hash = req.headers['hash'];
+        logger.debug('clientHash#1', hash);
         client.get(req.params.id, function (err, reply) {
             try {
                 if (err) {

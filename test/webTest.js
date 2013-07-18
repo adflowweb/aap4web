@@ -43,7 +43,6 @@ describe('webTest', function () {
     });
 
     describe('verify', function () {
-
         it('should return code 200 trying to verify hashValue', function (done) {
             request(httpUrl)
                 .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')
