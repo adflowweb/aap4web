@@ -8,97 +8,96 @@ var VERIFICATIONURI = 'verificationURI';
 var verificationUri = function () {
 };
 
-verificationUri.prototype.post = function (req, res, client) {
-    try {
-        logger.debug('req.rawBody : ', req.rawBody);
-        client.set(VERIFICATIONURI, req.rawBody, function (err) {
-            try {
-                if (err) {
-                    logger.error('error : ', err);
-                    res.send(err.message, 500);
-                } else {
-                    logger.debug('key set just to be sure');
-                    res.send(200);
+verificationUri.prototype = {
+    post: function (req, res, client) {
+        try {
+            logger.debug('req.rawBody : ', req.rawBody);
+            client.set(VERIFICATIONURI, req.rawBody, function (err) {
+                try {
+                    if (err) {
+                        logger.error('error : ', err);
+                        res.send(err.message, 500);
+                    } else {
+                        logger.debug('key set just to be sure');
+                        res.send(200);
+                    }
+                } catch (e) {
+                    logger.error(e.stack);
+                    res.send(e.message, 500);
                 }
-            } catch (e) {
-                logger.error(e.stack);
-                res.send(e.message, 500);
-            }
-        });
-    } catch (e) {
-        logger.error(e.stack);
-        res.send(e.message, 500);
-    }
-};
-
-verificationUri.prototype.put = function (req, res, client) {
-    try {
-        logger.debug('req.rawBody : ', req.rawBody);
-        client.set(VERIFICATIONURI, req.rawBody, function (err) {
-            try {
-                if (err) {
-                    logger.error('error : ', err);
-                    res.send(err.message, 500);
-                } else {
-                    logger.debug('key set just to be sure');
-                    res.send(200);
+            });
+        } catch (e) {
+            logger.error(e.stack);
+            res.send(e.message, 500);
+        }
+    },
+    put: function (req, res, client) {
+        try {
+            logger.debug('req.rawBody : ', req.rawBody);
+            client.set(VERIFICATIONURI, req.rawBody, function (err) {
+                try {
+                    if (err) {
+                        logger.error('error : ', err);
+                        res.send(err.message, 500);
+                    } else {
+                        logger.debug('key set just to be sure');
+                        res.send(200);
+                    }
+                } catch (e) {
+                    logger.error(e.stack);
+                    res.send(e.message, 500);
                 }
-            } catch (e) {
-                logger.error(e.stack);
-                res.send(e.message, 500);
-            }
-        });
-    } catch (e) {
-        logger.error(e.stack);
-        res.send(e.message, 500);
-    }
-};
-
-verificationUri.prototype.delete = function (req, res, client) {
-    try {
-        client.del(VERIFICATIONURI, function (err) {
-            try {
-                if (err) {
-                    logger.error('error : ', err);
-                    res.send(err.message, 500);
-                } else {
-                    logger.debug('key deleted just to be sure');
-                    //console.log(util.inspect(arguments))
-                    res.send(200);
+            });
+        } catch (e) {
+            logger.error(e.stack);
+            res.send(e.message, 500);
+        }
+    },
+    delete: function (req, res, client) {
+        try {
+            client.del(VERIFICATIONURI, function (err) {
+                try {
+                    if (err) {
+                        logger.error('error : ', err);
+                        res.send(err.message, 500);
+                    } else {
+                        logger.debug('key deleted just to be sure');
+                        //console.log(util.inspect(arguments))
+                        res.send(200);
+                    }
+                } catch (e) {
+                    logger.error(e.stack);
+                    res.send(e.message, 500);
                 }
-            } catch (e) {
-                logger.error(e.stack);
-                res.send(e.message, 500);
-            }
-        });
-    } catch (e) {
-        logger.error(e.stack);
-        res.send(e.message, 500);
-    }
-};
-
-verificationUri.prototype.get = function (req, res, client) {
-    try {
-        client.get(VERIFICATIONURI, function (err, reply) {
-            try {
-                if (err) {
-                    logger.error('error : ', err);
-                    res.send(err.message, 500);
-                    return;
+            });
+        } catch (e) {
+            logger.error(e.stack);
+            res.send(e.message, 500);
+        }
+    },
+    get: function (req, res, client) {
+        try {
+            client.get(VERIFICATIONURI, function (err, reply) {
+                try {
+                    if (err) {
+                        logger.error('error : ', err);
+                        res.send(err.message, 500);
+                        return;
+                    }
+                    if (reply) {
+                        logger.debug('reponse : ', reply);
+                        res.send(reply);
+                    } else res.send(404);
+                } catch (e) {
+                    logger.debug(e.stack);
+                    res.send(e.message, 500);
                 }
-                if (reply) {
-                    logger.debug('reponse : ', reply);
-                    res.send(reply);
-                } else res.send(404);
-            } catch (e) {
-                logger.debug(e.stack);
-                res.send(e.message, 500);
-            }
-        });
-    } catch (e) {
-        logger.debug(e.stack);
-        res.send(e.message, 500);
+            });
+        } catch (e) {
+            logger.debug(e.stack);
+            res.send(e.message, 500);
+        }
     }
-};
+}
 
 module.exports = verificationUri;
