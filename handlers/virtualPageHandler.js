@@ -22,7 +22,14 @@ virtualPageHandler.prototype = {
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
             logger.debug('path : ', path);
-            var val = require(path).post(req, res);
+
+            try {
+                var val = require(path).post(req, res);
+            } catch (e) {
+                logger.error(e.stack);
+                val = require('../routes/site/default/index.js').post(req, res);
+            }
+
             //set page
             client.set(req.params.id, val, function (err) {
                 try {
@@ -65,7 +72,14 @@ virtualPageHandler.prototype = {
                         return;
                     }
 
-                    var val = require(path).put(req, res, reply);
+                    try {
+                        var val = require(path).put(req, res, reply);
+                    } catch (e) {
+                        logger.error(e.stack);
+                        val = require('../routes/site/default/index.js').put(req, res, reply);
+                    }
+
+
                     client.set(req.params.id, val, function (err) {
                         try {
                             if (err) {
