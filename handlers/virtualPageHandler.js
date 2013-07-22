@@ -4,7 +4,9 @@
  * Time: 오후 12:18
  */
 var util = require('util'),
-    logger = require('../logger');
+    logger = require('../logger'),
+    DEFAULT_INDEX_JS = '../routes/site/default/index.js',
+    RESPONSE_MESSAGE = '{"error":{"code":400,"message":"virtual_page_uri header not found"}}';
 
 var virtualPageHandler = function () {
 };
@@ -16,7 +18,7 @@ virtualPageHandler.prototype = {
             //nonExistFunctionCall();
             if (!req.headers['virtual_page_uri']) {
                 //reponseCode 400 : bad request
-                res.send('{"error":{"code":400,"message":"virtual_page_uri header not found"}}', 400);
+                res.send(RESPONSE_MESSAGE, 400);
                 return;
             }
 
@@ -27,7 +29,7 @@ virtualPageHandler.prototype = {
                 var val = require(path).post(req, res);
             } catch (e) {
                 logger.error(e.stack);
-                val = require('../routes/site/default/index.js').post(req, res);
+                val = require(DEFAULT_INDEX_JS).post(req, res);
             }
 
             //set page
@@ -52,7 +54,7 @@ virtualPageHandler.prototype = {
         try {
             if (!req.headers['virtual_page_uri']) {
                 //reponseCode 400 : bad request
-                res.send('{"error":{"code":400,"message":"virtual_page_uri header not found"}}', 400);
+                res.send(RESPONSE_MESSAGE, 400);
                 return;
             }
 
@@ -76,7 +78,7 @@ virtualPageHandler.prototype = {
                         var val = require(path).put(req, res, reply);
                     } catch (e) {
                         logger.error(e.stack);
-                        val = require('../routes/site/default/index.js').put(req, res, reply);
+                        val = require(DEFAULT_INDEX_JS).put(req, res, reply);
                     }
 
 
