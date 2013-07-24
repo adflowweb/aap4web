@@ -135,12 +135,14 @@ describe('verificationServerTest', function () {
 
     describe('verificationURI', function () {
         it('should return code 200 trying to create verificationURI', function (done) {
-            var body = {
-                uri: [
-                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value'}},
-                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value'}}
-                ]
-            };
+//            var body = {
+//                uri: [
+//                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value'}},
+//                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value'}}
+//                ]
+//            };
+
+            var body = {'/test001/index.jsp': {options: {'qryStr': 'key=value'}}, '/test001/TestServlet': {options: {'qryStr': 'key=value'}}};
 
             request(url)
                 .post('/v1/verificationuri')
@@ -157,28 +159,28 @@ describe('verificationServerTest', function () {
                 });
         });
 
-        it('should return code 200 trying to modify verificationURI', function (done) {
-            var body = {
-                uri: [
-                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value&key2=value2'}},
-                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value&key3=value3'}}
-                ]
-            };
-
-            request(url)
-                .put('/v1/verificationuri')
-                .send(body)
-                // end handles the response
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    //console.log('response : ',res.text);
-                    // this is should.js syntax, very clear
-                    res.should.have.status(200);
-                    done();
-                });
-        });
+//        it('should return code 200 trying to modify verificationURI', function (done) {
+//            var body = {
+//                uri: [
+//                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value&key2=value2'}},
+//                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value&key3=value3'}}
+//                ]
+//            };
+//
+//            request(url)
+//                .put('/v1/verificationuri')
+//                .send(body)
+//                // end handles the response
+//                .end(function (err, res) {
+//                    if (err) {
+//                        throw err;
+//                    }
+//                    //console.log('response : ',res.text);
+//                    // this is should.js syntax, very clear
+//                    res.should.have.status(200);
+//                    done();
+//                });
+//        });
 
         it('should return code 200 trying to get verificationURI', function (done) {
             // once we have specified the info we want to send to the server via POST verb,
@@ -199,20 +201,20 @@ describe('verificationServerTest', function () {
                 });
         });
 
-        it('should return code 200 trying to delete verificationURI', function (done) {
-            request(url)
-                .del('/v1/verificationuri')
-                // end handles the response
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    //console.log('response : ',res.text);
-                    // this is should.js syntax, very clear
-                    res.should.have.status(200);
-                    done();
-                });
-        });
+//        it('should return code 200 trying to delete verificationURI', function (done) {
+//            request(url)
+//                .del('/v1/verificationuri')
+//                // end handles the response
+//                .end(function (err, res) {
+//                    if (err) {
+//                        throw err;
+//                    }
+//                    //console.log('response : ',res.text);
+//                    // this is should.js syntax, very clear
+//                    res.should.have.status(200);
+//                    done();
+//                });
+//        });
     });
 
     describe('verify', function () {
@@ -242,7 +244,7 @@ describe('verificationServerTest', function () {
             };
 
             request(url)
-                .post('/v1/verify/1234567890')
+                .get('/v1/verify/1234567890')
                 .set('hash', '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9')
                 .send(body)
                 // end handles the response

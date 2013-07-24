@@ -9,7 +9,7 @@ var logger = require('../logger'),
 var verifyHandler = function () {
 };
 
-verifyHandler.prototype.post = function (req, res, client) {
+verifyHandler.prototype.get = function (req, res, client) {
     try {
         logger.debug('key : ', req.params.id);
         var hash = req.headers['hash'];
@@ -28,6 +28,7 @@ verifyHandler.prototype.post = function (req, res, client) {
                 }
                 //정규화
                 var serverHash = util.normalize(reply);
+                console.log('hash', hash);
                 var clientHash = req.headers['hash'];
                 logger.debug('serverHash', serverHash);
                 logger.debug('clientHash', clientHash);

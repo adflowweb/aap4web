@@ -45,15 +45,15 @@ exports.setup = function (app, handlers, client) {
     //route verify
     var VERIFY_PATH = '/v1/verify/:id';
 
-    app.post(VERIFY_PATH, function (req, res) {
-        handlers.verifyHandler.post(req, res, client);
+    app.get(VERIFY_PATH, function (req, res) {
+        handlers.verifyHandler.get(req, res, client);
     });
 
     app.put(VERIFY_PATH, function (req, res) {
         res.send(405);
     });
 
-    app.get(VERIFY_PATH, function (req, res) {
+    app.post(VERIFY_PATH, function (req, res) {
         res.send(405);
     });
 
