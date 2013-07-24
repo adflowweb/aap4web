@@ -25,7 +25,7 @@ exports.normalize = function (html) {
     //logger.debug('encoded string : ', enc);
     //console.log('hash : ', crypto.createHmac('sha1', key).update('<html>'+$('html').html()+'</html>').digest('hex'));
     var hash = crypto.createHash('sha1').update(enc).digest('hex');
-    logger.debug('hash : ', hash);
+    logger.debug(__filename + ' hash : ', hash);
     //res.end('<html>'+$('html').html()+'</html>');
     return hash;
 };

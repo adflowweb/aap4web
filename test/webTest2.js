@@ -50,7 +50,7 @@ describe('webTest2', function () {
                 request(httpUrl)
                     .get('/test001/index.jsp')
                     .set('cookie', cookie)
-                    .set('hash', 'fe8a4261f96a7fb71f1d88b05478acf469fdf10f')
+                    .set('hash', '2be88ca4242c76e8253ac62474851065032d6833')
                     // end handles the response
                     .end(function (err, res) {
                         if (err) {

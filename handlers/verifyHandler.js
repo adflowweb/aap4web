@@ -13,7 +13,7 @@ verifyHandler.prototype.get = function (req, res, client) {
     try {
         logger.debug(__filename + ' key : ', req.params.id);
         var hash = req.headers['hash'];
-        logger.debug(__filename + ' clientHash#1', hash);
+        logger.debug(__filename + ' clientHash', hash);
         client.get(req.params.id, function (err, reply) {
             try {
                 if (err) {
