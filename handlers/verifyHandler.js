@@ -11,9 +11,9 @@ var verifyHandler = function () {
 
 verifyHandler.prototype.get = function (req, res, client) {
     try {
-        logger.debug('key : ', req.params.id);
+        logger.debug(__filename + ' key : ', req.params.id);
         var hash = req.headers['hash'];
-        logger.debug('clientHash#1', hash);
+        logger.debug(__filename + ' clientHash#1', hash);
         client.get(req.params.id, function (err, reply) {
             try {
                 if (err) {
@@ -28,10 +28,10 @@ verifyHandler.prototype.get = function (req, res, client) {
                 }
                 //정규화
                 var serverHash = util.normalize(reply);
-                console.log('hash', hash);
+                logger.debug(__filename + ' hash', hash);
                 var clientHash = req.headers['hash'];
-                logger.debug('serverHash', serverHash);
-                logger.debug('clientHash', clientHash);
+                logger.debug(__filename + ' serverHash', serverHash);
+                logger.debug(__filename + ' clientHash', clientHash);
                 //검증
                 if (serverHash == clientHash) {
                     res.send(200);

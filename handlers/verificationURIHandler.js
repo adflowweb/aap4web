@@ -11,14 +11,14 @@ var verificationUri = function () {
 verificationUri.prototype = {
     post: function (req, res, client) {
         try {
-            logger.debug('req.rawBody : ', req.rawBody);
+            logger.debug(__filename + ' req.rawBody : ', req.rawBody);
             client.set(VERIFICATIONURI, req.rawBody, function (err) {
                 try {
                     if (err) {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug('key set just to be sure');
+                        logger.debug(__filename + ' key set just to be sure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -33,14 +33,14 @@ verificationUri.prototype = {
     },
     put: function (req, res, client) {
         try {
-            logger.debug('req.rawBody : ', req.rawBody);
+            logger.debug(__filename + ' req.rawBody : ', req.rawBody);
             client.set(VERIFICATIONURI, req.rawBody, function (err) {
                 try {
                     if (err) {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug('key set just to be sure');
+                        logger.debug(__filename + ' key set just to be sure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -61,7 +61,7 @@ verificationUri.prototype = {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug('key deleted just to be sure');
+                        logger.debug(__filename + ' key deleted just to be sure');
                         //console.log(util.inspect(arguments))
                         res.send(200);
                     }
@@ -85,7 +85,7 @@ verificationUri.prototype = {
                         return;
                     }
                     if (reply) {
-                        logger.debug('reponse : ', reply);
+                        logger.debug(__filename + ' reponse : ', reply);
                         res.send(reply);
                     } else res.send(404);
                 } catch (e) {

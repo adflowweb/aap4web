@@ -23,7 +23,7 @@ virtualPageHandler.prototype = {
             }
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
-            logger.debug('path : ', path);
+            logger.debug(__filename + ' path : ', path);
 
             try {
                 var val = require(path).post(req, res);
