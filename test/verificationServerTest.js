@@ -20,7 +20,7 @@ describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationS
         done();
     });
 
-    describe('vertualpage', function () {
+    describe('virtualpage', function () {
         it('should return code 200 trying to create virtualpage', function (done) {
             var profile = {
                 username: 'vgheri',
@@ -159,28 +159,28 @@ describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationS
                 });
         });
 
-//        it('should return code 200 trying to modify verificationURI', function (done) {
-//            var body = {
-//                uri: [
-//                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value&key2=value2'}},
-//                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value&key3=value3'}}
-//                ]
-//            };
-//
-//            request(url)
-//                .put('/v1/verificationuri')
-//                .send(body)
-//                // end handles the response
-//                .end(function (err, res) {
-//                    if (err) {
-//                        throw err;
-//                    }
-//                    //console.log('response : ',res.text);
-//                    // this is should.js syntax, very clear
-//                    res.should.have.status(200);
-//                    done();
-//                });
-//        });
+        it('should return code 200 trying to modify verificationURI', function (done) {
+            var body = {
+                uri: [
+                    {uri: '/test001/index.jsp', options: {'qryStr': 'key=value&key2=value2'}},
+                    {uri: '/test001/TestServlet', options: {'qryStr': 'key=value&key3=value3'}}
+                ]
+            };
+
+            request(url)
+                .put('/v1/verificationuri')
+                .send(body)
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    //console.log('response : ',res.text);
+                    // this is should.js syntax, very clear
+                    res.should.have.status(405);
+                    done();
+                });
+        });
 
         it('should return code 200 trying to get verificationURI', function (done) {
             // once we have specified the info we want to send to the server via POST verb,
@@ -201,20 +201,20 @@ describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationS
                 });
         });
 
-//        it('should return code 200 trying to delete verificationURI', function (done) {
-//            request(url)
-//                .del('/v1/verificationuri')
-//                // end handles the response
-//                .end(function (err, res) {
-//                    if (err) {
-//                        throw err;
-//                    }
-//                    //console.log('response : ',res.text);
-//                    // this is should.js syntax, very clear
-//                    res.should.have.status(200);
-//                    done();
-//                });
-//        });
+        it('should return code 200 trying to delete verificationURI', function (done) {
+            request(url)
+                .del('/v1/verificationuri')
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    //console.log('response : ',res.text);
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+        });
     });
 
     describe('verify', function () {

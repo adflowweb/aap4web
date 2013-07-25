@@ -44,8 +44,8 @@ describe('web test #1\n\t\tget session /notice_list.do \n\t\tverify /notice_cont
 
     describe('verify', function () {
         it('should return code 200 trying to verify hashValue', function (done) {
-            // async 호출이기 때문에 시간차로 인해 before가 수행되기전에
-            // 먼저 수행되어 404(notFound)가 발생할 수 있으므로 setTimeout(sleep 500ms) 추가
+            // async 호출이기 때문에 시간차로 인해 before 수행되기전에
+            // 먼저 수행되어 404(notFound)가 발생할 수 있으므로 setTimeout(sleep 500ms) 추가 ?????
             //setTimeout(function () {
                 request(httpUrl)
                     .get('/notice_content.do?board_ndx=939&rowNum=11&cnt=21')

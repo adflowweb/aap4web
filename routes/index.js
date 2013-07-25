@@ -31,7 +31,8 @@ exports.setup = function (app, handlers, client) {
     });
 
     app.put(VERIFICATIONURI_PATH, function (req, res) {
-        handlers.verificationuri.put(req, res, client);
+        res.send(405);
+        //handlers.verificationuri.put(req, res, client);
     });
 
     app.get(VERIFICATIONURI_PATH, function (req, res) {
