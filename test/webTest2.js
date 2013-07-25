@@ -9,7 +9,7 @@ var should = require('should')
     , verificationUrl = 'http://127.0.0.1:3000'
     , cookie;
 
-describe('웹테스트#2 :  /test001/index.jsp 에서 세션을 얻어오고 \n\t\t/test001/index.jsp로 검증하고 가상페이지를 삭제한다. \n\t\t서버주소 : 127.0.0.1:8080& 127.0.0.1:3000 \n\t\tfile : webTest2.js', function () {
+describe('web test#2 :  get session /test001/index.jsp \n\t\tverify /test001/index.jsp and delete virtual page. \n\t\tenv : 127.0.0.1:8080& 127.0.0.1:3000 \n\t\tfile : webTest2.js', function () {
     before(function (done) {
         request(httpUrl)
             .get('/test001/index.jsp')
