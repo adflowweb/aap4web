@@ -9,7 +9,7 @@ var should = require('should')
     , verificationUrl = 'http://127.0.0.1:3000'
     , cookie;
 
-describe('webTest2', function () {
+describe('웹테스트#2 :  /test001/index.jsp 에서 세션을 얻어오고 \n\t\t/test001/index.jsp로 검증하고 가상페이지를 삭제한다. \n\t\t서버주소 : 127.0.0.1:8080& 127.0.0.1:3000 \n\t\tfile : webTest2.js', function () {
     before(function (done) {
         request(httpUrl)
             .get('/test001/index.jsp')
@@ -26,21 +26,21 @@ describe('webTest2', function () {
             });
     });
 
-//    after(function (done) {
-//        var sessionID = cookie[0].split(';')[0].split('=')[1];
-//        //console.log('sessionID : ', sessionID);
-//        request(verificationUrl)
-//            .del('/v1/virtualpages/' + sessionID)
-//            // end handles the response
-//            .end(function (err, res) {
-//                if (err) {
-//                    throw err;
-//                }
-//                // this is should.js syntax, very clear
-//                res.should.have.status(200);
-//                done();
-//            });
-//    });
+    after(function (done) {
+        var sessionID = cookie[0].split(';')[0].split('=')[1];
+        //console.log('sessionID : ', sessionID);
+        request(verificationUrl)
+            .del('/v1/virtualpages/' + sessionID)
+            // end handles the response
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                // this is should.js syntax, very clear
+                res.should.have.status(200);
+                done();
+            });
+    });
 
     describe('verify', function () {
         it('should return code 200 trying to verify hashValue', function (done) {
