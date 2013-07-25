@@ -159,7 +159,7 @@ describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationS
                 });
         });
 
-        it('should return code 200 trying to modify verificationURI', function (done) {
+        it('should return code 405 trying to modify verificationURI', function (done) {
             var body = {
                 uri: [
                     {uri: '/test001/index.jsp', options: {'qryStr': 'key=value&key2=value2'}},
