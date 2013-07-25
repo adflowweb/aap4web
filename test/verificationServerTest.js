@@ -11,7 +11,7 @@ var winston = require('winston');
 var config = require('../config');
 var url = 'http://127.0.0.1:3000';
 
-describe('검증서버테스트', function () {
+describe('verificationServer', function () {
     // within before() you can run all the operations that are needed to setup your tests. In this case
     // I want to create a connection with the database, and when I'm done, I call done().
     before(function (done) {
@@ -20,7 +20,7 @@ describe('검증서버테스트', function () {
         done();
     });
 
-    describe('가상페이지', function () {
+    describe('vertualpage', function () {
         it('should return code 200 trying to create virtualpage', function (done) {
             var profile = {
                 username: 'vgheri',
@@ -133,7 +133,7 @@ describe('검증서버테스트', function () {
 //        });
     });
 
-    describe('검증 uri', function () {
+    describe('verification uri', function () {
         it('should return code 200 trying to create verificationURI', function (done) {
 //            var body = {
 //                uri: [
@@ -217,7 +217,7 @@ describe('검증서버테스트', function () {
 //        });
     });
 
-    describe('윕위변조검증', function () {
+    describe('verify', function () {
         it('should return code 200 trying to create virtualpage', function (done) {
             request(url)
                 .post('/v1/virtualpages/1234567890')

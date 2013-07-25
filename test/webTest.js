@@ -9,7 +9,7 @@ var should = require('should')
     , verificationUrl = 'http://192.168.1.19:3000'
     , cookie;
 
-describe('웹테스트#1 :  /notice_list.do 에서 세션을 얻고 \n\t\t페이지를 검증(/notice_content.do?board_ndx=939&rowNum=11&cnt=21)하고 \n\t\t가상페이지를 삭제한다. \n\t\t서버주소 : 192.168.1.19:8080& 192.168.1.19:3000 \n\t\tfile : webTest.js', function () {
+describe('web test #1 :  /notice_list.do 에서 세션을 얻고 \n\t\t페이지를 검증(/notice_content.do?board_ndx=939&rowNum=11&cnt=21)하고 \n\t\t가상페이지를 삭제한다. \n\t\t서버주소 : 192.168.1.19:8080& 192.168.1.19:3000 \n\t\tfile : webTest.js', function () {
     before(function (done) {
         request(httpUrl)
             .get('/notice_list.do')
