@@ -7,24 +7,15 @@ var parser = require('cheerio'),
     crypto = require('crypto'),
     logger = require('./logger');
 
-exports.normalize = function (html) {
-    var $ = parser.load(html);
-    var responseData = $('html').html().replace(/[\n\r]/g, '').replace(/\s+/g, '');
-    //logger.debug('response data : ', responseData);
-    //logger.debug('----------------------------------------------');
-    var enc = encodeURIComponent(responseData);
-    //var key = 'abcdeg'
-    //console.log('hash : ', crypto.createHash('sha1').update('this is test').digest('hex'));
-    //var bytes = Buffer.byteLength(responseData, 'utf8');
-    //var hex = '';
-    //console.log(responseData.length + " characters, " + bytes + " bytes");
-    //for (var i = 0; i < bytes; i++) {
-    //    hex += responseData.charCodeAt(i).toString(16);
-    //    //console.log('hex : ', hex);
-    //}
-    //logger.debug('encoded string : ', enc);
-    //console.log('hash : ', crypto.createHmac('sha1', key).update('<html>'+$('html').html()+'</html>').digest('hex'));
-    var hash = crypto.createHash('sha1').update(enc).digest('hex');
+exports.normalize = function (data) {
+    //logger.debug(__filename + ' data : ', data);
+    var normalizedData = encodeURIComponent(data.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
+    //logger.debug(__filename + ' normalizedData : ', normalizedData);
+    return normalizedData;
+};
+
+exports.hash = function (data) {
+    var hash = crypto.createHash('sha1').update(data).digest('hex');
     logger.debug(__filename + ' hash : ', hash);
     //res.end('<html>'+$('html').html()+'</html>');
     return hash;

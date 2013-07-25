@@ -245,7 +245,7 @@ describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationS
 
             request(url)
                 .get('/v1/verify/1234567890')
-                .set('hash', '3399cb41c8b4f4bce3ef39cb2d3ed4dd4b1371a9')
+                .set('hash', '6477ae1b06347222f72b185a12e525905f7bbdf8')
                 .send(body)
                 // end handles the response
                 .end(function (err, res) {
