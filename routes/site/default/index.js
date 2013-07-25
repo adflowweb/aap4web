@@ -8,7 +8,7 @@ var parser = require('cheerio'),
     logger = require('../../../logger');
 
 exports.post = function (req, res) {
-    logger.debug('called post default/index.js');
+    logger.debug(__filename + ' called post default/index.js');
     //logger.debug('req.xhr : ', req.xhr);
     //logger.debug('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
@@ -16,7 +16,7 @@ exports.post = function (req, res) {
 };
 
 exports.put = function (req, res, data) {
-    logger.debug('called put default/index.js');
+    logger.debug(__filename + ' called put default/index.js');
     var $ = parser.load(data);
     //req 에서 변경데이타를 뽑아
     //virtual dom 에 적용하는 코드

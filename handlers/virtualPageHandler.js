@@ -59,7 +59,7 @@ virtualPageHandler.prototype = {
             }
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
-            logger.debug('path : ', path);
+            logger.debug(__filename + ' path : ', path);
             client.get(req.params.id, function (err, reply) {
                 try {
                     if (err) {
@@ -107,7 +107,7 @@ virtualPageHandler.prototype = {
     //delete virtualPage
     delete: function (req, res, client) {
         try {
-            logger.debug('key : ', req.params.id);
+            logger.debug(__filename + ' key : ', req.params.id);
             client.del(req.params.id, function (err) {
                 //console.log(util.inspect(arguments))
                 try {
@@ -115,7 +115,7 @@ virtualPageHandler.prototype = {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug('key deleted just to be sure');
+                        logger.debug(__filename + ' key deleted just to be sure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -131,7 +131,7 @@ virtualPageHandler.prototype = {
     //read virtualPage
     get: function (req, res, client) {
         try {
-            logger.debug('key : ', req.params.id);
+            logger.debug(__filename + ' key : ', req.params.id);
             client.get(req.params.id, function (err, reply) {
                 try {
                     if (err) {
