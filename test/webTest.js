@@ -9,7 +9,7 @@ var should = require('should')
     , verificationUrl = 'http://192.168.1.19:3000'
     , cookie;
 
-describe('web test #1 : get session /notice_list.do \n\t\tverify /notice_content.do?board_ndx=939&rowNum=11&cnt=21\n\t\tdelete virtualpage. \n\t\tenv : 192.168.1.19:8080& 192.168.1.19:3000 \n\t\tfile : webTest.js', function () {
+describe('web test #1\n\t\tget session /notice_list.do \n\t\tverify /notice_content.do?board_ndx=939&rowNum=11&cnt=21\n\t\tdelete virtualpage. \n\t\tenv : 192.168.1.19:8080& 192.168.1.19:3000 \n\t\tfile : webTest.js', function () {
     before(function (done) {
         request(httpUrl)
             .get('/notice_list.do')
