@@ -8,7 +8,7 @@ var parser = require('cheerio'),
     logger = require('./logger');
 
 exports.normalize = function (data) {
-    //logger.debug(__filename + ' data : ', data);
+    logger.debug(__filename + ' data : ', data);
     var normalizedData = encodeURIComponent(data.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
     //logger.debug(__filename + ' normalizedData : ', normalizedData);
     return normalizedData;

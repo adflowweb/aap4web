@@ -201,20 +201,20 @@ describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationS
                 });
         });
 
-        it('should return code 200 trying to delete verificationURI', function (done) {
-            request(url)
-                .del('/v1/verificationuri')
-                // end handles the response
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    //console.log('response : ',res.text);
-                    // this is should.js syntax, very clear
-                    res.should.have.status(200);
-                    done();
-                });
-        });
+//        it('should return code 200 trying to delete verificationURI', function (done) {
+//            request(url)
+//                .del('/v1/verificationuri')
+//                // end handles the response
+//                .end(function (err, res) {
+//                    if (err) {
+//                        throw err;
+//                    }
+//                    //console.log('response : ',res.text);
+//                    // this is should.js syntax, very clear
+//                    res.should.have.status(200);
+//                    done();
+//                });
+//        });
     });
 
     describe('verify', function () {
