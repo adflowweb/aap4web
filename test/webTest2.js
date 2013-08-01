@@ -46,21 +46,21 @@ describe('web test#2 \n\t\tget session /test001/index.jsp \n\t\tverify /test001/
         it('should return code 200 trying to verify hashValue', function (done) {
             // async 호출이기 때문에 시간차로 인해 before 수행되기전에
             // 먼저 수행되어 404(notFound)가 발생할 수 있으므로 setTimeout(sleep 500ms) 추가 ?????
-            setTimeout(function () {
-                request(httpUrl)
-                    .get('/test001/index.jsp')
-                    .set('cookie', cookie)
-                    .set('hash', '2be88ca4242c76e8253ac62474851065032d6833')
-                    // end handles the response
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
-                        // this is should.js syntax, very clear
-                        res.should.have.status(200);
-                        done();
-                    });
-            }, 500);
+            //setTimeout(function () {
+            request(httpUrl)
+                .get('/test001/index.jsp')
+                .set('cookie', cookie)
+                .set('hash', '6f734d5299ab06937e12fa722a5d86a7edbab479')
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // this is should.js syntax, very clear
+                    res.should.have.status(200);
+                    done();
+                });
+            // }, 500);
         });
     });
 });
