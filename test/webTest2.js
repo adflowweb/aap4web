@@ -26,21 +26,21 @@ describe('web test#2 \n\t\tget session /test001/index.jsp \n\t\tverify /test001/
             });
     });
 
-//    after(function (done) {
-//        var sessionID = cookie[0].split(';')[0].split('=')[1];
-//        //console.log('sessionID : ', sessionID);
-//        request(verificationUrl)
-//            .del('/v1/virtualpages/' + sessionID)
-//            // end handles the response
-//            .end(function (err, res) {
-//                if (err) {
-//                    throw err;
-//                }
-//                // this is should.js syntax, very clear
-//                res.should.have.status(200);
-//                done();
-//            });
-//    });
+    after(function (done) {
+        var sessionID = cookie[0].split(';')[0].split('=')[1];
+        //console.log('sessionID : ', sessionID);
+        request(verificationUrl)
+            .del('/v1/virtualpages/' + sessionID)
+            // end handles the response
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                // this is should.js syntax, very clear
+                res.should.have.status(200);
+                done();
+            });
+    });
 
     describe('verify', function () {
         it('should return code 200 trying to verify hashValue', function (done) {
