@@ -9,18 +9,24 @@ var parser = require('cheerio'),
 
 
 exports.post = function (req, res) {
-    //console.log('req.rawBody : ', req.rawBody);
+    console.log('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
     //var xhr = req.headers['x-requested-with'];
     //__dirname
     //logger.debug(arguments.callee.toString());
 
-    logger.debug( __filename + ' req.xhr : ', req.xhr);
+    logger.debug(__filename + ' req.xhr : ', req.xhr);
     //$('head').append('<script>function formsummit(){return 1;}</script>');
     $("h3").append("Login Example");
-    logger.debug( __filename + ' user id : ', req.params.id);
+    logger.debug(__filename + ' user id : ', req.params.id);
     //client.set(req.params.id, '<html>' + $('html').html() + '</html>', client.print);
     //logger.debug('modified : ', '<html>' + $('html').html() + '</html>');
-    return '<html>' + $('html').html() + '</html>';
+
+    if ($('html').html()) {
+        return '<html>' + $('html').html() + '</html>';
+    }
+    else {
+        return '<HTML>' + $('HTML').html() + '</HTML>';
+    }
 };
 

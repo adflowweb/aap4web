@@ -12,7 +12,12 @@ exports.post = function (req, res) {
     //logger.debug('req.xhr : ', req.xhr);
     //logger.debug('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
-    return '<html>' + $('html').html() + '</html>';
+    if ($('html').html()) {
+        return '<html>' + $('html').html() + '</html>';
+    }
+    else {
+        return '<HTML>' + $('HTML').html() + '</HTML>';
+    }
 };
 
 exports.put = function (req, res, data) {
@@ -21,6 +26,11 @@ exports.put = function (req, res, data) {
     //req 에서 변경데이타를 뽑아
     //virtual dom 에 적용하는 코드
     //...
-    return  '<html>' + $('html').html() + '</html>';
+    if ($('html').html()) {
+        return '<html>' + $('html').html() + '</html>';
+    }
+    else {
+        return '<HTML>' + $('HTML').html() + '</HTML>';
+    }
 }
 
