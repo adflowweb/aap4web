@@ -16,7 +16,7 @@ exports.normalize = function (data) {
 
 exports.hash = function (data) {
     //logger.debug(__filename + ' data : ', data);
-    var hash = crypto.createHash('sha1').update(data).digest('hex');
+    var hash = crypto.createHash('sha256').update(data).digest('hex');
     logger.debug(__filename + ' hash : ', hash);
     //res.end('<html>'+$('html').html()+'</html>');
     return hash;
