@@ -13,10 +13,12 @@ exports.post = function (req, res) {
     //logger.debug('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
     if ($('html').html()) {
-        return '<html>' + $('html').html() + '</html>';
+        //return '<html>' + $('html').html() + '</html>';
+        return $('html').html();
     }
     else {
-        return '<HTML>' + $('HTML').html() + '</HTML>';
+        //return '<HTML>' + $('HTML').html() + '</HTML>';
+        return $('html').html();
     }
 };
 
@@ -27,10 +29,12 @@ exports.put = function (req, res, data) {
     //virtual dom 에 적용하는 코드
     //...
     if ($('html').html()) {
-        return '<html>' + $('html').html() + '</html>';
+        //return '<html>' + $('html').html() + '</html>';
+        return $('html').html();
     }
     else {
-        return '<HTML>' + $('HTML').html() + '</HTML>';
+        //return '<HTML>' + $('HTML').html() + '</HTML>';
+        return $('html').html();
     }
 }
 
