@@ -27,9 +27,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                     return;
                 }
                 //정규화
-                var nornalizedData = util.normalize(reply);
+                //var nornalizedData = util.normalize(reply);
                 //hash
-                var serverHash = util.hash(nornalizedData);
+                //var serverHash = util.hash(nornalizedData);
+                //임시코드 -- 정규화 제거
+                var serverHash = util.hash(reply);
                 logger.debug(__filename + ' hash', hash);
                 var clientHash = req.headers['hash'];
                 logger.debug(__filename + ' serverHash', serverHash);
