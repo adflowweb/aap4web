@@ -1,17 +1,31 @@
 /**
- * User: nadir93
- * Date: 13. 8. 13.
- * Time: 오전 10:31
+ * User: nadir
+ * Date: 13. 7. 5
+ * Time: 오후 2:47
  */
-var jsdom = require('jsdom'),
+var parser = require('cheerio'),
+    crypto = require('crypto'),
     logger = require('../../../../logger');
 
-exports.post = function (req, res) {
-    logger.debug(__filename + ' called post default/index_jsdom.js');
-    //logger.debug('req.xhr : ', req.xhr);
-    //logger.debug('req.rawBody : ', req.rawBody);
 
-    var window = jsdom.jsdom(req.rawBody).createWindow();
-    logger.debug(__filename + ' jsdom : ', window.document.documentElement.innerHTML);
-    return window.document.documentElement.innerHTML
+exports.post = function (req, res) {
+    //console.log('req.rawBody : ', req.rawBody);
+    var $ = parser.load(req.rawBody);
+    //var xhr = req.headers['x-requested-with'];
+    //__dirname
+    //logger.debug(arguments.callee.toString());
+
+    logger.debug(__filename + ' req.xhr : ', req.xhr);
+    //$('head').append('<script>function formsummit(){return 1;}</script>');
+    $("h3").append("Login Example");
+    logger.debug(__filename + ' user id : ', req.params.id);
+    //client.set(req.params.id, '<html>' + $('html').html() + '</html>', client.print);
+    //logger.debug('modified : ', '<html>' + $('html').html() + '</html>');
+
+    if ($('html').html()) {
+        return $('html').html();
+    }
+    else {
+        return $('HTML').html();
+    }
 };
