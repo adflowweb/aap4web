@@ -8,7 +8,7 @@ var jsdom = require('jsdom'),   //.jsdom,
 
 exports.post = function (req, res) {
 
-    var window = jsdom.jsdom().parentWindow;
+    var window = jsdom.jsdom(req.rawBody).parentWindow;
 
     jsdom.jQueryify(window, "http://code.jquery.com/jquery.js", function () {
         //window.$("body").append('<div class="testing">Hello World, It works</div>');
