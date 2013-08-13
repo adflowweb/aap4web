@@ -22,6 +22,8 @@ exports.post = function (req, res) {
     //client.set(req.params.id, '<html>' + $('html').html() + '</html>', client.print);
     //logger.debug('modified : ', '<html>' + $('html').html() + '</html>');
 
+    logger.debug(__filename + ' $("html").html : ', $('html').html());
+
     if ($('html').html()) {
         return $('html').html();
     }

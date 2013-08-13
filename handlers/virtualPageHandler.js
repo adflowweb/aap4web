@@ -27,11 +27,12 @@ virtualPageHandler.prototype = {
 
             try {
                 var val = require(path).post(req, res);
-                logger.debug(__filename + ' stored data : ', val);
             } catch (e) {
                 logger.error(e.stack);
                 val = require(DEFAULT_INDEX_JS).post(req, res);
             }
+
+            logger.debug(__filename + ' stored data : ', val);
 
             //set page
             client.set(req.params.id, val, function (err) {
