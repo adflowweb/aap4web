@@ -3,18 +3,23 @@
  * Date: 13. 8. 13.
  * Time: 오전 10:31
  */
-var jsdom = require('jsdom'),   //.jsdom,
+var jsdom = require('jsdom').jsdom,
     logger = require('../../../logger');
 
 exports.post = function (req, res) {
 
-    var window = jsdom.jsdom(req.rawBody,jsdom.level(1, "core")).parentWindow;
+    var document = jsdom(req.rawBody, jsdom.level(1, "core"));
+    var window = document.parentWindow;
 
-    jsdom.jQueryify(window, "http://code.jquery.com/jquery.js", function () {
-        //window.$("body").append('<div class="testing">Hello World, It works</div>');
+    logger.debug(__filename + ' jsdom : ', window.document.innerHTML);
 
-        logger.debug(__filename + ' jsdom : ', window.$('html').html());
-    });
+//    var window = jsdom.jsdom(req.rawBody, jsdom.level(1, "core")).parentWindow;
+//
+//    jsdom.jQueryify(window, "http://code.jquery.com/jquery.js", function () {
+//        //window.$("body").append('<div class="testing">Hello World, It works</div>');
+//
+//        logger.debug(__filename + ' jsdom : ', window.$('html').html());
+//    });
 
 //////    var document = jsdom(req.rawBody);
 //////    var window = document.parentWindow;
