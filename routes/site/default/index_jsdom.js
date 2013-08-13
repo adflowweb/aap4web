@@ -3,12 +3,12 @@
  * Date: 13. 8. 13.
  * Time: 오전 10:31
  */
-var jsdom = require('jsdom').jsdom,
+var jsdom = require('jsdom'),
     logger = require('../../../logger');
 
 exports.post = function (req, res) {
 
-    var document = jsdom(req.rawBody, jsdom.level(1, "core"), options);
+    var document = jsdom.jsdom(req.rawBody, jsdom.level(1, "core"));
     var window = document.parentWindow;
 
     logger.debug(__filename + ' jsdom : ', window.document.innerHTML);
