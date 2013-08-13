@@ -3,17 +3,25 @@
  * Date: 13. 8. 13.
  * Time: 오전 10:31
  */
-var jsdom = require('jsdom').jsdom,
+var jsdom = require('jsdom'),   //.jsdom,
     logger = require('../../../logger');
 
 exports.post = function (req, res) {
 
-    var document = jsdom(req.rawBody);
-    var window = document.parentWindow;
+    var window = jsdom.jsdom().parentWindow;
 
-    logger.debug(__filename + ' jsdom : ', window.document.documentElement.innerHTML);
+    jsdom.jQueryify(window, "http://code.jquery.com/jquery.js", function () {
+        //window.$("body").append('<div class="testing">Hello World, It works</div>');
 
-    return window.document.documentElement.innerHTML;
+        logger.debug(__filename + ' jsdom : ', window.$('html').html());
+    });
+
+//////    var document = jsdom(req.rawBody);
+//////    var window = document.parentWindow;
+//////
+//////    logger.debug(__filename + ' jsdom : ', window.document.documentElement.innerHTML);
+//////
+//////    return window.document.documentElement.innerHTML;
 
 
 //    logger.debug(__filename + ' called post default/index_jsdom.js');
