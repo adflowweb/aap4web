@@ -8,7 +8,7 @@ var jsdom = require('jsdom').jsdom,
 
 exports.post = function (req, res) {
 
-    var document = jsdom(req.rawBody, jsdom.level(1, "core"));
+    var document = jsdom(req.rawBody, jsdom.level(1, "core"), options);
     var window = document.parentWindow;
 
     logger.debug(__filename + ' jsdom : ', window.document.innerHTML);
