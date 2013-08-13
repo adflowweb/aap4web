@@ -8,10 +8,10 @@ var jsdom = require('jsdom'),
 
 exports.post = function (req, res) {
 
-    var document = jsdom.jsdom(req.rawBody, jsdom.level(3, "html"));
+    var document = jsdom.jsdom(req.rawBody, jsdom.level(3, "core"));
     var window = document.parentWindow;
 
-    logger.debug(__filename + ' jsdom level3 html: ', window.document.innerHTML);
+    logger.debug(__filename + ' jsdom level3 core: ', window.document.innerHTML);
 
 //    var window = jsdom.jsdom(req.rawBody, jsdom.level(1, "core")).parentWindow;
 //
