@@ -5,7 +5,7 @@
  */
 var util = require('util'),
     logger = require('../logger'),
-    DEFAULT_INDEX_JS = '../routes/site/default/index.js',
+    DEFAULT_INDEX_JS = '../routes/site/default/index_jsdom.js',
     RESPONSE_MESSAGE = '{"error":{"code":400,"message":"virtual_page_uri header not found"}}';
 
 var virtualPageHandler = function () {
