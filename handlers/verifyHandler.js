@@ -35,7 +35,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 logger.debug(__filename + ' serverHash', serverHash);
                 logger.debug(__filename + ' clientHash', clientHash);
                 //검증
-                if (serverHash == clientHash) {
+                if (serverHash.toUpperCase() == clientHash.toUpperCase()) {
                     res.send(200);
                 } else res.send(505);
             } catch (e) {
