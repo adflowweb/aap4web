@@ -7,16 +7,16 @@ var htmlparser = require("htmlparser");
 var fs = require('fs');
 var sys = require('sys');
 
-var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/sample01.html');
+var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/sample002.html');
 
 //var rawHtml = "Xyz <script language= javascript>var foo = '<<bar>>';< /  script><!--<!-- Waah! -- -->";
 var handler = new htmlparser.DefaultHandler(function (error, dom) {
             if (error) {
-                //[...do something for errors...]
+               console.log(error);
             } else {
-                //[...parsing done, do something...]   }
+                console.log(dom);
             }
-        }, { verbose: false, ignoreWhitespace: true, enforceEmptyTags: false }
+        }, { verbose: false, ignoreWhitespace: true, enforceEmptyTags: true }
     )
     ;
 var parser = new htmlparser.Parser(handler);
