@@ -3,39 +3,29 @@
  * Date: 13. 7. 5
  * Time: 오후 2:47
  */
-var jsdom = require('jsdom').jsdom,
+var parser = require('cheerio'),
     crypto = require('crypto'),
     logger = require('../../../../logger');
 
 
 exports.post = function (req, res) {
+    //console.log('req.rawBody : ', req.rawBody);
+    var $ = parser.load(req.rawBody);
+    //var xhr = req.headers['x-requested-with'];
+    //__dirname
+    //logger.debug(arguments.callee.toString());
 
-    var document = jsdom(req.rawBody);
-    var window = document.parentWindow;
+    logger.debug(__filename + ' req.xhr : ', req.xhr);
+    //$('head').append('<script>function formsummit(){return 1;}</script>');
+    $("h3").append("Login Example");
+    logger.debug(__filename + ' user id : ', req.params.id);
+    //client.set(req.params.id, '<html>' + $('html').html() + '</html>', client.print);
+    //logger.debug('modified : ', '<html>' + $('html').html() + '</html>');
 
-    logger.debug(__filename + ' jsdom : ', window.document.documentElement.innerHTML);
-
-    return window.document.documentElement.innerHTML;
-
-    //var window = jsdom.jsdom(req.rawBody).createWindow();
-    //logger.debug(__filename + ' jsdom : ', window.document.documentElement.innerHTML);
-    //return window.document.documentElement.innerHTML
-
-
-//    jsdom.jQueryify(window, function () {
-//        logger.debug(__filename + ' jquery version : ', window.$().jquery);
-//        // console.log(window.document.innerHTML);
-//        logger.debug(__filename + ' jsdom : ', window.$('html').html());
-//        // console.log(window.location);
-//        //res.end("<html>"+window.$('html').html()+"</html>")
-//        if (window.$('html').html()) {
-//            return window.$('html').html();
-//        }
-//        else {
-//            //return '<HTML>' + $('HTML').html() + '</HTML>';
-//            return window.$('HTML').html();
-//        }
-//    });html
-
-
+    if ($('html').html()) {
+        return $('html').html();
+    }
+    else {
+        return $('HTML').html();
+    }
 };
