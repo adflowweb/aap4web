@@ -35,7 +35,7 @@ exports.put = function (req, res, data) {
     return  '<html>' + $('html').html() + '</html>';
 }
 
-exports.POST = function (req, res, data) {
+exports.post = function (req, res, data) {
     //console.log('req.headers : ', req.headers);
     //console.log('----------------------------------------------');
     var $ = parser.load(data);
