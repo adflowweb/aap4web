@@ -5,11 +5,19 @@
  */
 var util = require('util'),
     logger = require('../logger'),
+    tidy = require('htmltidy').tidy,
     DEFAULT_INDEX_JS = '../routes/site/default/index.js',
     RESPONSE_MESSAGE = '{"error":{"code":400,"message":"virtual_page_uri header not found"}}';
 
 var virtualPageHandler = function () {
 };
+
+var opts = {
+    //doctype: 'html5',
+    hideComments: true, //  multi word options can use a hyphen or "camel case"
+    indent: true,
+    'sort-attributes': 'alpha'
+}
 
 virtualPageHandler.prototype = {
     //create virtualPage
@@ -32,20 +40,34 @@ virtualPageHandler.prototype = {
                 val = require(DEFAULT_INDEX_JS).post(req, res);
             }
 
-            logger.debug(__filename + ' stored data : ', val);
+            tidy(val, opts, function (err, html) {
+                //console.log(encodeURIComponent(html.replace(/[\n\r]/g, '').replace(/\s+/g, '')));
+                var cleanedHtml = html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, '').substring(html.indexOf('<head>'));
+                cleanedHtml= cleanedHtml.substring(0, cleanedHtml.indexOf('</html>'));
+                //.replace('//]]>/g',''));
+                //$string = str_replace("//<![CDATA[","",$string);
+                //$string = str_replace("//]]>","",$string);
+                //console.log('value : ', html);
 
-            //set page
-            client.set(req.params.id, val, function (err) {
-                try {
-                    if (err) {
-                        logger.error('error : ', err);
-                        res.send(err.message, 500);
-                    } else res.send(200);
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
-                }
+                //set page
+                client.set(req.params.id, cleanedHtml, function (err) {
+                    try {
+                        if (err) {
+                            logger.error('error : ', err);
+                            res.send(err.message, 500);
+                        } else {
+                            logger.debug(__filename + ' stored data : ', cleanedHtml);
+                            res.send(200);
+                        }
+                    } catch (e) {
+                        logger.error(e.stack);
+                        res.send(e.message, 500);
+                    }
+                });
+
             });
+
+
         } catch (e) {
             logger.error(e.stack);
             res.send(e.message, 500);
