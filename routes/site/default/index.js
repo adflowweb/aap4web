@@ -12,6 +12,9 @@ exports.post = function (req, res) {
     //logger.debug('req.xhr : ', req.xhr);
     //logger.debug('req.rawBody : ', req.rawBody);
     var $ = parser.load(req.rawBody);
+    var testData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
+    logger.debug(__filename + ' testData : ', testData);
+
     if ($('html').html()) {
         return $('html').html();
     }
