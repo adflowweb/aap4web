@@ -12,7 +12,7 @@ exports.normalize = function (data) {
     var $ = parser.load('<html>' + data + '</html>');
     //logger.debug(__filename + ' before data : ', data);
     logger.debug(__filename + ' test data : ', $('html').text());
-    var normalizedData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
+    var normalizedData = encodeURIComponent($('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, ''));
     //encodeURIComponent(data.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
     logger.debug(__filename + ' normalizedData : ', normalizedData);
     return normalizedData;
