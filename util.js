@@ -9,7 +9,7 @@ var parser = require('cheerio'),
 
 exports.normalize = function (data) {
     logger.debug(__filename + ' before data : ', data);
-    var $ = parser.load(data);
+    var $ = parser.load('<html>' + data + '</html>');
     //logger.debug(__filename + ' before data : ', data);
     var normalizedData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
     //encodeURIComponent(data.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
