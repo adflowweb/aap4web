@@ -8,6 +8,7 @@ var parser = require('cheerio'),
     logger = require('./logger');
 
 exports.normalize = function (data) {
+    logger.debug(__filename + ' before data : ', data);
     var $ = parser.load(data);
     //logger.debug(__filename + ' before data : ', data);
     var normalizedData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
