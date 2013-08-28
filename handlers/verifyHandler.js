@@ -75,6 +75,13 @@ verifyHandler.prototype.get = function (req, res, client) {
                         }
                         else {
                             //else process static resource
+                            logger.debug(__filename + ' serverHash', reply);
+                            logger.debug(__filename + ' clientHash', hash[index[i]]);
+                            //검증
+                            if (reply.toUpperCase() != hash[index[i]].toUpperCase()) {
+                                res.send(505);
+                                return;
+                            }
                         }
                         verify(++i);
                     })
@@ -84,6 +91,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 }
             }
             else {
+                //최종 response
                 res.send(200);
             }
         }
