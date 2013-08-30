@@ -13,7 +13,7 @@ exports.normalize = function (data) {
     //logger.debug(__filename + ' before data : ', data);
 
     //var msg = $('html').text();
-    var msg = '<html>' + $('html').html() + '</html>';
+    var msg = $('html').html();
     logger.debug(__filename + ' $("html").html() : ', msg);
 
 
