@@ -10,6 +10,11 @@ var parser = require('cheerio'),
 exports.normalize = function (data) {
     logger.debug(__filename + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
+    $('meta').remove();
+    $('param').remove();
+    $('*[style]').removeAttr('style');
+    $('*[value]').removeAttr('value');
+    $('*[type]').removeAttr('type');
     //logger.debug(__filename + ' before data : ', data);
 
     //var msg = $('html').text();
@@ -18,9 +23,9 @@ exports.normalize = function (data) {
 
 
     //testCode
-    msg = msg.replace(/style=\"[\w\#\'\(\)\-\.\,\/\:\;\_\s]*\"|value=\"\w+\"|type=\"[\w\/]+\"/g, '');
-    msg = msg.replace(/\<meta\scontent=[\w\"\#\(\)\-\.\,\/\:\;\_\s\=]*\/\>/g, '');
-    msg = msg.replace(/\<param\s[\w\=\"\'\s\r\n\/\.\,]*\/\>/g, '');
+    //msg = msg.replace(/style=\"[\w\#\'\(\)\-\.\,\/\:\;\_\s]*\"|value=\"\w+\"|type=\"[\w\/]+\"/g, '');
+    //msg = msg.replace(/\<meta\scontent=[\w\"\#\(\)\-\.\,\/\:\;\_\s\=]*\/\>/g, '');
+    //msg = msg.replace(/\<param\s[\w\=\"\'\s\r\n\/\.\,]*\/\>/g, '');
     logger.debug(__filename + ' test data : ', msg);
     //testEnd
     var normalizedData = encodeURIComponent(msg.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
