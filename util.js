@@ -11,8 +11,18 @@ exports.normalize = function (data) {
     logger.debug(__filename + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
     //logger.debug(__filename + ' before data : ', data);
-    logger.debug(__filename + ' test data : ', $('html').text());
-    var normalizedData = encodeURIComponent($('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, ''));
+
+    var msg = $('html').text();
+    logger.debug(__filename + ' $("html").text() : ', msg);
+
+
+    //testCode
+    msg = msg.replace(/style=\"[\w\#\'\(\)\-\.\,\/\:\;\_\s]*\"|value=\"\w+\"|type=\"[\w\/]+\"/g, '');
+    msg = msg.replace(/\<meta\scontent=[\w\"\#\(\)\-\.\,\/\:\;\_\s\=]*\/\>/g, '');
+    msg = msg.replace(/\<param\s[\w\=\"\'\s\r\n\/\.\,]*\/\>/g, '');
+    logger.debug(__filename + ' test data : ', msg);
+    //testEnd
+    var normalizedData = encodeURIComponent(msg.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
     //encodeURIComponent(data.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
     logger.debug(__filename + ' normalizedData : ', normalizedData);
     return normalizedData;
