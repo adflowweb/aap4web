@@ -12,8 +12,9 @@ exports.normalize = function (data) {
     var $ = parser.load('<html>' + data + '</html>');
     //logger.debug(__filename + ' before data : ', data);
 
-    var msg = $('html').text();
-    logger.debug(__filename + ' $("html").text() : ', msg);
+    //var msg = $('html').text();
+    var msg = '<html>' + $('html').html() + '</html>';
+    logger.debug(__filename + ' $("html").html() : ', msg);
 
 
     //testCode
