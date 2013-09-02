@@ -10,11 +10,14 @@ var parser = require('cheerio'),
 exports.normalize = function (data) {
     logger.debug(__filename + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
-    $('meta').remove();
-    $('param').remove();
-    $('*[style]').removeAttr('style');
-    $('*[value]').removeAttr('value');
-    $('*[type]').removeAttr('type');
+    $('meta').remove(); //remove meta tag
+    $('param').remove(); //remove param tag
+    $('link').remove();
+    $('*[style]').removeAttr('style'); //remove style attr
+    $('*[value]').removeAttr('value'); //remove value attr
+    $('*[type]').removeAttr('type'); //remove type attr
+    $('*[selected]').removeAttr('selected'); //remove selected attr
+
     //logger.debug(__filename + ' before data : ', data);
 
     //var msg = $('html').text();

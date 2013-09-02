@@ -10,11 +10,13 @@ var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/ASPN.html');
 
 var $ = parser.load(rawHtml);
 if ($('html').html()) {
-    $('meta').remove();
-    $('param').remove();
-    $('*[style]').removeAttr('style');
-    $('*[value]').removeAttr('value');
-    $('*[type]').removeAttr('type');
+    $('meta').remove(); //remove meta tag
+    $('param').remove(); //remove param tag
+    $('link').remove();
+    $('*[style]').removeAttr('style'); //remove style attr
+    $('*[value]').removeAttr('value'); //remove value attr
+    $('*[type]').removeAttr('type'); //remove type attr
+    $('*[selected]').removeAttr('selected'); //remove selected attr
     //console.log($('html').toArray());
     //console.log($.html());
     //console.log($('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, ''));

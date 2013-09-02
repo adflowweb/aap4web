@@ -10,9 +10,9 @@ var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/sample002.html');
 
 var opts = {
     //doctype: 'html5',
-    //hideComments: true, //  multi word options can use a hyphen or "camel case"
+    hideComments: true, //  multi word options can use a hyphen or "camel case"
     indent: true,
-    'sort-attributes':'alpha'
+    'sort-attributes':'alpha'//,
     //'output-xml': true,
     //'escape-cdata': false
 }
