@@ -12,11 +12,12 @@ exports.normalize = function (data) {
     var $ = parser.load('<html>' + data + '</html>');
     $('meta').remove(); //remove meta tag
     $('param').remove(); //remove param tag
+    $('link[rel="stylesheet"]').remove(); //remove param tag
     $('*[style]').removeAttr('style'); //remove style attr
     $('*[value]').removeAttr('value'); //remove value attr
     $('*[type]').removeAttr('type'); //remove type attr
     $('*[selected]').removeAttr('selected'); //remove selected attr
-    $('*[rel]').removeAttr('rel');
+    //$('*[rel]').removeAttr('rel');
 
     //logger.debug(__filename + ' before data : ', data);
 

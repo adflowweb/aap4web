@@ -12,11 +12,12 @@ var $ = parser.load(rawHtml);
 if ($('html').html()) {
     $('meta').remove(); //remove meta tag
     $('param').remove(); //remove param tag
+    $('link[rel="stylesheet"]').remove(); //remove param tag
     $('*[style]').removeAttr('style'); //remove style attr
     $('*[value]').removeAttr('value'); //remove value attr
     $('*[type]').removeAttr('type'); //remove type attr
     $('*[selected]').removeAttr('selected'); //remove selected attr
-    $('*[rel]').removeAttr('rel');
+    //$('*[rel]').removeAttr('rel');
     //console.log($('html').toArray());
     //console.log($.html());
     //console.log($('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, ''));
