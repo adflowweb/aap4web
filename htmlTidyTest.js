@@ -20,11 +20,11 @@ var opts = {
 
 tidy(rawHtml, opts, function (err, html) {
     //console.log(encodeURIComponent(html.replace(/[\n\r]/g, '').replace(/\s+/g, '')));
-    console.log('cleaned html : ', html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, ''));
+    //console.log('cleaned html : ', html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, ''));
 
 
     //.replace('//]]>/g',''));
     //$string = str_replace("//<![CDATA[","",$string);
     //$string = str_replace("//]]>","",$string);
-    //console.log(html);
+    console.log(html);
 });
