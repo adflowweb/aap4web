@@ -16,7 +16,7 @@ verifyHandler.prototype.get = function (req, res, client) {
         //var hash = req.headers['hash'];
 
         //var hash = eval("(" + req.headers['hash'] + ")");
-        var hash = JSON.parse(req.headers['hash']);
+        var hash = JSON.parse(req.headers['hash'].replace(/[\']/g, '\"'));
         logger.debug(__filename + ' clientHash', typeof(hash));
         logger.debug(__filename + ' clientHash', hash.valueOf());
         logger.debug(__filename + ' clientHash', hash.main);
