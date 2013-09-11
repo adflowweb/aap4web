@@ -12,6 +12,7 @@ var verifyHandler = function () {
 verifyHandler.prototype.get = function (req, res, client) {
     try {
         logger.debug(__filename + ' key : ', req.params.id);
+        logger.debug(__filename + ' hash : ', req.headers['hash']);
         //var hash = req.headers['hash'];
 
         //var hash = eval("(" + req.headers['hash'] + ")");
