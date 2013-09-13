@@ -25,7 +25,7 @@ describe('orcle test', function () {
                     callback(err, conn);
                 });
             },
-            destroy: function (con) {
+            destroy: function (conn) {
                 conn.close();
             }
         });
