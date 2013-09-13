@@ -38,9 +38,9 @@ describe('orcle test', function () {
     });
 
     it('oracle connection', function (done) {
-        this.timeout(15000);
+        this.timeout(150000);
         var j = 0;
-        for (i = 0; i < 1000; i++) {
+        for (i = 0; i < 100000; i++) {
             pool.acquire(function (err, conn) {
                 j++;
                 if (err) {
@@ -58,7 +58,7 @@ describe('orcle test', function () {
                     pool.release(conn);
 
                     console.log('j = ', j);
-                    if (j == 999) {
+                    if (j == 99999) {
                         done();
                     }
 
