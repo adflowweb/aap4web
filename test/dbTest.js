@@ -16,7 +16,7 @@ describe('orcle test', function () {
         pool = poolModule.Pool({
             name: 'oracle',
             // connection은 최대 10개까지 생성합니다.
-            max: 100,
+            max: 10,
             // 생성된 connection은 30초 동안 유휴 상태(idle)면 destory됩니다.
             idleTimeoutMillis: 30000,
             log: false,
