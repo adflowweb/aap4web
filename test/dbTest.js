@@ -17,7 +17,7 @@ oracle.connect(connectData, function (err, connection) {
 
 
     // selecting rows
-    connection.execute("SELECT * FROM URL_POLICY", [], function (err, results) {
+    connection.execute("SELECT * FROM serv_info", [], function (err, results) {
         if (err) {
             console.log(err);
         } else {
