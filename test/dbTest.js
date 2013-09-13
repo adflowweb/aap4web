@@ -19,7 +19,7 @@ describe('orcle test', function () {
             max: 100,
             // 생성된 connection은 30초 동안 유휴 상태(idle)면 destory됩니다.
             idleTimeoutMillis: 30000,
-            log: true,
+            log: false,
             create: function (callback) {
                 oracle.connect(initData, function (err, conn) {
                     callback(err, conn);
