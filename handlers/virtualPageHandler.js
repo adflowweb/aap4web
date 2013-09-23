@@ -72,7 +72,7 @@ virtualPageHandler.prototype = {
                             logger.error('error : ', err);
                             res.send(err.message, 500);
                         } else {
-                            logger.debug(__filename + ' stored data : ', cleanedHtml);
+//logger.debug(__filename + ' stored data : ', cleanedHtml);
                             res.send(200);
                         }
                     } catch (e) {

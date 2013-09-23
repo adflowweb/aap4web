@@ -7,11 +7,15 @@ var express = require('express')
     , virtualPageHandler = require('./handlers/virtualPageHandler')
     , verificationURIHandler = require('./handlers/verificationURIHandler')
     , verifyHandler = require('./handlers/verifyHandler')
+    , redisHandler = require('./handlers/redisHandler')
     , routes = require('./routes')
     , http = require('http')
     , redis = require('redis').createClient()
     , path = require('path')
     , logger = require('./logger');
+
+//var oracle = require('oracle');
+//var poolModule = require('generic-pool');
 
 //redis error
 redis.on('error', function (err) {
@@ -55,7 +59,8 @@ function rawBody(req, res, next) {
 var handlers = {
     virtualpages: new virtualPageHandler(),
     verificationuri: new verificationURIHandler(),
-    verifyHandler: new verifyHandler()
+    verifyHandler: new verifyHandler(),
+    redisHandler: new redisHandler()
 };
 
 function start() {

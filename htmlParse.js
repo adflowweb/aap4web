@@ -6,6 +6,7 @@
 var htmlparser = require("htmlparser");
 var fs = require('fs');
 var sys = require('sys');
+var oracle = require("oracle");
 
 var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/sample002.html');
 
