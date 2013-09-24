@@ -8,6 +8,7 @@ var util = require('util'),
     tidy = require('htmltidy').tidy,
     DEFAULT_INDEX_JS = '../routes/site/default/index.js',
     RESPONSE_MESSAGE = '{"error":{"code":400,"message":"virtual_page_uri header not found"}}';
+var srcName = __filename.substring(__filename.lastIndexOf('/'));
 
 var virtualPageHandler = function () {
 };
@@ -31,7 +32,7 @@ virtualPageHandler.prototype = {
             }
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
-            logger.debug(__filename + ' path : ', path);
+            logger.debug(srcName + ' path : ', path);
 
             try {
                 var val = require(path).post(req, res);
@@ -99,7 +100,7 @@ virtualPageHandler.prototype = {
             }
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
-            logger.debug(__filename + ' path : ', path);
+            logger.debug(srcName + ' path : ', path);
             client.get(req.params.id, function (err, reply) {
                 try {
                     if (err) {
@@ -147,7 +148,7 @@ virtualPageHandler.prototype = {
     //delete virtualPage
     delete: function (req, res, client) {
         try {
-            logger.debug(__filename + ' key : ', req.params.id);
+            logger.debug(srcName + ' key : ', req.params.id);
             client.del(req.params.id, function (err) {
                 //console.log(util.inspect(arguments))
                 try {
@@ -155,7 +156,7 @@ virtualPageHandler.prototype = {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(__filename + ' key deleted just to be sure');
+                        logger.debug(srcName + ' key deleted just to be sure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -171,7 +172,7 @@ virtualPageHandler.prototype = {
     //read virtualPage
     get: function (req, res, client) {
         try {
-            logger.debug(__filename + ' key : ', req.params.id);
+            logger.debug(srcName + ' key : ', req.params.id);
             client.get(req.params.id, function (err, reply) {
                 try {
                     if (err) {

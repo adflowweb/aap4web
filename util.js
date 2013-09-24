@@ -6,6 +6,7 @@
 var parser = require('cheerio'),
     crypto = require('crypto'),
     logger = require('./logger');
+var srcName = __filename.substring(__filename.lastIndexOf('/'));
 
 exports.normalize = function (data) {
 //logger.debug(__filename + ' before data : ', data);
@@ -45,7 +46,7 @@ exports.normalize = function (data) {
 exports.hash = function (data) {
 //logger.debug(__filename + ' before data : ', data);
     var hash = crypto.createHash('sha256').update(data).digest('hex');
-    logger.debug(__filename + ' hash : ', hash);
+    logger.debug(srcName + ' hash : ', hash);
     //res.end('<html>'+$('html').html()+'</html>');
     return hash;
 };

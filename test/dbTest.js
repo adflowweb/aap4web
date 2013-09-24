@@ -106,10 +106,10 @@ describe('orcle test', function () {
                     console.log('results : ', results);
                 }
 
-                var result = [];
-                result.push('{"txid","11111111111"}');
-                result.push('{"txid","22222222222"}');
-                console.log('result : ', result);
+//                var result = [];
+//                result.push('{"txid","11111111111"}');
+//                result.push('{"txid","22222222222"}');
+//                console.log('result : ', result);
 
                 // return object back to pool
                 pool.release(conn);

@@ -76,10 +76,11 @@ describe('verify', function () {
         request(url)
             .get('/v1/verify/1234567890')
             .set('txid', "'"+Math.floor((Math.random()*10000000)+1)+"'")
+            .set('filterID', '1234@192.168.1.86')
             .set('hash', '{"/test001/index.js":"1234567890","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
-            .set('ua', 'testClient')
+            .set('User-Agent', 'mochaTestClient')
             .set('clientIP', '192.168.1.86')
-            .send(body)
+            //.send(body)
             // end handles the response
             .end(function (err, res) {
                 if (err) {
