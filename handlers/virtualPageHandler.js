@@ -81,10 +81,7 @@ virtualPageHandler.prototype = {
                         res.send(e.message, 500);
                     }
                 });
-
             });
-
-
         } catch (e) {
             logger.error(e.stack);
             res.send(e.message, 500);
@@ -156,7 +153,7 @@ virtualPageHandler.prototype = {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key deleted just to be sure');
+                        logger.debug(srcName + ' key deleted');
                         res.send(200);
                     }
                 } catch (e) {

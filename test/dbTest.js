@@ -46,22 +46,22 @@ describe('orcle test', function () {
             }
 
             // selecting rows
-//            conn.execute("SELECT * FROM url_policy", [], function (err, results) {
-//                if (err) {
-//                    console.log(err);
-//                } else {
-//                    console.log('results : ', results);
-//                }
-//
-//                var result = [];
-//                result.push('{"txid","11111111111"}');
-//                result.push('{"txid","22222222222"}');
-//                console.log('result : ', result);
-//
-//                // return object back to pool
-//                pool.release(conn);
-//                done();
-//            });
+            conn.execute("SELECT * FROM web_file", [], function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('results : ', results);
+                }
+
+                var result = [];
+                result.push('{"txid","11111111111"}');
+                result.push('{"txid","22222222222"}');
+                console.log('result : ', result);
+
+                // return object back to pool
+                pool.release(conn);
+                done();
+            });
 
 //            conn.execute("INSERT INTO url_policy (uri_key, uri_name) VALUES ('" + hashCode('/test001/index.jsp') + "','/test001/index.jsp')", [], function (err, results) {
 //                if (err) {
@@ -97,24 +97,29 @@ describe('orcle test', function () {
 //                done();
 //            });
 
+//            conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", [hashCode('/test001/index.js'), '1', '/test001/index.js', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff'], function (err, results) {
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    console.log('results : ', results);
+//                }
+//                // return object back to pool
+//                pool.release(conn);
+//                done();
+//            });
+
 
             // selecting rows
-            conn.execute("SELECT * FROM log_v", [], function (err, results) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('results : ', results);
-                }
-
-//                var result = [];
-//                result.push('{"txid","11111111111"}');
-//                result.push('{"txid","22222222222"}');
-//                console.log('result : ', result);
-
-                // return object back to pool
-                pool.release(conn);
-                done();
-            });
+//            conn.execute("INSERT INTO log_v_detail (txid, file_key, server_hash, client_hash, file_v_result, file_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)", [], function (err, results) {
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    console.log('results : ', results);
+//                }
+//                // return object back to pool
+//                pool.release(conn);
+//                done();
+//            });
 
         });
 

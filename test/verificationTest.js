@@ -14,9 +14,7 @@ var url = 'http://127.0.0.1:3000';
 describe('verify', function () {
 
     //테스트 수행전 선행작업
-
     before(function (done) {
-
         //가상페이지 생성
         request(url)
             .post('/v1/virtualpages/1234567890')
@@ -28,29 +26,27 @@ describe('verify', function () {
                     throw err;
                 }
                 res.should.have.status(200);
-                done();
-            });
-    });
 
-    before(function (done) {
-        var body = {"/test001/index.jsp":"1234567890"};
-
-        request(url)
-            .post('/v1/verificationuri')
-            .send(body)
-            // end handles the response
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                //console.log('response : ',res.text);
-                // this is should.js syntax, very clear
-                res.should.have.status(200);
-                done();
+                //create static resource hash
+                var body = {"/test001/index.js": "e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff"};
+                request(url)
+                    .post('/v1/redis')
+                    .send(body)
+                    // end handles the response
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        //console.log('response : ', res.text);
+                        // this is should.js syntax, very clear
+                        res.should.have.status(200);
+                        done();
+                    });
             });
     });
 
     after(function (done) {
+        //가상페이지 삭제
         request(url)
             .del('/v1/virtualpages/1234567890')
             // end handles the response
@@ -58,36 +54,36 @@ describe('verify', function () {
                 if (err) {
                     throw err;
                 }
-                //console.log('response : ',res.text);
-                // this is should.js syntax, very clear
                 res.should.have.status(200);
-                done();
+                //delete static resource hash
+                var body = ['/test001/index.js'];
+                request(url)
+                    .del('/v1/redis')
+                    .send(body)
+                    // end handles the response
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        res.should.have.status(200);
+                        done();
+                    });
             });
     });
 
     it('검증테스트 : 응답코드 200', function (done) {
-        var body = {
-            uri: [
-                {uri: '/test001/index.jsp', options: {'qryStr': 'key=value'}},
-                {uri: '/test001/TestServlet', options: {'qryStr': 'key=value'}}
-            ]
-        };
-
         request(url)
             .get('/v1/verify/1234567890')
-            .set('txid', "'"+Math.floor((Math.random()*10000000)+1)+"'")
+            .set('txid', "'" + Math.floor((Math.random() * 10000000) + 1) + "'")
             .set('filterID', '1234@192.168.1.86')
-            .set('hash', '{"/test001/index.js":"1234567890","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
+            .set('hash', '{"/test001/index.js":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
             .set('User-Agent', 'mochaTestClient')
             .set('clientIP', '192.168.1.86')
-            //.send(body)
             // end handles the response
             .end(function (err, res) {
                 if (err) {
                     throw err;
                 }
-                //console.log('response : ',res);
-                // this is should.js syntax, very clear
                 res.should.have.status(200);
                 done();
             });

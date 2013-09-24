@@ -5,6 +5,7 @@
  */
 var logger = require('../logger'),
     util = require('../util');
+var utils = require('util');
 var oracle = require("oracle");
 var poolModule = require('generic-pool');
 var hostName = require('os').hostname();
@@ -14,6 +15,8 @@ var pid = process.pid;
 var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, 'v', 'y', :4, :5, :6, :7)";
+var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, file_key, server_hash, client_hash, file_v_result, file_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
+
 var initData;
 var pool;
 
@@ -78,6 +81,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 client.get(key, function (err, reply) {
                     try {
                         logger.debug(srcName + ' key', key);
+                        //logger.debug(srcName + ' reply', reply);
                         if (err) {
                             logger.error('error : ', err);
                             details[i] = {"key": key, "result": "f"};
@@ -109,9 +113,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 //return;
                                 transaction.result = 'f';
                                 details[i] = {"key": "main", "result": "f"};
+                                logger.info(srcName + ' not matched main session :', key);
                             }
                             else {
                                 details[i] = {"key": "main", "result": "s"};
+                                logger.info(srcName + ' matched main session :', key);
                             }
                         }
                         else {
@@ -122,9 +128,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 //return;
                                 transaction.result = 'f';
                                 details[i] = {"key": key, "result": "f"};
+                                logger.info(srcName + ' not matched', key);
                             }
                             else {
                                 details[i] = {"key": key, "result": "s"};
+                                logger.info(srcName + ' matched', key);
                             }
                         }
                     }
@@ -149,42 +157,86 @@ verifyHandler.prototype.get = function (req, res, client) {
 
                 //main transaction insert
                 pool.acquire(function (err, conn) {
-                    try {
-                        if (err) {
-                            logger.error('err : ', err);
-                            return;
-                        }
+                        try {
+                            logger.debug(srcName + ' conn : ', conn);
+                            conn.setAutoCommit(false);
+                            if (err) {
+                                logger.error('err : ', err);
+                                return;
+                            }
 
-                        conn.execute(INSERT_LOG_SQL, [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip']), hashCode('/test001/index.jsp'), req.headers['filterid'], processID], function (err, results) {
-                            try {
-                                if (err) {
-                                    logger.error(err);
-                                    return;
-                                } else {
-                                    logger.debug(srcName + ' results : ', results);
+                            conn.execute(INSERT_LOG_SQL, [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip']), hashCode('/test001/index.jsp'), req.headers['filterid'], processID], function (err, results) {
+                                    try {
+                                        logger.debug(srcName + ' conn : ', utils.inspect(conn));
+                                        if (err) {
+                                            logger.error(err);
+                                            return;
+                                        } else {
+                                            logger.debug(srcName + ' results : ', results);
+
+                                            //db insert log_v_detail
+                                            conn.execute(INSERT_LOG_DETAIL_SQL, [hashCode(transaction.txid), hashCode('/test001/index.js'), 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 's', 'v'], function (err, results) {
+                                                try {
+                                                    logger.debug(srcName + ' conn : ', conn);
+                                                    if (err) {
+                                                        logger.error(err);
+                                                        return;
+                                                    } else {
+                                                        logger.debug(srcName + ' results : ', results);
+
+//                                                        conn.commit(function (err) {
+//
+//                                                            if (err) {
+//                                                                logger.error(err);
+//                                                                return;
+//                                                            }
+//
+//                                                            logger.debug(srcName + ' commiting ');
+//                                                            // transaction committed
+//                                                        });
+                                                    }
+                                                } catch (e) {
+                                                    logger.error(e.stack);
+                                                }
+                                                finally {
+                                                    // return object back to pool
+                                                    pool.release(conn);
+                                                    logger.debug(srcName + ' pool.released ');
+                                                }
+                                            });
+                                        }
+                                    }
+                                    catch (e) {
+                                        logger.error(e.stack);
+                                    }
+//                                    finally {
+//                                        // return object back to pool
+//                                        pool.release(conn);
+//                                        logger.debug(srcName + ' 1 pool.released ');
+//                                    }
                                 }
-                            } catch (e) {
-                                logger.error(e.stack);
-                            }
-                            finally {
-                                // return object back to pool
-                                pool.release(conn);
-                                logger.debug(srcName + ' pool.released ');
-                            }
-                        });
-                    } catch (e) {
-                        logger.error(e.stack);
+                            );
+                        }
+                        catch
+                            (e) {
+                            logger.error(e.stack);
+                        }
                     }
-                });
+                )
+                ;
             }
         }
 
         verify(0);
-    } catch (e) {
+    }
+
+    catch
+        (e) {
         logger.error(e.stack);
         res.send(e.message, 500);
     }
-};
+}
+;
 
 hashCode = function (str) {
     try {
@@ -202,6 +254,5 @@ hashCode = function (str) {
         throw new Error('hashCodeFuncErr');
     }
 }
-
 
 module.exports = verifyHandler;

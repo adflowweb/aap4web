@@ -66,7 +66,8 @@ exports.setup = function (app, handlers, client) {
     var REDIS_PATH = '/v1/redis';
 
     app.get(REDIS_PATH, function (req, res) {
-        handlers.redisHandler.get(req, res, client);
+        //handlers.redisHandler.get(req, res, client);
+        res.send(405);
     });
 
     app.put(REDIS_PATH, function (req, res) {
@@ -78,6 +79,6 @@ exports.setup = function (app, handlers, client) {
     });
 
     app.delete(REDIS_PATH, function (req, res) {
-        res.send(405);
+        handlers.redisHandler.delete(req, res, client);
     });
 };
