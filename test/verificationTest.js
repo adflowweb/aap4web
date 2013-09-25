@@ -79,6 +79,8 @@ describe('verify', function () {
             .set('hash', '{"/test001/index.js":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
             .set('User-Agent', 'mochaTestClient')
             .set('clientIP', '192.168.1.86')
+            .set('virtual_page_uri', '/test001/index.jsp')
+
             // end handles the response
             .end(function (err, res) {
                 if (err) {

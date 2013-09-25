@@ -45,7 +45,8 @@ describe('orcle test', function () {
                 return;
             }
 
-            conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", [hashCode('/test001/index.js'), '1', '/test001/index.js', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff'], function (err, results) {
+            var args = [hashCode('/test001/index.js'), '1', '/test001/index.js', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff']
+            conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", args, function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -96,9 +97,9 @@ describe('orcle test', function () {
 //                if (err) {
 //                    console.log(err);
 //                } else {
-//                    //console.log('results : ', results);
+//                    console.log('results : ', results);
 //                }
-//                results.should.have.property('updateCount', 1);
+//                //results.should.have.property('updateCount', 1);
 //                // return object back to pool
 //                pool.release(conn);
 //                done();

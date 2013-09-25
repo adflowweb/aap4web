@@ -84,28 +84,28 @@ describe('log_v_detail table test', function () {
         });
     });
 
-//    it('delete log_v_detail', function (done) {
-//        this.timeout(10000);
-//        pool.acquire(function (err, conn) {
-//            if (err) {
-//                console.log('err : ', err);
-//                return;
-//            }
-//
-//            conn.execute("delete from log_v_detail", [], function (err, results) {
-//                if (err) {
-//                    console.log(err);
-//                } else {
-//                    console.log('results : ', results);
-//                }
-//                //results.should.have.property('updateCount', 1);
-//                // return object back to pool
-//                pool.release(conn);
-//                done();
-//            });
-//
-//        });
-//    });
+    it('delete log_v_detail', function (done) {
+        this.timeout(10000);
+        pool.acquire(function (err, conn) {
+            if (err) {
+                console.log('err : ', err);
+                return;
+            }
+
+            conn.execute("delete from log_v_detail", [], function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('results : ', results);
+                }
+                //results.should.have.property('updateCount', 1);
+                // return object back to pool
+                pool.release(conn);
+                done();
+            });
+
+        });
+    });
 
 
     hashCode = function (str) {
