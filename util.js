@@ -9,7 +9,7 @@ var parser = require('cheerio'),
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 
 exports.normalize = function (data) {
-logger.debug(srcName + ' before data : ', data);
+//logger.debug(srcName + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
     $('meta').remove(); //remove meta tag
     $('param').remove(); //remove param tag
@@ -29,23 +29,23 @@ logger.debug(srcName + ' before data : ', data);
 
     //var msg = $('html').text();
     var msg = $('html').html();
-logger.debug(srcName + ' $("html").html() : ', msg);
+//logger.debug(srcName + ' $("html").html() : ', msg);
 
 
     //testCode
     //msg = msg.replace(/style=\"[\w\#\'\(\)\-\.\,\/\:\;\_\s]*\"|value=\"\w+\"|type=\"[\w\/]+\"/g, '');
     //msg = msg.replace(/\<meta\scontent=[\w\"\#\(\)\-\.\,\/\:\;\_\s\=]*\/\>/g, '');
     //msg = msg.replace(/\<param\s[\w\=\"\'\s\r\n\/\.\,]*\/\>/g, '');
-logger.debug(srcName + ' test data : ', msg);
+//logger.debug(srcName + ' test data : ', msg);
     //testEnd
     var normalizedData = encodeURIComponent(msg.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
     //encodeURIComponent(data.replace(/[\n\r]/g, '').replace(/\s+/g, ''));
-logger.debug(srcName + ' normalizedData : ', normalizedData);
+//logger.debug(srcName + ' normalizedData : ', normalizedData);
     return normalizedData;
 };
 
 exports.hash = function (data) {
-logger.debug(srcName + ' before data : ', data);
+//logger.debug(srcName + ' before data : ', data);
     var hash = crypto.createHash('sha256').update(data).digest('hex');
     logger.debug(srcName + ' hash : ', hash);
     //res.end('<html>'+$('html').html()+'</html>');
