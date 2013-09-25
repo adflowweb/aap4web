@@ -117,11 +117,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 //res.send(505);
                                 //return;
                                 transaction.result = 'f';
-                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "f"};
+                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "f", "serverHash": serverHash, "clientHash": clientHash};
                                 logger.info(srcName + ' not matched main session :', key);
                             }
                             else {
-                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "s"};
+                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "s", "serverHash": serverHash, "clientHash": clientHash};
                                 logger.info(srcName + ' matched main session :', key);
                             }
                         }
@@ -132,11 +132,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 //res.send(505);
                                 //return;
                                 transaction.result = 'f';
-                                details[i] = {"key": key, "result": "f"};
+                                details[i] = {"key": key, "result": "f", "serverHash": reply, "clientHash": hash[index[i]]};
                                 logger.info(srcName + ' not matched', key);
                             }
                             else {
-                                details[i] = {"key": key, "result": "s"};
+                                details[i] = {"key": key, "result": "s", "serverHash": reply, "clientHash": hash[index[i]]};
                                 logger.info(srcName + ' matched', key);
                             }
                         }
@@ -159,7 +159,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 logger.debug(srcName + ' transaction : ', transaction);
                 logger.debug(srcName + ' details : ', details);
 
-                //main transaction insert
+                //db insert log_v
                 pool.acquire(function (err, conn) {
                     try {
                         //conn.setAutoCommit(false);
@@ -182,7 +182,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     function logDetail(i) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
-                                            arg = [hashCode(transaction.txid), hashCode(details[i].key), 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 's', 'v'];
+                                            arg = [hashCode(transaction.txid), hashCode(details[i].key), details[i].serverHash, details[i].clientHash, 's', 'v'];
                                             logger.debug(srcName + ' args : ', arg);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
                                                 try {
