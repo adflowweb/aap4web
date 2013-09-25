@@ -36,14 +36,19 @@ var verifyHandler = function () {
             });
         },
         destroy: function (conn) {
-            conn.close();
+            try {
+                conn.close();
+            } catch (e) {
+                logger.error(e.stack);
+            }
         }
     });
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
     try {
-        //logger.debug(__filename + ' req : ', req);
+        //logger.debug(srcName + ' req : ', req);
+        logger.debug(srcName + ' req.url : ', req.url);
         logger.debug(srcName + ' key : ', req.params.id);
         logger.debug(srcName + ' txid : ', req.headers['txid']);
         logger.debug(srcName + ' hash : ', req.headers['hash']);
@@ -112,11 +117,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 //res.send(505);
                                 //return;
                                 transaction.result = 'f';
-                                details[i] = {"key": "main", "result": "f"};
+                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "f"};
                                 logger.info(srcName + ' not matched main session :', key);
                             }
                             else {
-                                details[i] = {"key": "main", "result": "s"};
+                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "s"};
                                 logger.info(srcName + ' matched main session :', key);
                             }
                         }
@@ -144,7 +149,6 @@ verifyHandler.prototype.get = function (req, res, client) {
             }
             else {
                 //최종 response
-                //result[0].result = 's';
                 if (transaction.result == 's') {
                     res.send(200);
                 }
@@ -157,40 +161,41 @@ verifyHandler.prototype.get = function (req, res, client) {
 
                 //main transaction insert
                 pool.acquire(function (err, conn) {
-                        try {
-                            logger.debug(srcName + ' conn : ', conn);
-                            conn.setAutoCommit(false);
-                            if (err) {
-                                logger.error('err : ', err);
-                                return;
-                            }
+                    try {
+                        //conn.setAutoCommit(false);
+                        if (err) {
+                            logger.error('err : ', err);
+                            return;
+                        }
 
-                            conn.execute(INSERT_LOG_SQL, [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip']), hashCode('/test001/index.jsp'), req.headers['filterid'], processID], function (err, results) {
-                                    try {
-                                        logger.debug(srcName + ' conn : ', utils.inspect(conn));
-                                        if (err) {
-                                            logger.error(err);
-                                            return;
-                                        } else {
-                                            logger.debug(srcName + ' results : ', results);
+                        var arg = [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip']), hashCode(req.headers['virtual_page_uri']), req.headers['filterid'], processID];
+                        logger.debug(srcName + ' args : ', arg);
+                        conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
+                            try {
+                                //logger.debug(srcName + ' conn : ', utils.inspect(conn));
+                                if (err) {
+                                    logger.error(err.stack);
+                                    return;
+                                } else {
+                                    logger.debug(srcName + ' log inserted : ', results);
 
+                                    function logDetail(i) {
+                                        if (i < details.length) {
                                             //db insert log_v_detail
-                                            conn.execute(INSERT_LOG_DETAIL_SQL, [hashCode(transaction.txid), hashCode('/test001/index.js'), 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 's', 'v'], function (err, results) {
+                                            arg = [hashCode(transaction.txid), hashCode(details[i].key), 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 's', 'v'];
+                                            logger.debug(srcName + ' args : ', arg);
+                                            conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
                                                 try {
-                                                    logger.debug(srcName + ' conn : ', conn);
                                                     if (err) {
-                                                        logger.error(err);
+                                                        logger.error(err.stack);
                                                         return;
                                                     } else {
-                                                        logger.debug(srcName + ' results : ', results);
-
+                                                        logger.debug(srcName + ' logDetail inserted : ', results);
 //                                                        conn.commit(function (err) {
-//
 //                                                            if (err) {
 //                                                                logger.error(err);
 //                                                                return;
 //                                                            }
-//
 //                                                            logger.debug(srcName + ' commiting ');
 //                                                            // transaction committed
 //                                                        });
@@ -203,27 +208,31 @@ verifyHandler.prototype.get = function (req, res, client) {
                                                     pool.release(conn);
                                                     logger.debug(srcName + ' pool.released ');
                                                 }
+                                                logDetail(++i);
                                             });
                                         }
+                                        else {
+                                            logger.debug(srcName + ' logDetail insert done ');
+                                        }
                                     }
-                                    catch (e) {
-                                        logger.error(e.stack);
-                                    }
-//                                    finally {
-//                                        // return object back to pool
-//                                        pool.release(conn);
-//                                        logger.debug(srcName + ' 1 pool.released ');
-//                                    }
+
+                                    logDetail(0);
                                 }
-                            );
-                        }
-                        catch
-                            (e) {
-                            logger.error(e.stack);
-                        }
+                            }
+                            catch (e) {
+                                logger.error(e.stack);
+                            }
+                            finally {
+                                // return object back to pool
+                                //pool.release(conn);
+                                //logger.debug(srcName + ' pool.released ');
+                            }
+                        });
                     }
-                )
-                ;
+                    catch (e) {
+                        logger.error(e.stack);
+                    }
+                });
             }
         }
 
