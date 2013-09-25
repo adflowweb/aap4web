@@ -54,6 +54,8 @@ verifyHandler.prototype.get = function (req, res, client) {
         logger.debug(srcName + ' hash : ', req.headers['hash']);
         logger.debug(srcName + ' clientip : ', req.headers['clientip']);
         logger.debug(srcName + ' filterid : ', req.headers['filterid']);
+        logger.debug(srcName + ' user-agent : ', req.headers['user-agent']);
+        logger.debug(srcName + ' virtual_page_uri : ', req.headers['virtual_page_uri']);
         //var hash = req.headers['hash'];
 
         //var hash = eval("(" + req.headers['hash'] + ")");
