@@ -45,7 +45,82 @@ describe('orcle test', function () {
                 return;
             }
 
-            var args = [hashCode('/test001/index.js'), '1', '/test001/index.js', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff']
+            var args = [hashCode('/css/common.css'), '1', '/css/common.css', '441EDBA0E5AC63E3B36B8D10E85CDCBC6A7A1B1B18E818411422A75F98F9A2C8']
+            conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", args, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    //console.log('results : ', results);
+                }
+                results.should.have.property('updateCount', 1);
+                // return object back to pool
+                pool.release(conn);
+                done();
+            });
+
+        });
+
+    });
+
+    it('insert webfile', function (done) {
+        this.timeout(10000);
+        pool.acquire(function (err, conn) {
+            if (err) {
+                console.log('err : ', err);
+                return;
+            }
+
+            var args = [hashCode('/css/menu.css'), '1', '/css/menu.css', 'F1AA12FC1836AB9737B27DB696C36D4F6B9B906EC70D4586693BFB15AE9E8D36']
+            conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", args, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    //console.log('results : ', results);
+                }
+                results.should.have.property('updateCount', 1);
+                // return object back to pool
+                pool.release(conn);
+                done();
+            });
+
+        });
+
+    });
+
+    it('insert webfile', function (done) {
+        this.timeout(10000);
+        pool.acquire(function (err, conn) {
+            if (err) {
+                console.log('err : ', err);
+                return;
+            }
+
+            var args = [hashCode('/js/aap.js'), '1', '/js/aap.js', 'B98D57B8A43C088ADC9B67A2A4277684B75B787C22790A0BA76547EA14C0BB99']
+            conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", args, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    //console.log('results : ', results);
+                }
+                results.should.have.property('updateCount', 1);
+                // return object back to pool
+                pool.release(conn);
+                done();
+            });
+
+        });
+
+    });
+
+    it('insert webfile', function (done) {
+        this.timeout(10000);
+        pool.acquire(function (err, conn) {
+            if (err) {
+                console.log('err : ', err);
+                return;
+            }
+
+            var args = [hashCode('/js/script.js'), '1', '/css/common.css', '3F5AB479E8C992E1C1C6C7FBDDE321F1D47C1D47B8AA13588B0F33E30B3711BE']
             conn.execute("INSERT INTO web_file (file_key, file_type, file_name, file_hash, reg_date) VALUES (:1, :2, :3, :4, SYSDATE)", args, function (err, results) {
                 if (err) {
                     console.log(err);
