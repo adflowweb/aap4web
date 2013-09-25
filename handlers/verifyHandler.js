@@ -121,13 +121,11 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 transaction.result = 'f';
                                 details[i] = {"key": req.headers['virtual_page_uri'], "result": "f", "serverHash": serverHash, "clientHash": clientHash};
                                 logger.info(srcName + ' not matched main session :', key);
-                            }
-                            else {
+                            } else {
                                 details[i] = {"key": req.headers['virtual_page_uri'], "result": "s", "serverHash": serverHash, "clientHash": clientHash};
                                 logger.info(srcName + ' matched main session :', key);
                             }
-                        }
-                        else {
+                        } else {
                             //else process static resource
                             logger.debug(srcName + ' value : ', hash[index[i]]);
                             if (hash[index[i]] != reply) {
@@ -136,25 +134,21 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 transaction.result = 'f';
                                 details[i] = {"key": key, "result": "f", "serverHash": reply, "clientHash": hash[index[i]]};
                                 logger.info(srcName + ' not matched', key);
-                            }
-                            else {
+                            } else {
                                 details[i] = {"key": key, "result": "s", "serverHash": reply, "clientHash": hash[index[i]]};
                                 logger.info(srcName + ' matched', key);
                             }
                         }
-                    }
-                    catch (e) {
+                    } catch (e) {
                         logger.error(e.stack);
                     }
                     verify(++i);
                 })
-            }
-            else {
+            } else {
                 //최종 response
                 if (transaction.result == 's') {
                     res.send(200);
-                }
-                else {
+                } else {
                     res.send(505);
                 }
                 //logging
@@ -212,27 +206,23 @@ verifyHandler.prototype.get = function (req, res, client) {
                                                     }
                                                 } catch (e) {
                                                     logger.error(e.stack);
-                                                }
-                                                finally {
+                                                } finally {
                                                     // return object back to pool
                                                     pool.release(conn);
                                                     logger.debug(srcName + ' pool.released ');
                                                 }
                                                 logDetail(++i);
                                             });
-                                        }
-                                        else {
+                                        } else {
                                             logger.debug(srcName + ' logDetail insert done ');
                                         }
                                     }
 
                                     logDetail(0);
                                 }
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 logger.error(e.stack);
-                            }
-                            finally {
+                            } finally {
                                 // return object back to pool
                                 //pool.release(conn);
                                 //logger.debug(srcName + ' pool.released ');
@@ -247,15 +237,11 @@ verifyHandler.prototype.get = function (req, res, client) {
         }
 
         verify(0);
-    }
-
-    catch
-        (e) {
+    } catch (e) {
         logger.error(e.stack);
         res.send(e.message, 500);
     }
-}
-;
+};
 
 hashCode = function (str) {
     try {

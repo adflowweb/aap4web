@@ -74,7 +74,9 @@ describe('verify', function () {
     it('검증테스트 : 응답코드 200', function (done) {
         request(url)
             .get('/v1/verify/1234567890')
-            .set('txid', "'" + Math.floor((Math.random() * 10000000) + 1) + "'")
+            //.set('txid', "'" + Math.floor((Math.random() * 10000000) + 1) + "'")
+            .set('txid', "'" + process.pid + '-' + guid() + "'")
+
             .set('filterID', '1234@192.168.1.86')
             .set('hash', '{"/test001/index.js":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
             .set('User-Agent', 'mochaTestClient')
@@ -90,4 +92,15 @@ describe('verify', function () {
                 done();
             });
     });
+
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    };
+
+    function guid() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    }
 });
