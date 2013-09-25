@@ -71,7 +71,7 @@ exports.setup = function (app, handlers, client) {
     });
 
     app.put(REDIS_PATH, function (req, res) {
-        res.send(405);
+        handlers.redisHandler.put(req, res, client);
     });
 
     app.post(REDIS_PATH, function (req, res) {
