@@ -21,6 +21,7 @@ if ($('html').html()) {
     //console.log("test : ",);
     $('img[src$=".png"]').removeAttr('src');
     $('option[selected]').removeAttr('selected');
+    $('form[name="searchForm"]').removeAttr('method');
     //$('*[src]').removeAttr('src'); //remove selected attr
     //$('*[rel]').removeAttr('rel');
     //console.log($('html').toArray());

@@ -159,6 +159,12 @@ verifyHandler.prototype.get = function (req, res, client) {
                 logger.debug(srcName + ' transaction : ', transaction);
                 logger.debug(srcName + ' details : ', details);
 
+                //임시코드 삭제할것!!
+                if (!transaction.txid) {
+                    transaction.txid = process.pid + '-' + guid();
+                    logger.debug(srcName + ' temporary transaction : ', transaction);
+                }
+
                 //db insert log_v
                 pool.acquire(function (err, conn) {
                     try {
@@ -168,7 +174,8 @@ verifyHandler.prototype.get = function (req, res, client) {
                             return;
                         }
 
-                        var arg = [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip']), hashCode(req.headers['virtual_page_uri']), req.headers['filterid'], processID];
+                        var arg = [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip'])
+                            , hashCode(req.headers['virtual_page_uri']), req.headers['filterid'], processID];
                         logger.debug(srcName + ' args : ', arg);
                         conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
                             try {
@@ -182,7 +189,8 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     function logDetail(i) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
-                                            arg = [hashCode(transaction.txid), hashCode(details[i].key), details[i].serverHash, details[i].clientHash, 's', 'v'];
+                                            arg = [hashCode(transaction.txid), hashCode(details[i].key)
+                                                , details[i].serverHash, details[i].clientHash, 's', 'v'];
                                             logger.debug(srcName + ' args : ', arg);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
                                                 try {
@@ -263,5 +271,17 @@ hashCode = function (str) {
         throw new Error('hashCodeFuncErr');
     }
 }
+//test code
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+};
+
+function guid() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+//end
 
 module.exports = verifyHandler;
