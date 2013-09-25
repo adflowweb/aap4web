@@ -161,6 +161,13 @@ verifyHandler.prototype.get = function (req, res, client) {
                     logger.debug(srcName + ' temporary transaction : ', transaction);
                 }
 
+                var clientIP = req.headers['clientip'];
+                if (!clientIP) {
+                    clientIP = '192.168.1.86';
+                    logger.debug(srcName + ' temporary clientIP : ', clientIP);
+                }
+                //임시코드 삭제할것!!
+
                 //db insert log_v
                 pool.acquire(function (err, conn) {
                     try {
@@ -170,7 +177,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                             return;
                         }
 
-                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip'])
+                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], hashCode(clientIP)
                             , hashCode(req.headers['virtual_page_uri']), req.headers['filterid'], processID];
                         logger.debug(srcName + ' args : ', arg);
                         conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
