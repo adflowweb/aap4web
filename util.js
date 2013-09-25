@@ -22,6 +22,7 @@ exports.normalize = function (data) {
     //console.log("test : ",);
     $('img[src$=".png"]').removeAttr('src');
     $('option[selected]').removeAttr('selected');
+    $('form[name="searchForm"]').removeAttr('id');
     //$('*[rel]').removeAttr('rel');
 
     //logger.debug(__filename + ' before data : ', data);
