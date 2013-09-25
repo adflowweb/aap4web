@@ -176,7 +176,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                             return;
                         }
 
-                        var arg = [hashCode(transaction.txid), transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip'])
+                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], hashCode(req.headers['clientip'])
                             , hashCode(req.headers['virtual_page_uri']), req.headers['filterid'], processID];
                         logger.debug(srcName + ' args : ', arg);
                         conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
@@ -191,7 +191,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     function logDetail(i) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
-                                            arg = [hashCode(transaction.txid), hashCode(details[i].key)
+                                            arg = [transaction.txid, hashCode(details[i].key)
                                                 , details[i].serverHash, details[i].clientHash, 's', 'v'];
                                             logger.debug(srcName + ' args : ', arg);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
