@@ -8,7 +8,7 @@ var assert = require('assert');
 var request = require('supertest');
 //var mongoose = require('mongoose');
 var winston = require('winston');
-var config = require('../config');
+var config = require('../../config');
 var url = 'http://127.0.0.1:3000';
 
 describe('verificationServer\n\t\tenv : 127.0.0.1:3000\n\t\tfile : verificationServerTest.js', function () {

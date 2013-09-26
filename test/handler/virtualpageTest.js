@@ -8,7 +8,7 @@ var assert = require('assert');
 var request = require('supertest');
 //var mongoose = require('mongoose');
 var winston = require('winston');
-var config = require('../config');
+var config = require('../../config');
 var url = 'http://127.0.0.1:3000';
 
 describe('검증서버\n\t\tenv : 127.0.0.1:3000\n\t\tfile : virtualpageTest.js', function () {
@@ -29,7 +29,7 @@ describe('검증서버\n\t\tenv : 127.0.0.1:3000\n\t\tfile : virtualpageTest.js'
             request(url)
                 .post('/v1/virtualpages/1234567890')
                 .set('virtual_page_uri', '/test001/index.jsp')
-                .attach('nadir', './test/test.html')
+                .attach('nadir', './test/resource/test.html')
                 //.send(profile)
                 // end handles the response
                 .end(function (err, res) {
