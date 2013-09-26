@@ -193,7 +193,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
                                             arg = [transaction.txid, hashCode(details[i].key)
-                                                , details[i].serverHash, details[i].clientHash, 's', 'v'];
+                                                , details[i].serverHash, details[i].clientHash, details[i].result, 'v'];
                                             logger.debug(srcName + ' args : ', arg);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
                                                 try {
@@ -235,8 +235,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 //logger.debug(srcName + ' pool.released ');
                             }
                         });
-                    }
-                    catch (e) {
+                    } catch (e) {
                         logger.error(e.stack);
                     }
                 });
