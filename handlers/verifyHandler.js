@@ -5,6 +5,7 @@
  */
 var logger = require('../logger'),
     util = require('../util');
+var crypto = require('crypto');
 var utils = require('util');
 var oracle = require("oracle");
 var poolModule = require('generic-pool');
@@ -15,7 +16,7 @@ var pid = process.pid;
 var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, 'v', 'y', :4, :5, :6, :7)";
-var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, file_key, server_hash, client_hash, file_v_result, file_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
+var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
 
 var initData;
 var pool;
@@ -59,6 +60,7 @@ verifyHandler.prototype.get = function (req, res, client) {
         //var hash = req.headers['hash'];
 
         //var hash = eval("(" + req.headers['hash'] + ")");
+        //single quotation to double quotation
         var hash = JSON.parse(req.headers['hash'].replace(/[\']/g, '\"'));
         logger.debug(srcName + ' clientHash', typeof(hash));
         logger.debug(srcName + ' clientHash', hash.valueOf());
@@ -155,7 +157,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 logger.debug(srcName + ' transaction : ', transaction);
                 logger.debug(srcName + ' details : ', details);
 
-                //임시코드 삭제할것!!
+//////////////////임시코드 삭제할것!!
                 if (!transaction.txid) {
                     transaction.txid = process.pid + '-' + guid();
                     logger.debug(srcName + ' temporary transaction : ', transaction);
@@ -166,7 +168,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                     clientIP = '192.168.1.86';
                     logger.debug(srcName + ' temporary clientIP : ', clientIP);
                 }
-                //임시코드 삭제할것!!
+//////////////////임시코드 삭제할것!!
 
                 //db insert log_v
                 pool.acquire(function (err, conn) {
@@ -177,8 +179,8 @@ verifyHandler.prototype.get = function (req, res, client) {
                             return;
                         }
 
-                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], hashCode(clientIP)
-                            , hashCode(req.headers['virtual_page_uri']), req.headers['filterid'], processID];
+                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], crypto.createHash('md5').update(clientIP).digest("base64")
+                            , crypto.createHash('md5').update(req.headers['virtual_page_uri']).digest("base64"), req.headers['filterid'], processID];
                         logger.debug(srcName + ' args : ', arg);
                         conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
                             try {
@@ -192,7 +194,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     function logDetail(i) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
-                                            arg = [transaction.txid, hashCode(details[i].key)
+                                            arg = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64")
                                                 , details[i].serverHash, details[i].clientHash, details[i].result, 'v'];
                                             logger.debug(srcName + ' args : ', arg);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
@@ -202,6 +204,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                                         return;
                                                     } else {
                                                         logger.debug(srcName + ' logDetail inserted : ', results);
+                                                        //test transaction
 //                                                        conn.commit(function (err) {
 //                                                            if (err) {
 //                                                                logger.error(err);
