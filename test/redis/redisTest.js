@@ -47,25 +47,25 @@ describe('redis test', function () {
 ////            });
 ////    });
 //
-//    it('"testKey":"1234567890" 생성 테스트 : 응답코드 200', function (done) {
-//
-//        var value = "1234567890";
-//        var key = 'testKey';
-//
-//        request(url)
-//            .post('/v1/redis/' + key)
-//            .send(value)
-//            // end handles the response
-//            .end(function (err, res) {
-//                if (err) {
-//                    throw err;
-//                }
-//                //console.log('response : ',res.text);
-//                // this is should.js syntax, very clear
-//                res.should.have.status(200);
-//                done();
-//            });
-//    });
+    it('"testKey":"1234567890" 생성 테스트 : 응답코드 200', function (done) {
+
+        var value = "1234567890";
+        var key = 'testKey';
+
+        request(url)
+            .post('/v1/redis/' + key)
+            .send(value)
+            // end handles the response
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                //console.log('response : ',res.text);
+                // this is should.js syntax, very clear
+                res.should.have.status(200);
+                done();
+            });
+    });
 //
 ////    it('redis 수정 테스트 : 응답코드 405', function (done) {
 ////        var body = {

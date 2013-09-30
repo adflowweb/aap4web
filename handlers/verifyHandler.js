@@ -46,53 +46,53 @@ var verifyHandler = function () {
         }
     });
 
-    //oracle poller
-    setInterval(function () {
-
-        logger.debug(srcName + ' polling oracle ');
-        pool.acquire(function (err, conn) {
-            if (err) {
-                console.log('err : ', err);
-                return;
-            }
-
-            //content_policy
-            conn.execute("SELECT * FROM content_info ", [], function (err, results) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('results : ', results);
-
-                    results.forEach(function (value, i) {
-                        console.log('value : ', value);
-                        console.log('CONTENT_NAME : ', value.CONTENT_NAME);
-                        console.log('CONTENT_HASH : ', value.CONTENT_HASH);
-                        //redis insert
-                        redis.hset('static', value.CONTENT_NAME, value.CONTENT_HASH, function (err) {
-                            try {
-                                if (err) {
-                                    logger.error(err.stack);
-                                    return;
-                                } else {
-                                    //logger.debug(srcName + ' key inserted ', reply);
-                                }
-                            } catch (e) {
-                                logger.error(e.stack);
-                            }
-                        });
-                    });
-                }
-
-//                var result = [];
-//                result.push('{"txid","11111111111"}');
-//                result.push('{"txid","22222222222"}');
-//                console.log('result : ', result);
-
-                // return object back to pool
-                pool.release(conn);
-            });
-        });
-    }, 60000); // 5초 뒤에 또 실행
+//    //oracle poller
+//    setInterval(function () {
+//
+//        logger.debug(srcName + ' polling oracle ');
+//        pool.acquire(function (err, conn) {
+//            if (err) {
+//                console.log('err : ', err);
+//                return;
+//            }
+//
+//            //content_policy
+//            conn.execute("SELECT * FROM content_info ", [], function (err, results) {
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    console.log('results : ', results);
+//
+//                    results.forEach(function (value, i) {
+//                        console.log('value : ', value);
+//                        console.log('CONTENT_NAME : ', value.CONTENT_NAME);
+//                        console.log('CONTENT_HASH : ', value.CONTENT_HASH);
+//                        //redis insert
+//                        redis.hset('static', value.CONTENT_NAME, value.CONTENT_HASH, function (err) {
+//                            try {
+//                                if (err) {
+//                                    logger.error(err.stack);
+//                                    return;
+//                                } else {
+//                                    //logger.debug(srcName + ' key inserted ', reply);
+//                                }
+//                            } catch (e) {
+//                                logger.error(e.stack);
+//                            }
+//                        });
+//                    });
+//                }
+//
+////                var result = [];
+////                result.push('{"txid","11111111111"}');
+////                result.push('{"txid","22222222222"}');
+////                console.log('result : ', result);
+//
+//                // return object back to pool
+//                pool.release(conn);
+//            });
+//        });
+//    }, 60000); // 5초 뒤에 또 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
