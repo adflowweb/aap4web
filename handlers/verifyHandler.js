@@ -144,13 +144,13 @@ verifyHandler.prototype.get = function (req, res, client) {
                             //logger.debug(srcName + ' reply', reply);
                             if (err) {
                                 logger.error('error : ', err);
-                                details[i] = {"key": key, "result": "f"};
+                                details[i] = {"key": key, "result": "F"};
                                 //res.send(err.message, 500);
                                 //return;
                             }
                             // reply is null when the key is missing
                             if (!reply) {
-                                details[i] = {"key": key, "result": "f"};
+                                details[i] = {"key": key, "result": "F"};
                                 //res.send(404);
                                 //return;
                             }
@@ -171,7 +171,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
                                     //res.send(505);
                                     //return;
-                                    transaction.result = 'f';
+                                    transaction.result = 'F';
                                     details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash};
                                     logger.info(srcName + ' not matched main session :', key);
                                 } else {
@@ -184,7 +184,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                 if (hash[index[i]] != reply) {
                                     //res.send(505);
                                     //return;
-                                    transaction.result = 'f';
+                                    transaction.result = 'F';
                                     details[i] = {"key": key, "result": "F", "serverHash": reply, "clientHash": hash[index[i]]};
                                     logger.info(srcName + ' not matched', key);
                                 } else {
@@ -200,7 +200,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 )
             } else {
                 //최종 response
-                if (transaction.result == 's') {
+                if (transaction.result == 'S') {
                     res.send(200);
                 } else {
                     res.send(505);
