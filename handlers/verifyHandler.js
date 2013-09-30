@@ -9,13 +9,14 @@ var crypto = require('crypto');
 var utils = require('util');
 var oracle = require("oracle");
 var poolModule = require('generic-pool');
+var redis = require('redis').createClient()
 var hostName = require('os').hostname();
 var platform = process.platform;
 var arch = process.arch;
 var pid = process.pid;
 var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
-var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, 'v', 'y', :4, :5, :6, :7)";
+var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, 'V', 'Y', :4, :5, :6, :7)";
 var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
 
 var initData;
@@ -25,7 +26,7 @@ var verifyHandler = function () {
     initData = { "hostname": "192.168.1.39", "user": "aap4web", "password": "aap4web1234", "database": "orcl" };
     pool = poolModule.Pool({
         name: 'oracle',
-        min: 2,
+        min: 0,
         // connection은 최대 50개까지 생성합니다.
         max: 50,
         // 생성된 connection은 30초 동안 유휴 상태(idle)면 destory됩니다.
@@ -44,6 +45,54 @@ var verifyHandler = function () {
             }
         }
     });
+
+    //oracle poller
+    setInterval(function () {
+
+        logger.debug(srcName + ' polling oracle ');
+        pool.acquire(function (err, conn) {
+            if (err) {
+                console.log('err : ', err);
+                return;
+            }
+
+            //content_policy
+            conn.execute("SELECT * FROM content_info ", [], function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('results : ', results);
+
+                    results.forEach(function (value, i) {
+                        console.log('value : ', value);
+                        console.log('CONTENT_NAME : ', value.CONTENT_NAME);
+                        console.log('CONTENT_HASH : ', value.CONTENT_HASH);
+                        //redis insert
+                        redis.hset('static', value.CONTENT_NAME, value.CONTENT_HASH, function (err) {
+                            try {
+                                if (err) {
+                                    logger.error(err.stack);
+                                    return;
+                                } else {
+                                    //logger.debug(srcName + ' key inserted ', reply);
+                                }
+                            } catch (e) {
+                                logger.error(e.stack);
+                            }
+                        });
+                    });
+                }
+
+//                var result = [];
+//                result.push('{"txid","11111111111"}');
+//                result.push('{"txid","22222222222"}');
+//                console.log('result : ', result);
+
+                // return object back to pool
+                pool.release(conn);
+            });
+        });
+    }, 60000); // 5초 뒤에 또 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
@@ -83,69 +132,72 @@ verifyHandler.prototype.get = function (req, res, client) {
         function verify(i) {
             if (i < index.length) {
                 var key = req.params.id;
+                var hashKey = 'virtualpage';
                 if (index[i] != 'main') {
                     key = index[i];
+                    hashKey = 'static';
                 }
 
-                client.get(key, function (err, reply) {
-                    try {
-                        logger.debug(srcName + ' key', key);
-                        //logger.debug(srcName + ' reply', reply);
-                        if (err) {
-                            logger.error('error : ', err);
-                            details[i] = {"key": key, "result": "f"};
-                            //res.send(err.message, 500);
-                            //return;
-                        }
-                        // reply is null when the key is missing
-                        if (!reply) {
-                            details[i] = {"key": key, "result": "f"};
-                            //res.send(404);
-                            //return;
-                        }
+                client.hget(hashKey, key, function (err, reply) {
+                        try {
+                            logger.debug(srcName + ' key', key);
+                            //logger.debug(srcName + ' reply', reply);
+                            if (err) {
+                                logger.error('error : ', err);
+                                details[i] = {"key": key, "result": "f"};
+                                //res.send(err.message, 500);
+                                //return;
+                            }
+                            // reply is null when the key is missing
+                            if (!reply) {
+                                details[i] = {"key": key, "result": "f"};
+                                //res.send(404);
+                                //return;
+                            }
 
-                        if (index[i] == 'main') {
-                            //process main page
-                            //logger.debug(__filename + ' reply : ', reply);
-                            //정규화
-                            var nornalizedData = util.normalize(reply);
-                            //hash
-                            var serverHash = util.hash(nornalizedData);
-                            logger.debug(srcName + ' hash', hash.main);
-                            //var clientHash = req.headers['hash'];
-                            var clientHash = hash.main;
-                            logger.debug(srcName + ' serverHash', serverHash);
-                            logger.debug(srcName + ' clientHash', clientHash);
-                            //검증
-                            if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
-                                //res.send(505);
-                                //return;
-                                transaction.result = 'f';
-                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "f", "serverHash": serverHash, "clientHash": clientHash};
-                                logger.info(srcName + ' not matched main session :', key);
+                            if (index[i] == 'main') {
+                                //process main page
+                                //logger.debug(__filename + ' reply : ', reply);
+                                //정규화
+                                var nornalizedData = util.normalize(reply);
+                                //hash
+                                var serverHash = util.hash(nornalizedData);
+                                logger.debug(srcName + ' hash', hash.main);
+                                //var clientHash = req.headers['hash'];
+                                var clientHash = hash.main;
+                                logger.debug(srcName + ' serverHash', serverHash);
+                                logger.debug(srcName + ' clientHash', clientHash);
+                                //검증
+                                if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
+                                    //res.send(505);
+                                    //return;
+                                    transaction.result = 'f';
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash};
+                                    logger.info(srcName + ' not matched main session :', key);
+                                } else {
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash};
+                                    logger.info(srcName + ' matched main session :', key);
+                                }
                             } else {
-                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "s", "serverHash": serverHash, "clientHash": clientHash};
-                                logger.info(srcName + ' matched main session :', key);
+                                //else process static resource
+                                logger.debug(srcName + ' value : ', hash[index[i]]);
+                                if (hash[index[i]] != reply) {
+                                    //res.send(505);
+                                    //return;
+                                    transaction.result = 'f';
+                                    details[i] = {"key": key, "result": "F", "serverHash": reply, "clientHash": hash[index[i]]};
+                                    logger.info(srcName + ' not matched', key);
+                                } else {
+                                    details[i] = {"key": key, "result": "S", "serverHash": reply, "clientHash": hash[index[i]]};
+                                    logger.info(srcName + ' matched', key);
+                                }
                             }
-                        } else {
-                            //else process static resource
-                            logger.debug(srcName + ' value : ', hash[index[i]]);
-                            if (hash[index[i]] != reply) {
-                                //res.send(505);
-                                //return;
-                                transaction.result = 'f';
-                                details[i] = {"key": key, "result": "f", "serverHash": reply, "clientHash": hash[index[i]]};
-                                logger.info(srcName + ' not matched', key);
-                            } else {
-                                details[i] = {"key": key, "result": "s", "serverHash": reply, "clientHash": hash[index[i]]};
-                                logger.info(srcName + ' matched', key);
-                            }
+                        } catch (e) {
+                            logger.error(e.stack);
                         }
-                    } catch (e) {
-                        logger.error(e.stack);
+                        verify(++i);
                     }
-                    verify(++i);
-                })
+                )
             } else {
                 //최종 response
                 if (transaction.result == 's') {
@@ -195,7 +247,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
                                             arg = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64")
-                                                , details[i].serverHash, details[i].clientHash, details[i].result, 'v'];
+                                                , details[i].serverHash, details[i].clientHash, details[i].result, 'V'];
                                             logger.debug(srcName + ' args : ', arg);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
                                                 try {
@@ -268,6 +320,7 @@ hashCode = function (str) {
         throw new Error('hashCodeFuncErr');
     }
 }
+
 //test code
 function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -282,3 +335,5 @@ function guid() {
 //end
 
 module.exports = verifyHandler;
+
+

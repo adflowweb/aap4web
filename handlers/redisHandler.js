@@ -193,7 +193,7 @@ redisHandler.prototype = {
     delete: function (req, res, client) {
         try {
             logger.debug(srcName + ' method : delete ');
-            var key = req.url.substring(req.url.lastIndexOf('/v1/redis') + 9);
+            var key = req.url.substring(req.url.lastIndexOf('/v1/redis') + 10);
             logger.debug(srcName + ' key : ', key);
             client.del(key, function (err, replies) {
                 try {
@@ -220,24 +220,46 @@ redisHandler.prototype = {
         try {
             logger.debug(srcName + ' method : multiDelete ');
             logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-            var data = JSON.parse(req.rawBody);
-            logger.debug(srcName + ' data : ', data);
 
-            client.del(data, function (err, replies) {
-                try {
-                    if (err) {
-                        logger.error('error : ', err);
-                        res.send(err.message, 500);
-                        return;
-                    } else {
-                        logger.debug(srcName + ' key deleted ', replies);
-                        res.end(replies.toString(), 200);
+            if (req.rawBody) {
+                var data = JSON.parse(req.rawBody);
+                logger.debug(srcName + ' data : ', data);
+
+                client.del(data, function (err, replies) {
+                    try {
+                        if (err) {
+                            logger.error('error : ', err);
+                            res.send(err.message, 500);
+                            return;
+                        } else {
+                            logger.debug(srcName + ' key deleted ', replies);
+                            res.end(replies.toString(), 200);
+                        }
+                    } catch (e) {
+                        logger.error(e.stack);
+                        res.send(e.message, 500);
                     }
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
-                }
-            });
+                });
+            } else {
+                //flushAll
+                client.flushall(function (err, replies) {
+                    try {
+                        if (err) {
+                            logger.error('error : ', err);
+                            res.send(err.message, 500);
+                            return;
+                        } else {
+                            logger.debug(srcName + ' all key deleted ', replies);
+                            res.end(replies.toString(), 200);
+                        }
+                    } catch (e) {
+                        logger.error(e.stack);
+                        res.send(e.message, 500);
+                    }
+                });
+            }
+
+
         } catch (e) {
             logger.debug(e.stack);
             res.send(e.message, 500);
@@ -275,26 +297,36 @@ redisHandler.prototype = {
             logger.debug(srcName + ' req.url : ', req.url);
             var queryStr = require('url').parse(req.url, true).query;
             logger.debug(srcName + ' queryString : ', utils.inspect(queryStr));
+            var keyType = req.headers['keytype'];
+            logger.debug(srcName + ' keyType : ', keyType);
 
-            if (queryStr.keys) {
-                if (queryStr.keys == 'all') {
+            if (queryStr.key) {
+                if (queryStr.key == 'all') {
                     client.keys("*", function (err, keys) {
-                        keys.forEach(function (key, pos) {
-                            client.type(key, function (err, keytype) {
-                                logger.debug(srcName + " " + key + " is " + keytype);
-                                if (pos === (keys.length - 1)) {
-                                    logger.debug(srcName + " list end ");
-                                    res.send(200);
-                                    //client.quit();
-                                }
+                        logger.debug(srcName + " keys : ", utils.inspect(keys));
+                        if (keys.length != 0) {
+                            var results = [];
+                            keys.forEach(function (key, pos) {
+                                var count = 0;
+                                client.type(key, function (err, keytype) {
+                                    logger.debug(srcName + " " + key + " is " + keytype);
+                                    results.push('{' + key + ':' + keytype + '}');
+                                    if (pos === (keys.length - 1)) {
+                                        logger.debug(srcName + " results : ", results);
+                                        res.send(results);
+                                        //client.quit();
+                                    }
+                                });
                             });
-                        });
+                        } else {
+                            res.send(404);
+                        }
                     });
                 } else {
                     client.get(queryStr.keys, function (err, reply) {
                         try {
                             if (err) {
-                                logger.error('error : ', err);
+                                logger.error(err.stack);
                                 res.send(err.message, 500);
                                 return;
                             }
@@ -311,13 +343,14 @@ redisHandler.prototype = {
                         }
                     });
                 }
-            } else {
+            }
+            else {
                 var key = req.url.substring(req.url.lastIndexOf('/v1/redis') + 10);
                 logger.debug(srcName + ' key : ', key);
                 client.get(key, function (err, reply) {
                     try {
                         if (err) {
-                            logger.error('error : ', err);
+                            logger.error(err.stack);
                             res.send(err.message, 500);
                             return;
                         }
@@ -335,7 +368,49 @@ redisHandler.prototype = {
                 });
             }
 
+//            if (keyType == 'string') {
+//
+//            }
+//            elseif(keyType == 'hash')
+//            {
+//
+//            }
+        } catch (e) {
+            logger.debug(e.stack);
+            res.send(e.message, 500);
+        }
+    },
+    getHash: function (req, res, client) {
 
+        try {
+            logger.debug(srcName + ' method : get ');
+            logger.debug(srcName + ' req.url : ', req.url);
+            var queryStr = require('url').parse(req.url, true).query;
+            logger.debug(srcName + ' queryString : ', utils.inspect(queryStr));
+            logger.debug(srcName + ' keyType : ', req.headers['keytype']);
+
+
+            var key = req.url.substring(req.url.lastIndexOf('/v1/redis/hash/') + 15);
+            logger.debug(srcName + ' key : ', key);
+            client.hgetall(key, function (err, reply) {
+                try {
+                    if (err) {
+                        logger.error(err.stack);
+                        res.send(err.message, 500);
+                        return;
+                    }
+                    if (reply) {
+                        logger.debug(srcName + ' reply : ', reply);
+                        res.send(reply);
+                    } else {
+                        logger.debug(srcName + ' not found ');
+                        res.send(404);
+                    }
+                } catch (e) {
+                    logger.debug(e.stack);
+                    res.send(e.message, 500);
+                }
+            });
         } catch (e) {
             logger.debug(e.stack);
             res.send(e.message, 500);
@@ -343,7 +418,7 @@ redisHandler.prototype = {
 
 
     },
-    getHash: function (req, res, client) {
+    flushAll: function (req, res, client) {
 
     }
 }

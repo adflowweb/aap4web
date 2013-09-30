@@ -66,7 +66,7 @@ virtualPageHandler.prototype = {
                 //console.log('value : ', html);
 
                 //set page
-                client.set(req.params.id, cleanedHtml, function (err) {
+                client.hset('virtualpage', req.params.id, cleanedHtml, function (err) {
                     try {
                         if (err) {
                             logger.error('error : ', err);
@@ -97,7 +97,7 @@ virtualPageHandler.prototype = {
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
             logger.debug(srcName + ' path : ', path);
-            client.get(req.params.id, function (err, reply) {
+            client.hget('virtualpage', req.params.id, function (err, reply) {
                 try {
                     if (err) {
                         logger.error('error : ', err);
@@ -145,7 +145,7 @@ virtualPageHandler.prototype = {
     delete: function (req, res, client) {
         try {
             logger.debug(srcName + ' key : ', req.params.id);
-            client.del(req.params.id, function (err) {
+            client.hdel('virtualpage', req.params.id, function (err) {
                 //console.log(util.inspect(arguments))
                 try {
                     if (err) {
@@ -169,7 +169,7 @@ virtualPageHandler.prototype = {
     get: function (req, res, client) {
         try {
             logger.debug(srcName + ' key : ', req.params.id);
-            client.get(req.params.id, function (err, reply) {
+            client.hget('virtualpage', req.params.id, function (err, reply) {
                 try {
                     if (err) {
                         logger.error('error : ', err);

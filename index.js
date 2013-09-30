@@ -66,3 +66,5 @@ process.on('uncaughtException', function (err) {
 //console.log("Successfully connected to MongoDB. Starting web server...");
 server.start();
 logger.info("Successfully started web server. Waiting for incoming connections...");
+
+

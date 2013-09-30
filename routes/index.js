@@ -67,11 +67,9 @@ exports.setup = function (app, handlers, client) {
 
     app.get(REDIS_PATH, function (req, res) {
         handlers.redisHandler.get(req, res, client);
-        //res.send(405);
     });
 
     app.put(REDIS_PATH, function (req, res) {
-        //handlers.redisHandler.multiPut(req, res, client);
         res.send(405);
     });
 
@@ -87,13 +85,12 @@ exports.setup = function (app, handlers, client) {
     var REDIS_HASH_PATH = '/v1/redis/hash/:id';
 
     app.get(REDIS_HASH_PATH, function (req, res) {
-        //handlers.redisHandler.getHash(req, res, client);
-        res.send(405);
+        handlers.redisHandler.getHash(req, res, client);
+        //res.send(405);
     });
 
     app.put(REDIS_HASH_PATH, function (req, res) {
         res.send(405);
-        //handlers.redisHandler.putHash(req, res, client);
     });
 
     app.post(REDIS_HASH_PATH, function (req, res) {
@@ -114,7 +111,6 @@ exports.setup = function (app, handlers, client) {
     });
 
     app.put(REDIS_KEY_PATH, function (req, res) {
-        //handlers.redisHandler.put(req, res, client);
         res.send(405);
     });
 
