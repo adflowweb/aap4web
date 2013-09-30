@@ -63,48 +63,26 @@ exports.setup = function (app, handlers, client) {
     });
 
     //route redis
-    var REDIS_PATH = '/v1/redis';
-
-    app.get(REDIS_PATH, function (req, res) {
-        handlers.redisHandler.get(req, res, client);
-    });
-
-    app.put(REDIS_PATH, function (req, res) {
-        res.send(405);
-    });
-
-    app.post(REDIS_PATH, function (req, res) {
-        handlers.redisHandler.multiPost(req, res, client);
-    });
-
-    app.delete(REDIS_PATH, function (req, res) {
-        handlers.redisHandler.multiDelete(req, res, client);
-    });
-
-    //route redis hash
-//    var REDIS_HASH_PATH = '/v1/redis/hash/:id';
+//    var REDIS_PATH = '/v1/redis';
 //
-//    app.get(REDIS_HASH_PATH, function (req, res) {
+//    app.get(REDIS_PATH, function (req, res) {
 //        handlers.redisHandler.get(req, res, client);
-//        //res.send(405);
 //    });
 //
-//    app.put(REDIS_HASH_PATH, function (req, res) {
+//    app.put(REDIS_PATH, function (req, res) {
 //        res.send(405);
 //    });
 //
-//    app.post(REDIS_HASH_PATH, function (req, res) {
-//        handlers.redisHandler.postHash(req, res, client);
+//    app.post(REDIS_PATH, function (req, res) {
+//        handlers.redisHandler.multiPost(req, res, client);
 //    });
 //
-//    app.delete(REDIS_HASH_PATH, function (req, res) {
-//        handlers.redisHandler.deleteHash(req, res, client);
+//    app.delete(REDIS_PATH, function (req, res) {
+//        handlers.redisHandler.multiDelete(req, res, client);
 //    });
 
     //route redis
-    //순서가 중요
-    ///v1/redis/hash/:id 뒤에 /v1/redis/* 이 와야 hash로 먼저 라우팅
-    var REDIS_KEY_PATH = '/v1/redis/*';
+    var REDIS_KEY_PATH = '/v1/redis*';
 
     app.get(REDIS_KEY_PATH, function (req, res) {
         handlers.redisHandler.get(req, res, client);
@@ -121,4 +99,23 @@ exports.setup = function (app, handlers, client) {
     app.delete(REDIS_KEY_PATH, function (req, res) {
         handlers.redisHandler.delete(req, res, client);
     });
+
+    //route policy
+    var POLICY_PATH = '/v1/policy*';
+    app.get(POLICY_PATH, function (req, res) {
+        handlers.policyHandler.get(req, res, client);
+    });
+
+    app.put(POLICY_PATH, function (req, res) {
+        res.send(405);
+    });
+
+    app.post(POLICY_PATH, function (req, res) {
+        handlers.policyHandler.post(req, res, client);
+    });
+
+    app.delete(POLICY_PATH, function (req, res) {
+        handlers.policyHandler.delete(req, res, client);
+    });
+
 };

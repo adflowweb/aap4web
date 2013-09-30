@@ -26,7 +26,7 @@ redisHandler.prototype = {
                 client.hmset(key, data, function (err, reply) {
                     try {
                         if (err) {
-                            logger.error('error : ', err.stack);
+                            logger.error(err.stack);
                             res.send(err.message, 500);
                             return;
                         } else {
@@ -39,23 +39,49 @@ redisHandler.prototype = {
                     }
                 });
             } else {
-                client.set(key, req.rawBody, function (err, reply) {
-                    try {
-                        if (err) {
-                            logger.error('error : ', err);
-                            res.send(err.message, 500);
-                            return;
-                        } else {
-                            logger.debug(srcName + ' key inserted ', reply);
-                            res.send(200);
+                if (key) {
+                    logger.debug(srcName + ' key : ', key);
+                    client.set(key, req.rawBody, function (err, reply) {
+                        try {
+                            if (err) {
+                                logger.error(err.stack);
+                                res.send(err.message, 500);
+                                return;
+                            } else {
+                                logger.debug(srcName + ' key inserted ', reply);
+                                res.send(200);
+                            }
+                        } catch (e) {
+                            logger.error(e.stack);
+                            res.send(e.message, 500);
                         }
-                    } catch (e) {
-                        logger.error(e.stack);
-                        res.send(e.message, 500);
+                    });
+                } else {
+                    //multiSet
+                    var index = [];
+                    // build the index
+                    for (var x in data) {
+                        index.push(x);
+                        index.push(data[x]);
                     }
-                });
+                    logger.debug(srcName + ' index ', index);
+                    client.mset(index, function (err, reply) {
+                        try {
+                            if (err) {
+                                logger.error('error : ', err);
+                                res.send(err.message, 500);
+                                return;
+                            } else {
+                                logger.debug(srcName + ' key inserted ', reply);
+                                res.send(200);
+                            }
+                        } catch (e) {
+                            logger.error(e.stack);
+                            res.send(e.message, 500);
+                        }
+                    });
+                }
             }
-
 
 //            Object.keys(data).forEach(function (key) {
 //                var val = data[key];
@@ -76,38 +102,6 @@ redisHandler.prototype = {
 //                    res.send(e.message, 500);
 //                }
 //            });
-        } catch (e) {
-            logger.error(e.stack);
-            res.send(e.message, 500);
-        }
-    },
-    multiPost: function (req, res, client) {
-        try {
-            logger.debug(srcName + ' method : multiPost ');
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-            var data = JSON.parse(req.rawBody);
-            var index = [];
-            // build the index
-            for (var x in data) {
-                index.push(x);
-                index.push(data[x]);
-            }
-            logger.debug(srcName + ' index ', index);
-            client.mset(index, function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error('error : ', err);
-                        res.send(err.message, 500);
-                        return;
-                    } else {
-                        logger.debug(srcName + ' key inserted ', reply);
-                        res.send(200);
-                    }
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
-                }
-            });
         } catch (e) {
             logger.error(e.stack);
             res.send(e.message, 500);
@@ -192,37 +186,9 @@ redisHandler.prototype = {
             logger.debug(srcName + ' method : delete ');
             var key = req.url.substring(req.url.lastIndexOf('/v1/redis') + 10);
             logger.debug(srcName + ' key : ', key);
-            client.del(key, function (err, replies) {
-                try {
-                    if (err) {
-                        logger.error('error : ', err);
-                        res.send(err.message, 500);
-                        return;
-                    } else {
-                        logger.debug(srcName + ' key deleted ', replies);
-                        res.end(replies.toString(), 200);
-                    }
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
-                }
-            });
-        } catch (e) {
-            logger.debug(e.stack);
-            res.send(e.message, 500);
-        }
-    },
-    multiDelete: function (req, res, client) {
 
-        try {
-            logger.debug(srcName + ' method : multiDelete ');
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-
-            if (req.rawBody) {
-                var data = JSON.parse(req.rawBody);
-                logger.debug(srcName + ' data : ', data);
-
-                client.del(data, function (err, replies) {
+            if (key) {
+                client.del(key, function (err, replies) {
                     try {
                         if (err) {
                             logger.error('error : ', err);
@@ -238,30 +204,49 @@ redisHandler.prototype = {
                     }
                 });
             } else {
-                //flushAll
-                client.flushall(function (err, replies) {
-                    try {
-                        if (err) {
-                            logger.error('error : ', err);
-                            res.send(err.message, 500);
-                            return;
-                        } else {
-                            logger.debug(srcName + ' all key deleted ', replies);
-                            res.end(replies.toString(), 200);
+                if (req.rawBody) {
+                    //multiDelete
+                    var data = JSON.parse(req.rawBody);
+                    logger.debug(srcName + ' data : ', data);
+
+                    client.del(data, function (err, replies) {
+                        try {
+                            if (err) {
+                                logger.error('error : ', err);
+                                res.send(err.message, 500);
+                                return;
+                            } else {
+                                logger.debug(srcName + ' key deleted ', replies);
+                                res.end(replies.toString(), 200);
+                            }
+                        } catch (e) {
+                            logger.error(e.stack);
+                            res.send(e.message, 500);
                         }
-                    } catch (e) {
-                        logger.error(e.stack);
-                        res.send(e.message, 500);
-                    }
-                });
+                    });
+                } else {
+                    //flushAll
+                    client.flushall(function (err, replies) {
+                        try {
+                            if (err) {
+                                logger.error('error : ', err);
+                                res.send(err.message, 500);
+                                return;
+                            } else {
+                                logger.debug(srcName + ' all key deleted ', replies);
+                                res.end(replies.toString(), 200);
+                            }
+                        } catch (e) {
+                            logger.error(e.stack);
+                            res.send(e.message, 500);
+                        }
+                    });
+                }
             }
-
-
         } catch (e) {
             logger.debug(e.stack);
             res.send(e.message, 500);
         }
-
     },
     deleteHash: function (req, res, client) {
         try {
