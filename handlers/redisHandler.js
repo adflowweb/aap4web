@@ -17,22 +17,46 @@ redisHandler.prototype = {
             var key = req.url.substring(req.url.lastIndexOf('/v1/redis') + 10);
             logger.debug(srcName + ' key : ', key);
             logger.debug(srcName + ' req.rawBody : ', req.rawBody);
+            var data = JSON.parse(req.rawBody);
+            logger.debug(srcName + ' data : ', data);
+            var keyType = req.headers['keytype']
+            logger.debug(srcName + ' keyType : ', keyType);
 
-            client.set(key, req.rawBody, function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error('error : ', err);
-                        res.send(err.message, 500);
-                        return;
-                    } else {
-                        logger.debug(srcName + ' key inserted ', reply);
-                        res.send(200);
+            if (keyType == 'hash') {
+                client.hmset(key, data, function (err, reply) {
+                    try {
+                        if (err) {
+                            logger.error('error : ', err.stack);
+                            res.send(err.message, 500);
+                            return;
+                        } else {
+                            logger.debug(srcName + ' key inserted ', reply);
+                            res.send(200);
+                        }
+                    } catch (e) {
+                        logger.error(e.stack);
+                        res.send(e.message, 500);
                     }
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
-                }
-            });
+                });
+            } else {
+                client.set(key, req.rawBody, function (err, reply) {
+                    try {
+                        if (err) {
+                            logger.error('error : ', err);
+                            res.send(err.message, 500);
+                            return;
+                        } else {
+                            logger.debug(srcName + ' key inserted ', reply);
+                            res.send(200);
+                        }
+                    } catch (e) {
+                        logger.error(e.stack);
+                        res.send(e.message, 500);
+                    }
+                });
+            }
+
+
 //            Object.keys(data).forEach(function (key) {
 //                var val = data[key];
 //                logger.debug(__filename + ' key :', key);
@@ -70,33 +94,6 @@ redisHandler.prototype = {
             }
             logger.debug(srcName + ' index ', index);
             client.mset(index, function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error('error : ', err);
-                        res.send(err.message, 500);
-                        return;
-                    } else {
-                        logger.debug(srcName + ' key inserted ', reply);
-                        res.send(200);
-                    }
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
-                }
-            });
-        } catch (e) {
-            logger.error(e.stack);
-            res.send(e.message, 500);
-        }
-    },
-    postHash: function (req, res, client) {
-        try {
-            logger.debug(srcName + ' method : postHash ');
-            logger.debug(srcName + ' key : ', req.params.id);
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-            var data = JSON.parse(req.rawBody);
-
-            client.hmset(req.params.id, data, function (err, reply) {
                 try {
                     if (err) {
                         logger.error('error : ', err);
@@ -372,11 +369,11 @@ redisHandler.prototype = {
                         client.get(key, function (err, reply) {
                             try {
                                 if (err) {
+                                    logger.error(err.stack);
                                     if (err.message == 'ERR Operation against a key holding the wrong kind of value') {
                                         res.send('keyType invalid', 400);
                                         return;
                                     }
-                                    logger.error(err.stack);
                                     res.send(err.message, 500);
                                     return;
                                 }
@@ -398,6 +395,7 @@ redisHandler.prototype = {
                     //default string
                     logger.debug(srcName + ' nonExist keyType ');
                     if (qryStr.key == 'all') {
+                        logger.debug(srcName + ' return all keys ');
                         client.keys("*", function (err, keys) {
                             logger.debug(srcName + " keys : ", utils.inspect(keys));
                             if (keys.length != 0) {
@@ -418,6 +416,8 @@ redisHandler.prototype = {
                                 res.send(404);
                             }
                         });
+                    } else {
+                        //??
                     }
                 }
             } else {
@@ -426,38 +426,77 @@ redisHandler.prototype = {
                 //default string
                 var key = req.url.substring(req.url.lastIndexOf('/v1/redis') + 10);
                 logger.debug(srcName + ' key : ', key);
-                client.get(key, function (err, reply) {
-                    try {
-                        if (err) {
-                            if (err.message == 'ERR Operation against a key holding the wrong kind of value') {
-                                res.send('keyType missing', 400);
-                                return;
-                            }
-                            logger.error(err.stack);
-                            res.send(err.message, 500);
-                            return;
-                        }
-                        if (reply) {
-                            logger.debug(srcName + ' reply : ', reply);
-                            res.send(reply);
+
+                if (key == '') {
+                    logger.debug(srcName + ' return all keys ');
+                    client.keys("*", function (err, keys) {
+                        logger.debug(srcName + " keys : ", utils.inspect(keys));
+                        if (keys.length != 0) {
+                            var results = [];
+                            keys.forEach(function (key, pos) {
+                                var count = 0;
+                                client.type(key, function (err, keytype) {
+                                    logger.debug(srcName + " " + key + " is " + keytype);
+                                    results.push('{' + key + ':' + keytype + '}');
+                                    if (pos === (keys.length - 1)) {
+                                        logger.debug(srcName + " results : ", results);
+                                        res.send(results);
+                                        //client.quit();
+                                    }
+                                });
+                            });
                         } else {
-                            logger.debug(srcName + ' not found ');
                             res.send(404);
                         }
-                    } catch (e) {
-                        logger.debug(e.stack);
-                        res.send(e.message, 500);
-                    }
-                });
+                    });
+                } else {
+                    client.get(key, function (err, reply) {
+                        try {
+                            if (err) {
+                                if (err.message == 'ERR Operation against a key holding the wrong kind of value') {
+                                    //hgetall
+                                    client.hgetall(key, function (err, reply) {
+                                        try {
+                                            if (err) {
+                                                logger.error(err.stack);
+                                                res.send(err.message, 500);
+                                                return;
+                                            }
+                                            if (reply) {
+                                                logger.debug(srcName + ' reply : ', reply);
+                                                res.send(reply);
+                                            } else {
+                                                logger.debug(srcName + ' not found ');
+                                                res.send(404);
+                                            }
+                                        } catch (e) {
+                                            logger.debug(e.stack);
+                                            res.send(e.message, 500);
+                                        }
+                                    });
+                                    //res.send('keyType missing', 400);
+                                    return;
+                                }
+                                logger.error(err.stack);
+                                res.send(err.message, 500);
+                                return;
+                            }
+                            if (reply) {
+                                logger.debug(srcName + ' reply : ', reply);
+                                res.send(reply);
+                            } else {
+                                logger.debug(srcName + ' not found ');
+                                res.send(404);
+                            }
+                        } catch (e) {
+                            logger.debug(e.stack);
+                            res.send(e.message, 500);
+                        }
+                    });
+                }
+
+
             }
-
-
-//            if (qryStr.key) {
-
-//            }
-//            else {
-
-//          }
         } catch (e) {
             logger.debug(e.stack);
             res.send(e.message, 500);

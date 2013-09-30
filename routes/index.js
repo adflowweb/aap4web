@@ -82,24 +82,24 @@ exports.setup = function (app, handlers, client) {
     });
 
     //route redis hash
-    var REDIS_HASH_PATH = '/v1/redis/hash/:id';
-
-    app.get(REDIS_HASH_PATH, function (req, res) {
-        handlers.redisHandler.getHash(req, res, client);
-        //res.send(405);
-    });
-
-    app.put(REDIS_HASH_PATH, function (req, res) {
-        res.send(405);
-    });
-
-    app.post(REDIS_HASH_PATH, function (req, res) {
-        handlers.redisHandler.postHash(req, res, client);
-    });
-
-    app.delete(REDIS_HASH_PATH, function (req, res) {
-        handlers.redisHandler.deleteHash(req, res, client);
-    });
+//    var REDIS_HASH_PATH = '/v1/redis/hash/:id';
+//
+//    app.get(REDIS_HASH_PATH, function (req, res) {
+//        handlers.redisHandler.get(req, res, client);
+//        //res.send(405);
+//    });
+//
+//    app.put(REDIS_HASH_PATH, function (req, res) {
+//        res.send(405);
+//    });
+//
+//    app.post(REDIS_HASH_PATH, function (req, res) {
+//        handlers.redisHandler.postHash(req, res, client);
+//    });
+//
+//    app.delete(REDIS_HASH_PATH, function (req, res) {
+//        handlers.redisHandler.deleteHash(req, res, client);
+//    });
 
     //route redis
     //순서가 중요
