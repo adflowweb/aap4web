@@ -8,6 +8,7 @@ var express = require('express')
     , verificationURIHandler = require('./handlers/verificationURIHandler')
     , verifyHandler = require('./handlers/verifyHandler')
     , redisHandler = require('./handlers/redisHandler')
+    , policyHandler = require('./handlers/policyHandler')
     , routes = require('./routes')
     , http = require('http')
     , redis = require('redis').createClient()
@@ -60,7 +61,8 @@ var handlers = {
     virtualpages: new virtualPageHandler(),
     verificationuri: new verificationURIHandler(),
     verifyHandler: new verifyHandler(),
-    redisHandler: new redisHandler()
+    redisHandler: new redisHandler(),
+    policyHandler: new policyHandler()
 };
 
 function start() {

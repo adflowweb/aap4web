@@ -37,31 +37,7 @@ describe('log_v_detail table test', function () {
         done();
     });
 
-//    it('insert log_v_detail', function (done) {
-//        this.timeout(10000);
-//        pool.acquire(function (err, conn) {
-//            if (err) {
-//                console.log('err : ', err);
-//                return;
-//            }
-//
-//            conn.execute("INSERT INTO log_v_detail (txid, file_key, server_hash, client_hash, file_v_result, file_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)", [1234567890, hashCode('/test001/index.js'), 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 's', 'v'], function (err, results) {
-//                if (err) {
-//                    console.log(err);
-//                } else {
-//                    console.log('results : ', results);
-//                }
-//                //results.should.have.property('updateCount', 1);
-//                // return object back to pool
-//                pool.release(conn);
-//                done();
-//            });
-//
-//        });
-//
-//    });
-
-    it('select log_v_detail', function (done) {
+    it('insert log_v_detail', function (done) {
         this.timeout(10000);
         pool.acquire(function (err, conn) {
             if (err) {
@@ -69,30 +45,7 @@ describe('log_v_detail table test', function () {
                 return;
             }
 
-            conn.execute("select * from log_v_detail", [], function (err, results) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('results : ', results);
-                }
-                //results.should.be.a('object');
-                // return object back to pool
-                pool.release(conn);
-                done();
-            });
-
-        });
-    });
-
-    it('delete log_v_detail', function (done) {
-        this.timeout(10000);
-        pool.acquire(function (err, conn) {
-            if (err) {
-                console.log('err : ', err);
-                return;
-            }
-
-            conn.execute("delete from log_v_detail", [], function (err, results) {
+            conn.execute("INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)", [1234567890, hashCode('/test001/index.js'), 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 'e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff', 's', 'v'], function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -105,7 +58,54 @@ describe('log_v_detail table test', function () {
             });
 
         });
+
     });
+
+//    it('select log_v_detail', function (done) {
+//        this.timeout(10000);
+//        pool.acquire(function (err, conn) {
+//            if (err) {
+//                console.log('err : ', err);
+//                return;
+//            }
+//
+//            conn.execute("select * from log_v_detail", [], function (err, results) {
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    console.log('results : ', results);
+//                }
+//                //results.should.be.a('object');
+//                // return object back to pool
+//                pool.release(conn);
+//                done();
+//            });
+//
+//        });
+//    });
+
+//    it('delete log_v_detail', function (done) {
+//        this.timeout(10000);
+//        pool.acquire(function (err, conn) {
+//            if (err) {
+//                console.log('err : ', err);
+//                return;
+//            }
+//
+//            conn.execute("delete from log_v_detail", [], function (err, results) {
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    console.log('results : ', results);
+//                }
+//                //results.should.have.property('updateCount', 1);
+//                // return object back to pool
+//                pool.release(conn);
+//                done();
+//            });
+//
+//        });
+//    });
 
 
     hashCode = function (str) {

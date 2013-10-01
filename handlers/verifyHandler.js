@@ -18,6 +18,9 @@ var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, 'V', 'Y', :4, :5, :6, :7)";
 var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
+// , server_hash, client_hash, content_v_result, content_policy, reg_date    //, :3, :4, :5, :6, SYSDATE
+var SELECT_POLICY_STATIC_SQL = "SELECT b.content_key, b.content_type, b.content_name, b.content_hash, b.reg_date, a.content_policy FROM content_policy a, content_info b where a.content_key = b.content_key";
+var SELECT_POLICY_URI_SQL = "SELECT a.uri_key, a.uri_policy, b.uri_name, b.reg_date from url_policy a, url_info b where a.uri_key = b.uri_key";
 
 var initData;
 var pool;
@@ -46,53 +49,80 @@ var verifyHandler = function () {
         }
     });
 
-//    //oracle poller
-//    setInterval(function () {
-//
-//        logger.debug(srcName + ' polling oracle ');
-//        pool.acquire(function (err, conn) {
-//            if (err) {
-//                console.log('err : ', err);
-//                return;
-//            }
-//
-//            //content_policy
-//            conn.execute("SELECT * FROM content_info ", [], function (err, results) {
-//                if (err) {
-//                    console.log(err);
-//                } else {
-//                    console.log('results : ', results);
-//
-//                    results.forEach(function (value, i) {
-//                        console.log('value : ', value);
-//                        console.log('CONTENT_NAME : ', value.CONTENT_NAME);
-//                        console.log('CONTENT_HASH : ', value.CONTENT_HASH);
-//                        //redis insert
-//                        redis.hset('static', value.CONTENT_NAME, value.CONTENT_HASH, function (err) {
-//                            try {
-//                                if (err) {
-//                                    logger.error(err.stack);
-//                                    return;
-//                                } else {
-//                                    //logger.debug(srcName + ' key inserted ', reply);
-//                                }
-//                            } catch (e) {
-//                                logger.error(e.stack);
-//                            }
-//                        });
-//                    });
-//                }
-//
-////                var result = [];
-////                result.push('{"txid","11111111111"}');
-////                result.push('{"txid","22222222222"}');
-////                console.log('result : ', result);
-//
-//                // return object back to pool
-//                pool.release(conn);
-//            });
-//        });
-//    }, 60000); // 5초 뒤에 또 실행
+    //oracle poller
+    setInterval(function () {
+
+        logger.debug(srcName + ' polling oracle ');
+        pool.acquire(function (err, conn) {
+            if (err) {
+                console.log('err : ', err);
+                return;
+            }
+
+            //content_policy
+            conn.execute(SELECT_POLICY_STATIC_SQL, [], function (err, results) {
+                if (err) {
+                    console.log(err.stack);
+                } else {
+                    console.log('results : ', results);
+
+                    results.forEach(function (value, i) {
+                        console.log('value : ', value);
+                        console.log('CONTENT_NAME : ', value.CONTENT_NAME);
+                        console.log('CONTENT_HASH : ', value.CONTENT_HASH);
+                        //redis insert
+                        redis.hset('static', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
+                            try {
+                                if (err) {
+                                    logger.error(err.stack);
+                                    return;
+                                } else {
+                                    //logger.debug(srcName + ' key inserted ', reply);
+                                }
+                            } catch (e) {
+                                logger.error(e.stack);
+                            }
+                        });
+                    });
+                }
+
+                // return object back to pool
+                pool.release(conn);
+            });
+
+            //uri_policy
+            conn.execute(SELECT_POLICY_URI_SQL, [], function (err, results) {
+                if (err) {
+                    console.log(err.stack);
+                } else {
+                    console.log('results : ', results);
+
+                    results.forEach(function (value, i) {
+                        console.log('value : ', value);
+                        console.log('URI_KEY : ', value.URI_KEY);
+                        console.log('URI_POLICY : ', value.URI_POLICY);
+                        //redis insert
+                        redis.hset('uri', value.URI_NAME, '{"uri_key":"' + value.URI_KEY + '","uri_policy":"' + value.URI_POLICY + '"}', function (err) {
+                            try {
+                                if (err) {
+                                    logger.error(err.stack);
+                                    return;
+                                } else {
+                                    //logger.debug(srcName + ' key inserted ', reply);
+                                }
+                            } catch (e) {
+                                logger.error(e.stack);
+                            }
+                        });
+                    });
+                }
+
+                // return object back to pool
+                pool.release(conn);
+            });
+
+        });
+    }, 60000); // 60초 뒤에 또 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
@@ -111,16 +141,16 @@ verifyHandler.prototype.get = function (req, res, client) {
         //var hash = eval("(" + req.headers['hash'] + ")");
         //single quotation to double quotation
         var hash = JSON.parse(req.headers['hash'].replace(/[\']/g, '\"'));
-        logger.debug(srcName + ' clientHash', typeof(hash));
-        logger.debug(srcName + ' clientHash', hash.valueOf());
-        logger.debug(srcName + ' clientHash', hash.main);
+        logger.debug(srcName + ' clientHash type ', typeof(hash));
+        logger.debug(srcName + ' clientHash value ', hash.valueOf());
+        logger.debug(srcName + ' main ', hash.main);
 
         //var length = 0;
         //for (var k in hash) if (hash.hasOwnProperty(k)) length++;
         //logger.debug(__filename + ' length ', length);
 
         var index = [];
-        var transaction = {"txid": req.headers["txid"], "result": "s"};
+        var transaction = {"txid": req.headers["txid"], "result": "S"};
         var details = [];
 
         // build the index
@@ -129,7 +159,7 @@ verifyHandler.prototype.get = function (req, res, client) {
         }
         logger.debug(srcName + ' index ', index);
 
-        function verify(i) {
+        function verify(i, policy) {
             if (i < index.length) {
                 var key = req.params.id;
                 var hashKey = 'virtualpage';
@@ -139,65 +169,82 @@ verifyHandler.prototype.get = function (req, res, client) {
                 }
 
                 client.hget(hashKey, key, function (err, reply) {
-                        try {
-                            logger.debug(srcName + ' key', key);
-                            //logger.debug(srcName + ' reply', reply);
-                            if (err) {
-                                logger.error('error : ', err);
-                                details[i] = {"key": key, "result": "F"};
-                                //res.send(err.message, 500);
-                                //return;
-                            }
-                            // reply is null when the key is missing
-                            if (!reply) {
-                                details[i] = {"key": key, "result": "F"};
-                                //res.send(404);
-                                //return;
-                            }
+                    try {
+                        logger.debug(srcName + ' key', key);
+                        //logger.debug(srcName + ' reply', reply);
+                        if (err) {
+                            logger.error('error : ', err);
+                            details[i] = {"key": key, "result": "F"};
+                            //res.send(err.message, 500);
+                            //return;
+                        }
+                        // reply is null when the key is missing
+                        if (!reply) {
+                            details[i] = {"key": key, "result": "F"};
+                            //res.send(404);
+                            //return;
+                        }
 
-                            if (index[i] == 'main') {
-                                //process main page
-                                //logger.debug(__filename + ' reply : ', reply);
-                                //정규화
-                                var nornalizedData = util.normalize(reply);
-                                //hash
-                                var serverHash = util.hash(nornalizedData);
-                                logger.debug(srcName + ' hash', hash.main);
-                                //var clientHash = req.headers['hash'];
-                                var clientHash = hash.main;
-                                logger.debug(srcName + ' serverHash', serverHash);
-                                logger.debug(srcName + ' clientHash', clientHash);
-                                //검증
-                                if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
-                                    //res.send(505);
-                                    //return;
-                                    transaction.result = 'F';
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash};
-                                    logger.info(srcName + ' not matched main session :', key);
-                                } else {
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash};
-                                    logger.info(srcName + ' matched main session :', key);
-                                }
+                        if (index[i] == 'main') {
+                            //process main page
+                            //logger.debug(srcName + ' reply : ', reply);
+                            //정규화
+                            var nornalizedData = util.normalize(reply);
+                            //hash
+                            var serverHash = util.hash(nornalizedData);
+                            logger.debug(srcName + ' hash', hash.main);
+                            //var clientHash = req.headers['hash'];
+                            var clientHash = hash.main;
+                            logger.debug(srcName + ' serverHash', serverHash);
+                            logger.debug(srcName + ' clientHash', clientHash);
+                            //검증
+                            if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
+                                //res.send(505);
+                                //return;
+                                transaction.result = 'F';
+                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                logger.info(srcName + ' not matched main session :', key);
                             } else {
-                                //else process static resource
-                                logger.debug(srcName + ' value : ', hash[index[i]]);
-                                if (hash[index[i]] != reply) {
+                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                logger.info(srcName + ' matched main session :', key);
+                            }
+                        } else {
+                            //else process static resource
+                            logger.debug(srcName + ' reply : ', reply);
+                            var data = JSON.parse(reply);
+                            logger.debug(srcName + ' clientHash : ', hash[index[i]]);
+                            logger.debug(srcName + ' content_policy : ', data.content_policy);
+
+                            //policy
+                            if (data.content_policy == 'V') {
+                                //검증대상
+                                if (hash[index[i]] != data.content_hash) {
                                     //res.send(505);
                                     //return;
                                     transaction.result = 'F';
-                                    details[i] = {"key": key, "result": "F", "serverHash": reply, "clientHash": hash[index[i]]};
+                                    details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
                                     logger.info(srcName + ' not matched', key);
                                 } else {
-                                    details[i] = {"key": key, "result": "S", "serverHash": reply, "clientHash": hash[index[i]]};
+                                    details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
+                                    logger.info(srcName + ' matched', key);
+                                }
+                            } else if (data.content_policy == 'M') {
+                                //모니터대상
+                                if (hash[index[i]] != data.content_hash) {
+                                    //transaction.result = 'F';
+                                    details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
+                                    logger.info(srcName + ' not matched', key);
+                                } else {
+                                    details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
                                     logger.info(srcName + ' matched', key);
                                 }
                             }
-                        } catch (e) {
-                            logger.error(e.stack);
                         }
-                        verify(++i);
+                    } catch (e) {
+                        logger.error(e.stack);
                     }
-                )
+                    verify(++i, policy);
+                })
             } else {
                 //최종 response
                 if (transaction.result == 'S') {
@@ -233,7 +280,7 @@ verifyHandler.prototype.get = function (req, res, client) {
 
                         var arg = [transaction.txid, transaction.result, req.headers['user-agent'], crypto.createHash('md5').update(clientIP).digest("base64")
                             , crypto.createHash('md5').update(req.headers['virtual_page_uri']).digest("base64"), req.headers['filterid'], processID];
-                        logger.debug(srcName + ' args : ', arg);
+                        logger.debug(srcName + ' log_v args : ', arg);
                         conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
                             try {
                                 //logger.debug(srcName + ' conn : ', utils.inspect(conn));
@@ -246,10 +293,9 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     function logDetail(i) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
-                                            arg = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64")
-                                                , details[i].serverHash, details[i].clientHash, details[i].result, 'V'];
-                                            logger.debug(srcName + ' args : ', arg);
-                                            conn.execute(INSERT_LOG_DETAIL_SQL, arg, function (err, results) {
+                                            var args2 = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64"), details[i].serverHash, details[i].clientHash, details[i].result, details[i].policy];
+                                            logger.debug(srcName + ' log_v_detail args : ', args2);
+                                            conn.execute(INSERT_LOG_DETAIL_SQL, args2, function (err, results) {
                                                 try {
                                                     if (err) {
                                                         logger.error(err.stack);
@@ -297,7 +343,26 @@ verifyHandler.prototype.get = function (req, res, client) {
             }
         }
 
-        verify(0);
+        client.hget('uri', req.headers['virtual_page_uri'], function (err, reply) {
+            try {
+                logger.debug(srcName + ' reply : ', reply);
+                var data = JSON.parse(reply);
+                //policy
+                if (data.uri_policy == 'V') {
+                    logger.info(srcName + ' 검증대상 : ', req.headers['virtual_page_uri']);
+                    verify(0, data.uri_policy);
+                } else if (data.uri_policy == 'M') {
+                    logger.info(srcName + ' 모니터대상 : ', req.headers['virtual_page_uri']);
+                    verify(0, data.uri_policy);
+                } else {
+                    // 검증대상아님
+                    logger.info(srcName + ' 검증대상아님 : ', req.headers['virtual_page_uri']);
+                    res.send(200);
+                }
+            } catch (e) {
+                logger.error(e.stack);
+            }
+        });
     } catch (e) {
         logger.error(e.stack);
         res.send(e.message, 500);

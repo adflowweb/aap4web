@@ -96,24 +96,24 @@ describe('verify', function () {
             });
     });
 
-    it('검증오류 테스트 : 응답코드 505', function (done) {
-        request(url)
-            .get('/v1/verify/1234567890')
-            .set('txid', process.pid + '-' + guid())
-            .set('filterID', '1234@192.168.1.86')
-            .set('hash', '{"/js/script.js":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"f4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
-            .set('User-Agent', 'mochaTestClient')
-            .set('clientIP', '192.168.1.86')
-            .set('virtual_page_uri', '/test001/index.jsp')
-            // end handles the response
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                res.should.have.status(505);
-                done();
-            });
-    });
+//    it('검증오류 테스트 : 응답코드 505', function (done) {
+//        request(url)
+//            .get('/v1/verify/1234567890')
+//            .set('txid', process.pid + '-' + guid())
+//            .set('filterID', '1234@192.168.1.86')
+//            .set('hash', '{"/js/script.js":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"f4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
+//            .set('User-Agent', 'mochaTestClient')
+//            .set('clientIP', '192.168.1.86')
+//            .set('virtual_page_uri', '/test001/index.jsp')
+//            // end handles the response
+//            .end(function (err, res) {
+//                if (err) {
+//                    throw err;
+//                }
+//                res.should.have.status(505);
+//                done();
+//            });
+//    });
 
     //generate uuid
     function s4() {

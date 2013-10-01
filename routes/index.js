@@ -63,25 +63,6 @@ exports.setup = function (app, handlers, client) {
     });
 
     //route redis
-//    var REDIS_PATH = '/v1/redis';
-//
-//    app.get(REDIS_PATH, function (req, res) {
-//        handlers.redisHandler.get(req, res, client);
-//    });
-//
-//    app.put(REDIS_PATH, function (req, res) {
-//        res.send(405);
-//    });
-//
-//    app.post(REDIS_PATH, function (req, res) {
-//        handlers.redisHandler.multiPost(req, res, client);
-//    });
-//
-//    app.delete(REDIS_PATH, function (req, res) {
-//        handlers.redisHandler.multiDelete(req, res, client);
-//    });
-
-    //route redis
     var REDIS_KEY_PATH = '/v1/redis*';
 
     app.get(REDIS_KEY_PATH, function (req, res) {

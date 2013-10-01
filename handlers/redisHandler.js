@@ -439,6 +439,7 @@ redisHandler.prototype = {
                         try {
                             if (err) {
                                 if (err.message == 'ERR Operation against a key holding the wrong kind of value') {
+                                    logger.debug(srcName + ' hgetall ');
                                     //hgetall
                                     client.hgetall(key, function (err, reply) {
                                         try {

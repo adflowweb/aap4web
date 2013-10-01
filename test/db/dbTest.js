@@ -45,18 +45,23 @@ describe('orcle test', function () {
                 return;
             }
 
+            var SELECT_CONTENT_POLICY = "SELECT b.content_key, b.content_type, b.content_name, b.content_hash, b.reg_date, a.content_policy FROM content_policy a, content_info b where a.content_key = b.content_key";
+            var SELECT_URI_POLICY = "SELECT b.uri_key, b.content_name, b.reg_date, a.uri_policy FROM uri_policy a, uri_info b where a.content_key = b.content_key";
+            var SELECT_LOG_V = "SELECT * from log_v";
+            var SELECT_LOG_V_DETAIL = "SELECT * from log_v_detail";
+
             // selecting rows
-            conn.execute("SELECT * FROM web_file", [], function (err, results) {
+            conn.execute(SELECT_LOG_V_DETAIL, [], function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
                     console.log('results : ', results);
                 }
 
-                var result = [];
-                result.push('{"txid","11111111111"}');
-                result.push('{"txid","22222222222"}');
-                console.log('result : ', result);
+//                var result = [];
+//                result.push('{"txid","11111111111"}');
+//                result.push('{"txid","22222222222"}');
+//                console.log('result : ', result);
 
                 // return object back to pool
                 pool.release(conn);
