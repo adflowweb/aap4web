@@ -204,10 +204,10 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     //res.send(505);
                                     //return;
                                     transaction.result = 'F';
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
                                     logger.info(srcName + ' not matched main session :', key);
                                 } else {
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
                                     logger.info(srcName + ' matched main session :', key);
                                 }
                             } else if (policy == 'M') {
@@ -216,12 +216,14 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     //res.send(505);
                                     //return;
                                     //transaction.result = 'F';
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
                                     logger.info(srcName + ' not matched main session :', key);
                                 } else {
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
                                     logger.info(srcName + ' matched main session :', key);
                                 }
+                            } else {
+
                             }
 
                         } else {
