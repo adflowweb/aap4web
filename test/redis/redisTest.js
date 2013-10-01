@@ -29,23 +29,23 @@ describe('redis test', function () {
             });
     });
 
-//    after(function (done) {
-//
-//        //deleteAll
-//        request(url)
-//            .del('/v1/redis')
-//            //.send(hashKey)
-//            // end handles the response
-//            .end(function (err, res) {
-//                if (err) {
-//                    throw err;
-//                }
-//                //console.log('response : ',res);
-//                // this is should.js syntax, very clear
-//                res.should.have.status(200);
-//                done();
-//            });
-//    });
+    after(function (done) {
+
+        //deleteAll
+        request(url)
+            .del('/v1/redis')
+            //.send(hashKey)
+            // end handles the response
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                //console.log('response : ',res);
+                // this is should.js syntax, very clear
+                res.should.have.status(200);
+                done();
+            });
+    });
 
     it('"testKey":"1234567890" 생성 테스트 : 응답코드 200', function (done) {
 

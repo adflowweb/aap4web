@@ -20,7 +20,28 @@ describe('policy test', function () {
         done();
     });
 
-    it('uri policy 가져오기 테스트 : 응답코드 200', function (done) {
+    it('uri policy 생성하기 : 응답코드 200', function (done) {
+
+        var key = 'uri';
+        //var value = {"/testUri/test.jsp": {"uri_key": "HxbLnJHViGL2NtTh26+psg==", "uri_policy": "V"}};
+        var value = {"/testUri/test.jsp": "{\"uri_key\": \"HxbLnJHViGL2NtTh26+psg==\", \"uri_policy\": \"V\"}"};
+        request(url)
+            .post('/v1/policy/' + key)
+            .send(value)
+            // end handles the response
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                //console.log('response : ',res.text);
+                // this is should.js syntax, very clear
+                res.should.have.status(200);
+                done();
+            });
+    });
+
+
+    it('uri policy 전체 가져오기 테스트 : 응답코드 200', function (done) {
 
         var key = 'uri';
         request(url)
@@ -37,7 +58,7 @@ describe('policy test', function () {
             });
     });
 
-    it('static resource policy 가져오기 테스트 : 응답코드 200', function (done) {
+    it('static resource policy 전체 가져오기 테스트 : 응답코드 200', function (done) {
 
         var key = 'static';
 

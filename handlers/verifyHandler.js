@@ -197,17 +197,33 @@ verifyHandler.prototype.get = function (req, res, client) {
                             var clientHash = hash.main;
                             logger.debug(srcName + ' serverHash', serverHash);
                             logger.debug(srcName + ' clientHash', clientHash);
-                            //검증
-                            if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
-                                //res.send(505);
-                                //return;
-                                transaction.result = 'F';
-                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
-                                logger.info(srcName + ' not matched main session :', key);
-                            } else {
-                                details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
-                                logger.info(srcName + ' matched main session :', key);
+                            //policy
+                            if (policy == 'V') {
+                                //검증
+                                if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
+                                    //res.send(505);
+                                    //return;
+                                    transaction.result = 'F';
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    logger.info(srcName + ' not matched main session :', key);
+                                } else {
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    logger.info(srcName + ' matched main session :', key);
+                                }
+                            } else if (policy == 'M') {
+                                //모니터
+                                if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
+                                    //res.send(505);
+                                    //return;
+                                    //transaction.result = 'F';
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    logger.info(srcName + ' not matched main session :', key);
+                                } else {
+                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": "V"};
+                                    logger.info(srcName + ' matched main session :', key);
+                                }
                             }
+
                         } else {
                             //else process static resource
                             logger.debug(srcName + ' reply : ', reply);
@@ -238,6 +254,8 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
                                     logger.info(srcName + ' matched', key);
                                 }
+                            } else {
+                                // 검증대상 or 모니터대상이 아닐경우
                             }
                         }
                     } catch (e) {
