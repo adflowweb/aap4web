@@ -235,7 +235,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                             logger.debug(srcName + ' content_policy : ', data.content_policy);
 
                             //policy
-                            if (data.content_policy == 'V') {
+                            if (policy == 'V') {
                                 //검증대상
                                 if (hash[index[i]] != data.content_hash) {
                                     //res.send(505);
@@ -247,7 +247,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
                                     logger.info(srcName + ' matched', key);
                                 }
-                            } else if (data.content_policy == 'M') {
+                            } else if (policy == 'M') {
                                 //모니터대상
                                 if (hash[index[i]] != data.content_hash) {
                                     //transaction.result = 'F';

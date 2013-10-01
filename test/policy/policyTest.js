@@ -24,7 +24,7 @@ describe('policy test', function () {
 
         var key = 'uri';
         //var value = {"/testUri/test.jsp": {"uri_key": "HxbLnJHViGL2NtTh26+psg==", "uri_policy": "V"}};
-        var value = {"/testUri/test.jsp": "{\"uri_key\": \"HxbLnJHViGL2NtTh26+psg==\", \"uri_policy\": \"V\"}"};
+        var value = {"/test001/index.jsp": "{\"uri_key\": \"HxbLnJHViGL2NtTh26+psg==\", \"uri_policy\": \"M\"}"};
         request(url)
             .post('/v1/policy/' + key)
             .send(value)
