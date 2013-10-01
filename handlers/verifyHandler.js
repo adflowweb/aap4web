@@ -122,7 +122,7 @@ var verifyHandler = function () {
             });
 
         });
-    }, 60000); // 60초 뒤에 또 실행
+    }, 10000); // 10초 마다 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
