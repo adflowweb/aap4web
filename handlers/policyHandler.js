@@ -141,25 +141,46 @@ policyHandler.prototype = {
                         }
                     });
                 } else {
-                    logger.debug(srcName + ' return all keys ');
-                    client.keys("*", function (err, keys) {
-                        logger.debug(srcName + " keys : ", utils.inspect(keys));
-                        if (keys.length != 0) {
-                            var results = [];
-                            keys.forEach(function (key, pos) {
-                                var count = 0;
-                                client.type(key, function (err, keytype) {
-                                    logger.debug(srcName + " " + key + " is " + keytype);
-                                    results.push('{' + key + ':' + keytype + '}');
-                                    if (pos === (keys.length - 1)) {
-                                        logger.debug(srcName + " results : ", results);
-                                        res.send(results);
-                                        //client.quit();
+                    logger.debug(srcName + ' return all ');
+                    //hgetall
+                    client.hgetall('uri', function (err, reply1) {
+                        try {
+                            if (err) {
+                                logger.error(err.stack);
+                                res.send(err.message, 500);
+                                return;
+                            }
+                            if (reply1) {
+                                logger.debug(srcName + ' reply : ', reply1);
+                                //res.send(reply);
+                                //hgetall
+                                client.hgetall('static', function (err, reply2) {
+                                    try {
+                                        if (err) {
+                                            logger.error(err.stack);
+                                            res.send(err.message, 500);
+                                            return;
+                                        }
+                                        if (reply2) {
+                                            logger.debug(srcName + ' reply : ', reply2)
+                                            var val = {"uri": reply1, "content": reply2};
+                                            res.send(val);
+                                        } else {
+                                            logger.debug(srcName + ' not found ');
+                                            res.send(404);
+                                        }
+                                    } catch (e) {
+                                        logger.debug(e.stack);
+                                        res.send(e.message, 500);
                                     }
                                 });
-                            });
-                        } else {
-                            res.send(404);
+                            } else {
+                                logger.debug(srcName + ' not found ');
+                                res.send(404);
+                            }
+                        } catch (e) {
+                            logger.debug(e.stack);
+                            res.send(e.message, 500);
                         }
                     });
                 }

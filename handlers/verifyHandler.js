@@ -52,77 +52,83 @@ var verifyHandler = function () {
     //oracle poller
     setInterval(function () {
 
-        logger.debug(srcName + ' polling oracle ');
+        logger.debug(srcName + ' acquire db conn ');
         pool.acquire(function (err, conn) {
             if (err) {
-                console.log('err : ', err);
+                logger.error(err.stack);
                 return;
             }
 
             //content_policy
-            conn.execute(SELECT_POLICY_STATIC_SQL, [], function (err, results) {
-                if (err) {
-                    console.log(err.stack);
-                } else {
-                    console.log('results : ', results);
+            logger.debug(srcName + ' polling content_policy ');
+            conn.execute(SELECT_POLICY_STATIC_SQL, [], function (err, reply) {
+                try {
+                    if (err) {
+                        logger.error(err.stack);
+                    } else {
+                        logger.debug(srcName + ' reply : ', reply);
 
-                    results.forEach(function (value, i) {
-                        console.log('value : ', value);
-                        console.log('CONTENT_NAME : ', value.CONTENT_NAME);
-                        console.log('CONTENT_HASH : ', value.CONTENT_HASH);
-                        //redis insert
-                        redis.hset('static', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
-                            try {
-                                if (err) {
-                                    logger.error(err.stack);
-                                    return;
-                                } else {
-                                    //logger.debug(srcName + ' key inserted ', reply);
+                        reply.forEach(function (value, i) {
+                            //logger.debug(srcName + ' value : ', value);
+                            //logger.debug(srcName + ' CONTENT_NAME : ', value.CONTENT_NAME);
+                            //logger.debug(srcName + ' CONTENT_HASH : ', value.CONTENT_HASH);
+                            //redis insert
+                            redis.hset('static', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
+                                try {
+                                    if (err) {
+                                        logger.error(err.stack);
+                                        return;
+                                    } else {
+                                        //logger.debug(srcName + ' key inserted ', reply);
+                                    }
+                                } catch (e) {
+                                    logger.error(e.stack);
                                 }
-                            } catch (e) {
-                                logger.error(e.stack);
-                            }
+                            });
                         });
-                    });
+                    }
+                } catch (e) {
+                    logger.error(e.stack);
                 }
-
-                // return object back to pool
-                pool.release(conn);
             });
 
             //uri_policy
-            conn.execute(SELECT_POLICY_URI_SQL, [], function (err, results) {
-                if (err) {
-                    console.log(err.stack);
-                } else {
-                    console.log('results : ', results);
+            logger.debug(srcName + ' polling uri_policy ');
+            conn.execute(SELECT_POLICY_URI_SQL, [], function (err, reply) {
+                try {
+                    if (err) {
+                        logger.error(err.stack);
+                    } else {
+                        logger.debug(srcName + ' reply : ', reply);
 
-                    results.forEach(function (value, i) {
-                        console.log('value : ', value);
-                        console.log('URI_KEY : ', value.URI_KEY);
-                        console.log('URI_POLICY : ', value.URI_POLICY);
-                        //redis insert
-                        redis.hset('uri', value.URI_NAME, '{"uri_key":"' + value.URI_KEY + '","uri_policy":"' + value.URI_POLICY + '"}', function (err) {
-                            try {
-                                if (err) {
-                                    logger.error(err.stack);
-                                    return;
-                                } else {
-                                    //logger.debug(srcName + ' key inserted ', reply);
+                        reply.forEach(function (value, i) {
+                            //logger.debug(srcName + ' value : ', value);
+                            //logger.debug(srcName + ' URI_KEY : ', value.URI_KEY);
+                            //logger.debug(srcName + ' URI_POLICY : ', value.URI_POLICY);
+                            //redis insert
+                            redis.hset('uri', value.URI_NAME, '{"uri_key":"' + value.URI_KEY + '","uri_policy":"' + value.URI_POLICY + '"}', function (err) {
+                                try {
+                                    if (err) {
+                                        logger.error(err.stack);
+                                        return;
+                                    } else {
+                                        //logger.debug(srcName + ' key inserted ', reply);
+                                    }
+                                } catch (e) {
+                                    logger.error(e.stack);
                                 }
-                            } catch (e) {
-                                logger.error(e.stack);
-                            }
+                            });
                         });
-                    });
+                    }
+                } catch (e) {
+                    logger.error(e.stack);
+                } finally {
+                    // return object back to pool
+                    pool.release(conn);
                 }
-
-                // return object back to pool
-                pool.release(conn);
             });
-
         });
-    }, 10000); // 10초 마다 실행
+    }, 60000); // 60초 마다 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
