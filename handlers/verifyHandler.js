@@ -18,8 +18,7 @@ var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, 'Y', :5, :6, :7, :8)";
 var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
-// , server_hash, client_hash, content_v_result, content_policy, reg_date    //, :3, :4, :5, :6, SYSDATE
-var SELECT_POLICY_STATIC_SQL = "SELECT b.content_key, b.content_type, b.content_name, b.content_hash, b.reg_date, a.content_policy FROM content_policy a, content_info b where a.content_key = b.content_key";
+var SELECT_POLICY_CONTENT_SQL = "SELECT b.content_key, b.content_type, b.content_name, b.content_hash, b.reg_date, a.content_policy FROM content_policy a, content_info b where a.content_key = b.content_key";
 var SELECT_POLICY_URI_SQL = "SELECT a.uri_key, a.uri_policy, b.uri_name, b.reg_date from url_policy a, url_info b where a.uri_key = b.uri_key";
 
 var initData;
@@ -61,7 +60,7 @@ var verifyHandler = function () {
 
             //content_policy
             logger.debug(srcName + ' polling content_policy ');
-            conn.execute(SELECT_POLICY_STATIC_SQL, [], function (err, reply) {
+            conn.execute(SELECT_POLICY_CONTENT_SQL, [], function (err, reply) {
                 try {
                     if (err) {
                         logger.error(err.stack);
@@ -73,7 +72,7 @@ var verifyHandler = function () {
                             //logger.debug(srcName + ' CONTENT_NAME : ', value.CONTENT_NAME);
                             //logger.debug(srcName + ' CONTENT_HASH : ', value.CONTENT_HASH);
                             //redis insert
-                            redis.hset('static', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
+                            redis.hset('content', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
                                 try {
                                     if (err) {
                                         logger.error(err.stack);
@@ -171,7 +170,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 var hashKey = 'virtualpage';
                 if (index[i] != 'main') {
                     key = index[i];
-                    hashKey = 'static';
+                    hashKey = 'content';
                 }
 
                 client.hget(hashKey, key, function (err, reply) {
