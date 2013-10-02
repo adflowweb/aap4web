@@ -16,6 +16,7 @@ var arch = process.arch;
 var pid = process.pid;
 var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
+var DEFAULT_INDEX_JS = '../routes/site/default/index.js';
 var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, 'Y', :5, :6, :7, :8)";
 var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
 var SELECT_POLICY_CONTENT_SQL = "SELECT b.content_key, b.content_type, b.content_name, b.content_hash, b.reg_date, a.content_policy FROM content_policy a, content_info b where a.content_key = b.content_key";
@@ -194,7 +195,16 @@ verifyHandler.prototype.get = function (req, res, client) {
                             //process main page
                             //logger.debug(srcName + ' reply : ', reply);
                             //정규화
-                            var nornalizedData = util.normalize(reply);
+                            //var nornalizedData = util.normalize(reply);
+                            var path = '../routes/site' + req.headers['virtual_page_uri'];
+                            var nornalizedData;
+                            logger.debug(srcName + ' path : ', path);
+                            try {
+                                nornalizedData = require(path).normalize(reply);
+                            } catch (e) {
+                                logger.error(e.stack);
+                                nornalizedData = require(DEFAULT_INDEX_JS).normalize(reply);
+                            }
                             //hash
                             var serverHash = util.hash(nornalizedData);
                             logger.debug(srcName + ' hash', hash.main);
@@ -211,10 +221,10 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     //return;
                                     transaction.result = 'F';
                                     details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.info(srcName + ' not matched main session :', key);
+                                    logger.debug(srcName + ' not matched main session :', key);
                                 } else {
                                     details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.info(srcName + ' matched main session :', key);
+                                    logger.debug(srcName + ' matched main session :', key);
                                 }
                             } else if (policy == 'M') {
                                 //모니터
@@ -223,10 +233,10 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     //return;
                                     //transaction.result = 'F';
                                     details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.info(srcName + ' not matched main session :', key);
+                                    logger.debug(srcName + ' not matched main session :', key);
                                 } else {
                                     details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.info(srcName + ' matched main session :', key);
+                                    logger.debug(srcName + ' matched main session :', key);
                                 }
                             } else {
 
@@ -247,20 +257,20 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     //return;
                                     transaction.result = 'F';
                                     details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.info(srcName + ' not matched', key);
+                                    logger.debug(srcName + ' not matched', key);
                                 } else {
                                     details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.info(srcName + ' matched', key);
+                                    logger.debug(srcName + ' matched', key);
                                 }
                             } else if (policy == 'M') {
                                 //모니터대상
                                 if (hash[index[i]] != data.content_hash) {
                                     //transaction.result = 'F';
                                     details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.info(srcName + ' not matched', key);
+                                    logger.debug(srcName + ' not matched', key);
                                 } else {
                                     details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.info(srcName + ' matched', key);
+                                    logger.debug(srcName + ' matched', key);
                                 }
                             } else {
                                 // 검증대상 or 모니터대상이 아닐경우
@@ -375,14 +385,14 @@ verifyHandler.prototype.get = function (req, res, client) {
                 var data = JSON.parse(reply);
                 //policy
                 if (data.uri_policy == 'V') {
-                    logger.info(srcName + ' 검증대상 : ', req.headers['virtual_page_uri']);
+                    logger.debug(srcName + ' 검증대상 : ', req.headers['virtual_page_uri']);
                     verify(0, data.uri_policy);
                 } else if (data.uri_policy == 'M') {
-                    logger.info(srcName + ' 모니터대상 : ', req.headers['virtual_page_uri']);
+                    logger.debug(srcName + ' 모니터대상 : ', req.headers['virtual_page_uri']);
                     verify(0, data.uri_policy);
                 } else {
                     // 검증대상아님
-                    logger.info(srcName + ' 검증대상아님 : ', req.headers['virtual_page_uri']);
+                    logger.debug(srcName + ' 검증대상아님 : ', req.headers['virtual_page_uri']);
                     res.send(200);
                 }
             } catch (e) {
