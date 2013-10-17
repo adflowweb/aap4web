@@ -16,11 +16,9 @@ exports.post = function (req, res) {
     //logger.debug(__filename + ' testData : ', testData);
 
     if ($('html').html()) {
-        return $('html').html();
-    }
-    else {
-        //return '<HTML>' + $('HTML').html() + '</HTML>';
-        return $('HTML').html();
+        return '<html>' + $('html').html() + '</html>';
+    } else {
+        return '<HTML>' + $('HTML').html() + '</HTML>';
     }
 };
 

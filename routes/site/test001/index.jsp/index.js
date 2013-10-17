@@ -23,9 +23,8 @@ exports.post = function (req, res) {
     //logger.debug('modified : ', '<html>' + $('html').html() + '</html>');
 
     if ($('html').html()) {
-        return $('html').html();
-    }
-    else {
-        return $('HTML').html();
+        return '<html>' + $('html').html() + '</html>';
+    } else {
+        return '<HTML>' + $('HTML').html() + '</HTML>';
     }
 };

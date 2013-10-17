@@ -60,6 +60,9 @@ virtualPageHandler.prototype = {
                 //console.log(encodeURIComponent(html.replace(/[\n\r]/g, '').replace(/\s+/g, '')));
                 var cleanedHtml = html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, '').substring(html.indexOf('<head>'));
                 cleanedHtml = cleanedHtml.substring(0, cleanedHtml.indexOf('</html>'));
+
+                //logger.debug(srcName + ' cleanedHtml : ', cleanedHtml);
+
                 //.replace('//]]>/g',''));
                 //$string = str_replace("//<![CDATA[","",$string);
                 //$string = str_replace("//]]>","",$string);
@@ -100,7 +103,7 @@ virtualPageHandler.prototype = {
             client.hget('virtualpage', req.params.id, function (err, reply) {
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error('error : ', err.stack);
                         res.send(err.message, 500);
                         return;
                     }
@@ -118,11 +121,11 @@ virtualPageHandler.prototype = {
                         val = require(DEFAULT_INDEX_JS).put(req, res, reply);
                     }
 
-
+                    // logger.debug(srcName + ' val : ', val);
                     client.set(req.params.id, val, function (err) {
                         try {
                             if (err) {
-                                logger.error('error : ', err);
+                                logger.error('error : ', err.stack);
                                 res.send(err.message, 500);
                             } else res.send(200);
                         } catch (e) {
