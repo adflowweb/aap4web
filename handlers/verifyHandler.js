@@ -6,6 +6,14 @@
 var logger = require('../logger'),
     util = require('../util');
 var crypto = require('crypto');
+//var domain = require('domain');
+//var d = domain.create();
+//
+//d.on('error', function (err) {
+//    console.error('domain err : ', err);
+//});
+
+
 var utils = require('util');
 var oracle = require("oracle");
 var poolModule = require('generic-pool');
@@ -34,11 +42,18 @@ var verifyHandler = function () {
         max: 50,
         // 생성된 connection은 30초 동안 유휴 상태(idle)면 destory됩니다.
         idleTimeoutMillis: 30000,
-        log: false,
+        log: true,
         create: function (callback) {
-            oracle.connect(initData, function (err, conn) {
-                callback(err, conn);
-            });
+            try {
+                oracle.connect(initData, function (err, conn) {
+                    if (err) {
+                        throw err;
+                    }
+                    callback(err, conn);
+                });
+            } catch (e) {
+                logger.error(e.stack);
+            }
         },
         destroy: function (conn) {
             try {
@@ -128,7 +143,7 @@ var verifyHandler = function () {
                 }
             });
         });
-    }, 60000); // 60초 마다 실행
+    }, 10000); // 60초 마다 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
@@ -180,100 +195,90 @@ verifyHandler.prototype.get = function (req, res, client) {
                         //logger.debug(srcName + ' reply', reply);
                         if (err) {
                             logger.error('error : ', err);
-                            details[i] = {"key": key, "result": "F"};
-                            //res.send(err.message, 500);
-                            //return;
+                            transaction.result = 'F';
+                            details[i] = {"key": key, "result": "R", "serverHash": "", "clientHash": "", "policy": ""};
                         }
                         // reply is null when the key is missing
                         if (!reply) {
-                            details[i] = {"key": key, "result": "F"};
-                            //res.send(404);
-                            //return;
-                        }
-
-                        if (index[i] == 'main') {
-                            //process main page
-                            //logger.debug(srcName + ' reply : ', reply);
-                            //정규화
-                            //var nornalizedData = util.normalize(reply);
-                            var path = '../routes/site' + req.headers['virtual_page_uri'];
-                            var nornalizedData;
-                            logger.debug(srcName + ' path : ', path);
-                            try {
-                                nornalizedData = require(path).normalize(reply);
-                            } catch (e) {
-                                logger.error(e.stack);
-                                nornalizedData = require(DEFAULT_INDEX_JS).normalize(reply);
-                            }
-                            //hash
-                            var serverHash = util.hash(nornalizedData);
-                            logger.debug(srcName + ' hash', hash.main);
-                            //var clientHash = req.headers['hash'];
-                            var clientHash = hash.main;
-                            logger.debug(srcName + ' serverHash', serverHash);
-                            logger.debug(srcName + ' clientHash', clientHash);
-                            transaction.uri_policy = policy;
-                            //policy
-                            if (policy == 'V') {
-                                //검증
-                                if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
-                                    //res.send(505);
-                                    //return;
-                                    transaction.result = 'F';
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.debug(srcName + ' not matched main session :', key);
-                                } else {
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.debug(srcName + ' matched main session :', key);
-                                }
-                            } else if (policy == 'M') {
-                                //모니터
-                                if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
-                                    //res.send(505);
-                                    //return;
-                                    //transaction.result = 'F';
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.debug(srcName + ' not matched main session :', key);
-                                } else {
-                                    details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
-                                    logger.debug(srcName + ' matched main session :', key);
-                                }
-                            } else {
-
-                            }
-
+                            transaction.result = 'F';
+                            details[i] = {"key": key, "result": "E", "serverHash": "", "clientHash": "", "policy": ""};
                         } else {
-                            //else process static resource
-                            logger.debug(srcName + ' reply : ', reply);
-                            var data = JSON.parse(reply);
-                            logger.debug(srcName + ' clientHash : ', hash[index[i]]);
-                            logger.debug(srcName + ' content_policy : ', data.content_policy);
-
-                            //policy
-                            if (policy == 'V') {
-                                //검증대상
-                                if (hash[index[i]] != data.content_hash) {
-                                    //res.send(505);
-                                    //return;
-                                    transaction.result = 'F';
-                                    details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.debug(srcName + ' not matched', key);
-                                } else {
-                                    details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.debug(srcName + ' matched', key);
+                            if (index[i] == 'main') {
+                                //process main page
+                                //logger.debug(srcName + ' reply : ', reply);
+                                //정규화
+                                //var nornalizedData = util.normalize(reply);
+                                var path = '../routes/site' + req.headers['virtual_page_uri'];
+                                var nornalizedData;
+                                logger.debug(srcName + ' path : ', path);
+                                try {
+                                    nornalizedData = require(path).normalize(reply);
+                                } catch (e) {
+                                    logger.error(e.message);
+                                    nornalizedData = require(DEFAULT_INDEX_JS).normalize(reply);
                                 }
-                            } else if (policy == 'M') {
-                                //모니터대상
-                                if (hash[index[i]] != data.content_hash) {
-                                    //transaction.result = 'F';
-                                    details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.debug(srcName + ' not matched', key);
+                                //hash
+                                var serverHash = util.hash(nornalizedData);
+                                logger.debug(srcName + ' hash', hash.main);
+                                //var clientHash = req.headers['hash'];
+                                var clientHash = hash.main;
+                                logger.debug(srcName + ' serverHash', serverHash);
+                                logger.debug(srcName + ' clientHash', clientHash);
+                                transaction.uri_policy = policy;
+                                //policy
+                                if (policy == 'V') {
+                                    //검증
+                                    if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
+                                        transaction.result = 'F';
+                                        details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
+                                        logger.debug(srcName + ' not matched main session :', key);
+                                    } else {
+                                        details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
+                                        logger.debug(srcName + ' matched main session :', key);
+                                    }
+                                } else if (policy == 'M') {
+                                    //모니터
+                                    if (serverHash.toUpperCase() != clientHash.toUpperCase()) {
+                                        //transaction.result = 'F';
+                                        details[i] = {"key": req.headers['virtual_page_uri'], "result": "F", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
+                                        logger.debug(srcName + ' not matched main session :', key);
+                                    } else {
+                                        details[i] = {"key": req.headers['virtual_page_uri'], "result": "S", "serverHash": serverHash, "clientHash": clientHash, "policy": policy};
+                                        logger.debug(srcName + ' matched main session :', key);
+                                    }
                                 } else {
-                                    details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
-                                    logger.debug(srcName + ' matched', key);
                                 }
                             } else {
-                                // 검증대상 or 모니터대상이 아닐경우
+                                //else process static resource
+                                logger.debug(srcName + ' reply : ', reply);
+                                var data = JSON.parse(reply);
+                                logger.debug(srcName + ' clientHash : ', hash[index[i]]);
+                                logger.debug(srcName + ' content_policy : ', data.content_policy);
+
+                                //policy
+                                if (policy == 'V') {
+                                    //검증대상
+                                    if (hash[index[i]] != data.content_hash) {
+                                        transaction.result = 'F';
+                                        details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
+                                        logger.debug(srcName + ' not matched', key);
+                                    } else {
+                                        details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
+                                        logger.debug(srcName + ' matched', key);
+                                    }
+                                } else if (policy == 'M') {
+                                    //모니터대상
+                                    if (hash[index[i]] != data.content_hash) {
+                                        //transaction.result = 'F';
+                                        details[i] = {"key": key, "result": "F", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
+                                        logger.debug(srcName + ' not matched', key);
+                                    } else {
+                                        details[i] = {"key": key, "result": "S", "serverHash": data.content_hash, "clientHash": hash[index[i]], "policy": data.content_policy};
+                                        logger.debug(srcName + ' matched', key);
+                                    }
+                                } else {
+                                    // 검증대상 or 모니터대상이 아닐경우
+                                }
                             }
                         }
                     } catch (e) {
