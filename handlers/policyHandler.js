@@ -119,60 +119,60 @@ policyHandler.prototype = {
                     }
                 });
             } else {
-                if (uri) {
-                    //hgetall
-                    client.hgetall(uri, function (err, reply) {
-                        try {
-                            if (err) {
-                                logger.error(err.stack);
-                                res.send(err.message, 500);
-                                return;
-                            }
-                            if (reply) {
-                                logger.debug(srcName + ' reply : ', reply);
-                                res.send(reply);
-                            } else {
-                                logger.debug(srcName + ' not found ');
-                                res.send(404);
-                            }
-                        } catch (e) {
-                            logger.debug(e.stack);
-                            res.send(e.message, 500);
-                        }
-                    });
-                } else {
-                    logger.debug(srcName + ' return all policy');
+//                if (uri) {
+//                    //hgetall
+//                    client.hgetall(uri, function (err, reply) {
+//                        try {
+//                            if (err) {
+//                                logger.error(err.stack);
+//                                res.send(err.message, 500);
+//                                return;
+//                            }
+//                            if (reply) {
+//                                logger.debug(srcName + ' reply : ', reply);
+//                                res.send(reply);
+//                            } else {
+//                                logger.debug(srcName + ' not found ');
+//                                res.send(404);
+//                            }
+//                        } catch (e) {
+//                            logger.debug(e.stack);
+//                            res.send(e.message, 500);
+//                        }
+//                    });
+//                } else {
+                logger.debug(srcName + ' return all policy');
 
-                    var pollingData = ['uri', 'content'];
-                    var result = [];
+                var pollingData = ['uri', 'content'];
+                var result = [];
 
-                    function getHash(i) {
-                        if (i < pollingData.length) {
-                            //hgetall
-                            client.hgetall(pollingData[i], function (err, reply) {
-                                try {
-                                    if (err) {
-                                        logger.error(err.stack);
-                                    }
-                                    if (reply) {
-                                        logger.debug(srcName + ' reply : ', reply);
-                                        result.push(reply);
-                                    } else {
-                                        logger.debug(srcName + ' not found ');
-                                    }
-                                } catch (e) {
-                                    logger.debug(e.stack);
+                function getHash(i) {
+                    if (i < pollingData.length) {
+                        //hgetall
+                        client.hgetall(pollingData[i], function (err, reply) {
+                            try {
+                                if (err) {
+                                    logger.error(err.stack);
                                 }
-                                getHash(++i);
-                            });
-                        } else {
-                            logger.debug(srcName + ' result : ', result);
-                            res.send({'uri': result[0], "content": result[1]});
-                        }
+                                if (reply) {
+                                    logger.debug(srcName + ' reply : ', reply);
+                                    result.push(reply);
+                                } else {
+                                    logger.debug(srcName + ' not found ');
+                                }
+                            } catch (e) {
+                                logger.debug(e.stack);
+                            }
+                            getHash(++i);
+                        });
+                    } else {
+                        logger.debug(srcName + ' result : ', result);
+                        res.send({'uri': result[0], "content": result[1]});
                     }
-
-                    getHash(0);
                 }
+
+                getHash(0);
+                // }
             }
         } catch (e) {
             logger.debug(e.stack);
