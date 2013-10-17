@@ -82,7 +82,7 @@ describe('verify', function () {
             .get('/v1/verify/1234567890')
             .set('txid', process.pid + '-' + guid())
             .set('filterID', '1234@192.168.1.86')
-            .set('hash', '{"/js/script.js":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
+            .set('hash', '{"/js/script.dll":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff","main":"e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489b3198"}')
             .set('User-Agent', 'mochaTestClient')
             .set('clientIP', '192.168.1.86')
             .set('virtual_page_uri', '/test001/index.jsp')
