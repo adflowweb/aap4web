@@ -5,7 +5,6 @@
  */
 var util = require('util'),
     logger = require('../logger'),
-    tidy = require('htmltidy').tidy,
     DEFAULT_INDEX_JS = '../routes/site/default/index.js',
     RESPONSE_MESSAGE = '{"error":{"code":400,"message":"virtual_page_uri header not found"}}';
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
@@ -13,18 +12,10 @@ var srcName = __filename.substring(__filename.lastIndexOf('/'));
 var virtualPageHandler = function () {
 };
 
-var opts = {
-    //doctype: 'html5',
-    hideComments: true, //  multi word options can use a hyphen or "camel case"
-    indent: true,
-    'sort-attributes': 'alpha'
-}
-
 virtualPageHandler.prototype = {
     //create virtualPage
     post: function (req, res, client) {
         try {
-            //nonExistFunctionCall();
             if (!req.headers['virtual_page_uri']) {
                 //reponseCode 400 : bad request
                 res.send(RESPONSE_MESSAGE, 400);
@@ -35,49 +26,31 @@ virtualPageHandler.prototype = {
             logger.debug(srcName + ' path : ', path);
 
             try {
-                var val = require(path).post(req, res);
+                var handler = require(path);
             } catch (e) {
-                val = require(DEFAULT_INDEX_JS).post(req, res);
+                logger.error(e.message);
+                handler = require(DEFAULT_INDEX_JS);
             }
 
-            //set page
-//            client.set(req.params.id, val, function (err) {
-//                try {
-//                    if (err) {
-//                        logger.error('error : ', err);
-//                        res.send(err.message, 500);
-//                    } else {
-//                        logger.debug(__filename + ' stored data : ', val);
-//                        res.send(200);
-//                    }
-//                } catch (e) {
-//                    logger.error(e.stack);
-//                    res.send(e.message, 500);
-//                }
-//            });
+            logger.debug(srcName + ' handler : ', handler);
 
-            tidy(val, opts, function (err, html) {
-                //console.log(encodeURIComponent(html.replace(/[\n\r]/g, '').replace(/\s+/g, '')));
-                var cleanedHtml = html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, '').substring(html.indexOf('<head>'));
-                cleanedHtml = cleanedHtml.substring(0, cleanedHtml.indexOf('</html>'));
+            handler.post(req, res, function (err, data) {
 
-                //logger.debug(srcName + ' cleanedHtml : ', cleanedHtml);
-
-                //.replace('//]]>/g',''));
-                //$string = str_replace("//<![CDATA[","",$string);
-                //$string = str_replace("//]]>","",$string);
-                //console.log('value : ', html);
-
+                if (err) {
+                    logger.error(err.stack);
+                    res.send(err.message, 500);
+                    return;
+                }
+                //logger.debug(srcName + ' data : ', data);
                 //set page
-                client.hset('virtualpage', req.params.id, cleanedHtml, function (err) {
+                client.hset('virtualpage', req.params.id, data, function (err) {
                     try {
                         if (err) {
-                            logger.error('error : ', err);
+                            logger.error(err.stack);
                             res.send(err.message, 500);
-                        } else {
-//logger.debug(__filename + ' stored data : ', cleanedHtml);
-                            res.send(200);
+                            return;
                         }
+                        res.send(200);
                     } catch (e) {
                         logger.error(e.stack);
                         res.send(e.message, 500);
@@ -115,25 +88,33 @@ virtualPageHandler.prototype = {
                     }
 
                     try {
-                        var val = require(path).put(req, res, reply);
+                        var handler = require(path);
                     } catch (e) {
                         logger.error(e.stack);
-                        val = require(DEFAULT_INDEX_JS).put(req, res, reply);
+                        handler = require(DEFAULT_INDEX_JS);
                     }
 
-                    // logger.debug(srcName + ' val : ', val);
-                    client.set(req.params.id, val, function (err) {
-                        try {
-                            if (err) {
-                                logger.error('error : ', err.stack);
-                                res.send(err.message, 500);
-                            } else res.send(200);
-                        } catch (e) {
-                            logger.error(e.stack);
-                            res.send(e.message, 500);
-                        }
-                    });
+                    handler.put(req, res, reply, function (error, reply) {
 
+                        if (error) {
+                            logger.error('error : ', error.stack);
+                            res.send(err.message, 500);
+                            return;
+                        }
+
+                        logger.debug(srcName + ' reply : ', reply);
+                        client.set(req.params.id, reply, function (err) {
+                            try {
+                                if (err) {
+                                    logger.error('error : ', err.stack);
+                                    res.send(err.message, 500);
+                                } else res.send(200);
+                            } catch (e) {
+                                logger.error(e.stack);
+                                res.send(e.message, 500);
+                            }
+                        });
+                    });
                 } catch (e) {
                     logger.error(e.stack);
                     res.send(e.message, 500);

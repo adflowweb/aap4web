@@ -5,34 +5,60 @@
  */
 var parser = require('cheerio'),
     crypto = require('crypto'),
+    tidy = require('htmltidy').tidy,
     logger = require('../../../logger');
 
-exports.post = function (req, res) {
-    logger.debug(__filename + ' called post default/index.js');
-    //logger.debug('req.xhr : ', req.xhr);
-    //logger.debug('req.rawBody : ', req.rawBody);
-    var $ = parser.load(req.rawBody);
-    //var testData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
-    //logger.debug(__filename + ' testData : ', testData);
+var opts = {
+    //doctype: 'html5',
+    hideComments: true, //  multi word options can use a hyphen or "camel case"
+    indent: true,
+    'sort-attributes': 'alpha'
+}
 
-    if ($('html').html()) {
-        return '<html>' + $('html').html() + '</html>';
-    } else {
-        return '<HTML>' + $('HTML').html() + '</HTML>';
+exports.post = function (req, res, callback) {
+    try {
+        logger.debug(__filename + ' called post default/index.js');
+        //logger.debug('req.xhr : ', req.xhr);
+        logger.debug('req.rawBody : ', req.rawBody);
+        var $ = parser.load('<html>' + req.rawBody + '</html>');
+
+        //var testData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
+        //logger.debug(__filename + ' testData : ', testData);
+
+        tidy($('html').html(), opts, function (err, html) {
+            //console.log(encodeURIComponent(html.replace(/[\n\r]/g, '').replace(/\s+/g, '')));
+            var cleanedHtml = html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, '').substring(html.indexOf('<head>'));
+            cleanedHtml = cleanedHtml.substring(0, cleanedHtml.indexOf('</html>'));
+            //logger.debug(srcName + ' cleanedHtml : ', cleanedHtml);
+            //.replace('//]]>/g',''));
+            //$string = str_replace("//<![CDATA[","",$string);
+            //$string = str_replace("//]]>","",$string);
+            //console.log('value : ', html);
+            callback(null, cleanedHtml);
+        });
+    } catch (e) {
+        logger.error(e.stack);
+        callback(e);
     }
 };
 
-exports.put = function (req, res, data) {
-    logger.debug(__filename + ' called put default/index.js');
-    var $ = parser.load(data);
-    //req 에서 변경데이타를 뽑아
-    //virtual dom 에 적용하는 코드
-    //...
-    if ($('html').html()) {
-        return $('html').html();
-    }
-    else {
-        return $('HTML').html();
+exports.put = function (req, res, data, callback) {
+
+    try {
+        logger.debug(__filename + ' called put default/index.js');
+        var $ = parser.load(data);
+        //req 에서 변경데이타를 뽑아
+        //virtual dom 에 적용하는 코드
+        //...
+        if ($('html').html()) {
+            callback(null, $('html').html());
+        }
+        else {
+            callback(null, $('HTML').html());
+        }
+    } catch (e) {
+        logger.error(e.stack);
+        callback(e);
     }
 }
 

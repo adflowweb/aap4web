@@ -47,7 +47,9 @@ describe('검증서버\n\t\tenv : 127.0.0.1:3000\n\t\tfile : virtualpageTest.js'
             request(url)
                 .put('/v1/virtualpages/1234567890')
                 .set('virtual_page_uri', '/test001/TestServlet')
-                .set('event', '[{"function1":["param1","param2"]},{"function2":["param1","param2"]}]')
+                .set('event', '["x=10;y=20;sum(x,y)"]')
+
+                //.set('event', '[{"function1":["param1","param2"]},{"function2":["param1","param2"]}]')
                 //.send(profile)
                 // end handles the response
                 .end(function (err, res) {

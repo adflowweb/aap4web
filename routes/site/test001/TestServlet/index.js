@@ -9,9 +9,7 @@ var parser = require('cheerio'),
 var utils = require('util');
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 
-exports.put = function (req, res, data) {
-    //console.log('req.headers : ', req.headers);
-    //console.log('----------------------------------------------');
+exports.put = function (req, res, data, callback) {
 
     try {
         //logger.debug(srcName + ' data :', '<html>' + data + '</html>');
@@ -20,6 +18,8 @@ exports.put = function (req, res, data) {
         //var hash = JSON.parse(req.headers['hash'].replace(/[\']/g, '\"'));
         var events = JSON.parse(req.headers['event']);
         logger.debug(srcName + ' events : ', utils.inspect(events));
+        //eval(events[0]);
+        eval('x=10;y=20;sum($,x,y)');
 
         $("#msg").text("Validation Success");
         $("#dynamicTable").append("<caption>" + "ChanTable" + "</caption>");
@@ -41,10 +41,24 @@ exports.put = function (req, res, data) {
         $("#dynamicTable").append("</tr>");
         $("#dynamicTable").append("</tbody>");
 
-        return  $('html').html();
+        //req 에서 변경데이타를 뽑아
+        //virtual dom 에 적용하는 코드
+        //...
+        if ($('html').html()) {
+            callback(null, $('html').html());
+        }
+        else {
+            callback(null, $('HTML').html());
+        }
     } catch (e) {
         logger.error(e.stack);
+        callback(e);
     }
+}
+
+function sum($, a, b) {
+    console.log('a+b : ', a + b);
+    $("#dynamicTable").append("<text>" + (a + b) + "</text>");
 }
 
 exports.post = function (req, res, data) {
