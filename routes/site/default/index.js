@@ -83,7 +83,7 @@ exports.normalize = function (data) {
 
     //var msg = $('html').text();
     var msg = $('html').html();
-//logger.debug(srcName + ' $("html").html() : ', msg);
+logger.debug(srcName + ' $("html").html() : ', msg);
 
 
     //testCode
