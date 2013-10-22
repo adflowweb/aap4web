@@ -35,7 +35,7 @@ pool = poolModule.Pool({
         try {
             conn.close();
         } catch (e) {
-            logger.error(e.stack);
+            console.log(e.stack);
         }
     }
 });
@@ -46,7 +46,7 @@ setInterval(function () {
     console.log(srcName + ' acquire db conn ');
     pool.acquire(function (err, conn) {
         if (err) {
-            logger.error(err.stack);
+            console.log(err.stack);
             return;
         }
 
