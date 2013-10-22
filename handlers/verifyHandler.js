@@ -288,7 +288,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                 if (transaction.result == 'S') {
                     res.send(200);
                 } else {
-                    res.send(505);
+                    res.send(details, 505);
                 }
                 //logging
                 logger.debug(srcName + ' transaction : ', transaction);

@@ -65,7 +65,7 @@ exports.put = function (req, res, data, callback) {
 
 exports.normalize = function (data) {
     logger.debug(__filename + ' called normalize default/index.js');
-//logger.debug(srcName + ' before data : ', data);
+    logger.debug(srcName + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
     $('meta').remove(); //remove meta tag
     $('param').remove(); //remove param tag
@@ -85,7 +85,7 @@ exports.normalize = function (data) {
 
     //var msg = $('html').text();
     var msg = $('html').html();
-    logger.debug(srcName + ' $("html").html() : ', msg);
+    //logger.debug(srcName + ' $("html").html() : ', msg);
 
 
     //testCode
