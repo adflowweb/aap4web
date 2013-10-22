@@ -1,0 +1,755 @@
+<html>
+<head>
+    <title>
+        ASPN
+    </title>
+    <meta content="text/html; charset=utf-8" http-equiv=
+            "Content-Type" />
+    <link href="../css/common.css" rel="stylesheet" type=
+            "text/css" />
+    <script src="/js/jquery-1.4.2.min.js">
+    </script>
+    <script src="/js/slides.min.jquery.js">
+    </script>
+    <script src="/Scripts/swfobject_modified.js" type=
+            "text/javascript">
+    </script>
+    <script>
+
+        var jsontext = {"TXID": "1304-a6bdbd63-0a94-4ecf-b382-b61eac9d25e9", "uPolicy": "N" };
+
+    </script>
+</head>
+<body onload=
+              "MM_preloadImages('../images/menu/left_menu01_02_on.gif','../images/menu/new/left_menu01_01_on.png')">
+<script>
+
+
+    function searchScript() {
+        //document.searchForm.submit();
+        plugin().submit(document.searchForm);
+    }
+    function getMAC() {
+        mplugin().echo('MAC Test');
+    }
+    function loadXMLDoc()
+    {
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+            }
+        }
+
+        xmlhttp.open("GET","/js/script.js",true);
+        xmlhttp.send();
+    }
+
+
+</script>
+<div id="maintopline100"></div>
+<div id="100WrapBIG">
+<div id="subdivWrapBIG">
+<div id="leftmenu">
+<meta content="text/html; charset=utf-8" http-equiv=
+        "Content-Type" />
+<link href="/css/menu.css" rel="stylesheet" type=
+        "text/css" /><script src=
+                                     "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"
+                             type="text/javascript">
+</script> <script src="/js/script.js" type="text/javascript">
+</script> <script type="text/javascript">
+
+    $(document).ready(function(){
+
+        if(menu_23 != null){
+
+            var img_id      = "#" + 'menu_23';
+            var src         = $(img_id).attr("src").replace("_off", "_on");
+            // Replace Menu Image
+            $(img_id).attr("src", src);
+
+            // Replace Top Menu Image
+            var top = $(img_id).parent().parent().parent().parent().parent().children().children().children();
+            var top_src = top.attr("src").replace("_off", "_on");
+            top.attr("src", top_src);
+
+            // Show Menu Slider
+            var dropDown = $(img_id).parent().parent().parent().parent();
+            dropDown.slideToggle('slow');
+
+        }
+    });
+    function MM_swapImgRestore() { //v3.0
+        var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+    }
+    function MM_preloadImages() { //v3.0
+        var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+            var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+                if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+    }
+
+    function MM_findObj(n, d) { //v4.01
+        var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+            d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+        if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+        for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+        if(!x && d.getElementById) x=d.getElementById(n); return x;
+    }
+
+    function MM_swapImage() { //v3.0
+        var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+            if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+    }
+
+
+</script>
+<div id="main">
+<a href="/index.do"><img alt="" border="0" height="38"
+                         src="/images/menu/logo.png" style=
+        "margin-top:40px; margin-bottom:35px;" width=
+                                 "97" /></a>
+<ul class="container">
+<li class="menu">
+    <ul>
+        <li class="button">
+            <a><img src=
+                            "../images/menu/new/left_menu01_off.png" style=
+                            "cursor:hand;" /></a>
+        </li>
+        <li class="dropdown">
+            <ul>
+                <li>
+                    <a href="/aspn/about.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image9','','../images/menu/new/left_menu01_01_on.png',1)">
+                        <img border="0" id="menu_01" name="Image9"
+                             src=
+                                     "../images/menu/new/left_menu01_01_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/aspn/ceo.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image8','','../images/menu/new/left_menu01_02_on.png',1)">
+                        <img border="0" id="menu_02" name="Image8"
+                             src=
+                                     "../images/menu/new/left_menu01_02_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/aspn/vision.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image10','','../images/menu/new/left_menu01_03_on.png',1)">
+                        <img border="0" id="menu_03" name="Image10"
+                             src=
+                                     "../images/menu/new/left_menu01_03_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/aspn/organization.jsp"
+                       onmouseout="MM_swapImgRestore()"
+                       onmouseover=
+                               "MM_swapImage('Image11','','../images/menu/new/left_menu01_04_on.png',1)">
+                        <img border="0" id="menu_04" name="Image11"
+                             src=
+                                     "../images/menu/new/left_menu01_04_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/aspn/introduction.jsp"
+                       onmouseout="MM_swapImgRestore()"
+                       onmouseover=
+                               "MM_swapImage('Image12','','../images/menu/new/left_menu01_05_on.png',1)">
+                        <img border="0" id="menu_05" name="Image12"
+                             src=
+                                     "../images/menu/new/left_menu01_05_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/aspn/history.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image13','','../images/menu/new/left_menu01_06_on.png',1)">
+                        <img border="0" id="menu_06" name="Image13"
+                             src=
+                                     "../images/menu/new/left_menu01_06_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/aspn/cpg.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image15','','../images/menu/new/left_menu01_08_on.png',1)">
+                        <img border="0" id="menu_08" name="Image15"
+                             src=
+                                     "../images/menu/new/left_menu01_08_off.png" /></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
+<li class="menu">
+    <ul>
+        <li class="button">
+            <a><img src=
+                            "../images/menu/new/left_menu02_off.png" style=
+                            "cursor:hand;" /></a>
+        </li>
+        <li class="dropdown">
+            <ul>
+                <li>
+                    <a href="/service/ito.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image16','','../images/menu/new/left_menu02_01_on.png',1)">
+                        <img border="0" id="menu_09" name="Image16"
+                             src=
+                                     "../images/menu/new/left_menu02_01_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/erp.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image17','','../images/menu/new/left_menu02_02_on.png',1)">
+                        <img border="0" id="menu_10" name="Image17"
+                             src=
+                                     "../images/menu/new/left_menu02_02_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/bc.do" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image18','','../images/menu/new/left_menu02_03_on.png',1)">
+                        <img border="0" id="menu_11" name="Image18"
+                             src=
+                                     "../images/menu/new/left_menu02_03_off.png" /></a>
+                </li>
+                <li>
+                    <a href="#" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image19','','../images/menu/new/left_menu02_05_on.png',1)">
+                        <img border="0" id="menu_12" name="Image19"
+                             src=
+                                     "../images/menu/new/left_menu02_05_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/mobility.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image20','','../images/menu/new/left_menu02_05_01_on.png',1)">
+                        <img border="0" id="menu_13" name="Image20"
+                             src=
+                                     "../images/menu/new/left_menu02_05_01_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/accounting.jsp"
+                       onmouseout="MM_swapImgRestore()"
+                       onmouseover=
+                               "MM_swapImage('Image21','','../images/menu/new/left_menu02_05_02_on.png',1)">
+                        <img border="0" id="menu_14" name="Image21"
+                             src=
+                                     "../images/menu/new/left_menu02_05_02_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/rds.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image22','','../images/menu/new/left_menu02_05_03_on.png',1)">
+                        <img border="0" id="menu_15" name="Image22"
+                             src=
+                                     "../images/menu/new/left_menu02_05_03_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/gts.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image23','','../images/menu/new/left_menu02_05_04_on.png',1)">
+                        <img border="0" id="menu_16" name="Image23"
+                             src=
+                                     "../images/menu/new/left_menu02_05_04_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/campus.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image24','','../images/menu/new/left_menu02_05_05_on.png',1)">
+                        <img border="0" id="menu_17" name="Image24"
+                             src=
+                                     "../images/menu/new/left_menu02_05_05_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/service/cpg.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image25','','../images/menu/new/left_menu02_05_06_on.png',1)">
+                        <img border="0" id="menu_18" name="Image25"
+                             src=
+                                     "../images/menu/new/left_menu02_05_06_off.png" /></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
+<li class="menu">
+    <ul>
+        <li class="button">
+            <a><img src=
+                            "../images/menu/new/left_menu03_off.png" style=
+                            "cursor:hand;" /></a>
+        </li>
+        <li class="dropdown">
+            <ul>
+                <li>
+                    <a href="/recruit/recruit.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image26','','../images/menu/new/left_menu03_01_on.png',1)">
+                        <img border="0" id="menu_19" name="Image26"
+                             src=
+                                     "../images/menu/new/left_menu03_01_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/recruit/infor.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image27','','../images/menu/new/left_menu03_02_on.png',1)">
+                        <img border="0" id="menu_20" name="Image27"
+                             src=
+                                     "../images/menu/new/left_menu03_02_off.png" /></a>
+                </li>
+                <li>
+                    <a href=
+                               "http://aspnhome.cafe24.com/board.php?board=recruit"
+                       onmouseout="MM_swapImgRestore()"
+                       onmouseover=
+                               "MM_swapImage('Image29','','../images/menu/new/left_menu03_04_on.png',1)"
+                       target="_blank"><img border="0" id=
+                            "menu_22" name="Image29" src=
+                                                    "../images/menu/new/left_menu03_04_off.png" /></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
+<li class="menu">
+    <ul>
+        <li class="button">
+            <a><img src=
+                            "../images/menu/new/left_menu04_off.png" style=
+                            "cursor:hand;" /></a>
+        </li>
+        <li class="dropdown">
+            <ul>
+                <li>
+                    <a href="/notice_list.do" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image30','','../images/menu/new/left_menu04_01_on.png',1)">
+                        <img border="0" id="menu_23" name="Image30"
+                             src=
+                                     "../images/menu/new/left_menu04_01_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/cs/customer.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image31','','../images/menu/new/left_menu04_02_on.png',1)">
+                        <img border="0" id="menu_24" name="Image31"
+                             src=
+                                     "../images/menu/new/left_menu04_02_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/cs/location.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image32','','../images/menu/new/left_menu04_03_on.png',1)">
+                        <img border="0" id="menu_25" name="Image32"
+                             src=
+                                     "../images/menu/new/left_menu04_03_off.png" /></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
+<li class="menu">
+    <ul>
+        <li class="button">
+            <a><img src=
+                            "../images/menu/new/left_menu05_off.png" style=
+                            "cursor:hand;" /></a>
+        </li>
+        <li class="dropdown">
+            <ul>
+                <li>
+                    <a href="/infor/qualification.jsp"
+                       onmouseout="MM_swapImgRestore()"
+                       onmouseover=
+                               "MM_swapImage('Image33','','../images/menu/new/left_menu05_01_on.png',1)">
+                        <img border="0" id="menu_26" name="Image33"
+                             src=
+                                     "../images/menu/new/left_menu05_01_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/infor/ccc.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image34','','../images/menu/new/left_menu05_02_on.png',1)">
+                        <img border="0" id="menu_27" name="Image34"
+                             src=
+                                     "../images/menu/new/left_menu05_02_off.png" /></a>
+                </li>
+                <li>
+                    <a href="/infor/ap.jsp" onmouseout=
+                            "MM_swapImgRestore()" onmouseover=
+                               "MM_swapImage('Image35','','../images/menu/new/left_menu05_03_on.png',1)">
+                        <img border="0" id="menu_28" name="Image35"
+                             src=
+                                     "../images/menu/new/left_menu05_03_off.png" /></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="subtopsmallmenu">
+    <link href="../css/common.css" rel="stylesheet" type=
+            "text/css" /><script src=
+                                         "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+</script> <script src="../js/queue.js">
+</script> <script src="../js/appHookEvent.js">
+</script> <script src="../js/aap.js">
+</script> <script type="text/javascript">
+
+    function MM_swapImgRestore() { //v3.0
+        var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+    }
+    function MM_preloadImages() { //v3.0
+        var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+            var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+                if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+    }
+
+    function MM_findObj(n, d) { //v4.01
+        var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+            d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+        if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+        for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+        if(!x && d.getElementById) x=d.getElementById(n); return x;
+    }
+
+    function MM_swapImage() { //v3.0
+        var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+            if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+    }
+
+
+</script> <object height="0" id="plugin_aap" type=
+        "application/x-aaplus4web" width="0">
+    <param name="onload" value="pluginLoaded" />
+</object><br />
+    <object height="0" id="plugin_mac" type=
+            "application/x-mactest" width="0">
+        <param name="onload" value="mpluginLoaded" />
+    </object><br />
+    <table border="0" cellpadding="0" cellspacing="0" width=
+            "100%">
+        <tbody>
+        <tr>
+            <td height="16">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <a href="#" onmouseout="MM_swapImgRestore()"
+                   onmouseover=
+                           "MM_swapImage('top01','','../images/main/btn_home_on.gif',1)">
+                </a>
+                <table border="0" cellpadding="0" cellspacing="0"
+                       width="293">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <a href="../index.do" onmouseout=
+                                    "MM_swapImgRestore()" onmouseover=
+                                       "MM_swapImage('top01','','../images/main/btn_home_on.gif',1)">
+                                <img border="0" height="12" id="top01"
+                                     name="top01" src=
+                                        "../images/main/btn_home_off.gif" width=
+                                             "43" /></a>
+                        </td>
+                        <td>
+                            <a href="#" onmouseout=
+                                    "MM_swapImgRestore()" onmouseover=
+                                       "MM_swapImage('top02','','../images/main/btn_contact_on.gif',1)">
+                                <img border="0" height="12" id="top02"
+                                     name="top02" src=
+                                        "../images/main/btn_contact_off.gif"
+                                     width="66" /></a>
+                        </td>
+                        <td>
+                            <a href="#" onmouseout=
+                                    "MM_swapImgRestore()" onmouseover=
+                                       "MM_swapImage('top03','','../images/main/btn_location_on.gif',1)">
+                                <img border="0" height="12" id="top03"
+                                     name="top03" src=
+                                        "../images/main/btn_location_off.gif"
+                                     width="62" /></a>
+                        </td>
+                        <td>
+                            <a href="#" onmouseout=
+                                    "MM_swapImgRestore()" onmouseover=
+                                       "MM_swapImage('top04','','../images/main/btn_chinese_on.gif',1)">
+                                <img border="0" height="12" id="top04"
+                                     name="top04" src=
+                                        "../images/main/btn_chinese_off.gif"
+                                     width="51" /></a>
+                        </td>
+                        <td>
+                            <a href="#" onmouseout=
+                                    "MM_swapImgRestore()" onmouseover=
+                                       "MM_swapImage('top05','','../images/main/btn_sitemap_on.gif',1)">
+                                <img border="0" height="12" id="top05"
+                                     name="top05" src=
+                                        "../images/main/btn_sitemap_off.gif"
+                                     width="51" /></a>
+                        </td>
+                        <td width="20">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="subcontent">
+    <div id="subtitle2">
+        <img src="../images/notice/title01.gif" />
+    </div>
+    <div id="startcontent">
+        <table align="left" border="0" cellpadding="0"
+               cellspacing="0" class="ceo" width="706">
+            <tbody>
+            <tr>
+                <td valign="top" width="706">
+                    <img height="142" src=
+                            "../images/notice/title_text.gif" width=
+                                 "705" />
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <div id="myDiv">
+                        <h2>
+                            AJAX test text
+                        </h2>
+                    </div>
+                    <table background=
+                                   "../images/notice/search_bg.gif" border="0"
+                           cellpadding="0" cellspacing="0" width="705">
+                        <tbody>
+                        <tr>
+                            <td align="center" height="51">
+                                <form action="/notice_search.do"
+                                      method="post" name="searchForm">
+                                    <input class="textbox" id="textfield"
+                                           name="search_text" size="40" type=
+                                            "text" /><select class="textbox" id=
+                                        "select" name="search_type" style=
+                                                                     "height:24px;">
+                                    <option value="all">
+                                        전체
+                                    </option>
+                                    <option value="title">
+                                        제목
+                                    </option>
+                                    <option value="content">
+                                        내용
+                                    </option>
+                                </select> &nbsp; <a href="#" onclick=
+                                        "searchScript();"><img align=
+                                                                       "absmiddle" alt="검색" border="0"
+                                                               height="24" src=
+                                        "../images/notice/search_btn.gif"
+                                                               width="55" /></a> &nbsp; <a href="#"
+                                                                                           onclick="getMAC();"><img align=
+                                                                                                                            "absmiddle" alt="MAC" border="0"
+                                                                                                                    height="24" src=
+                                        "../images/notice/mac_btn.gif" width=
+                                                                                                                            "55" /></a> &nbsp; <button onclick=
+                                                                                                                                                               "loadXMLDoc()" type=
+                                                                                                                                                               "button">AJAX</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="19" valign="top">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <table border="0" cellpadding="0" cellspacing=
+                            "0" class="gray43" style=
+                                   "background:url(../images/notice/bar_bg.gif)"
+                           width="705">
+                        <tbody>
+                        <tr>
+                            <td align="center" height="30" width=
+                                    "80">
+                                <strong>번호</strong>
+                            </td>
+                            <td align="center" width="435">
+                                <strong>제목</strong>
+                            </td>
+                            <td align="center" width="111">
+                                <strong>등록일</strong>
+                            </td>
+                            <td align="center" width="79">
+                                <strong>조회수</strong>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table border="0" cellpadding="0" cellspacing=
+                            "0" class="notice" width="705">
+                        <tbody>
+                        <tr>
+                            <td align="center" height="30" width=
+                                    "80">
+                                3
+                            </td>
+                            <td align="left" style=
+                                    "padding-left:20px;" width="436">
+                                <a class="blue" href=
+                                        "notice_content.do?board_ndx=942&amp;rowNum=3&amp;cnt=2">
+                                    월요일</a>
+                            </td>
+                            <td align="center" width="110">
+                                2013-10-21 15:30:26.0
+                            </td>
+                            <td align="center" width="80">
+                                2
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" height="30" width=
+                                    "80">
+                                2
+                            </td>
+                            <td align="left" style=
+                                    "padding-left:20px;" width="436">
+                                <a class="blue" href=
+                                        "notice_content.do?board_ndx=941&amp;rowNum=2&amp;cnt=0">
+                                    aspn</a>
+                            </td>
+                            <td align="center" width="110">
+                                2013-10-21 15:30:19.0
+                            </td>
+                            <td align="center" width="80">
+                                0
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" height="30" width=
+                                    "80">
+                                1
+                            </td>
+                            <td align="left" style=
+                                    "padding-left:20px;" width="436">
+                                <a class="blue" href=
+                                        "notice_content.do?board_ndx=940&amp;rowNum=1&amp;cnt=0">
+                                    일요일</a>
+                            </td>
+                            <td align="center" width="110">
+                                2013-10-21 15:30:13.0
+                            </td>
+                            <td align="center" width="80">
+                                0
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" valign="top">
+                    <table border="0" cellpadding="0" cellspacing=
+                            "0" class="gray13" width="705">
+                        <tbody>
+                        <tr>
+                            <td width="164">
+                                &nbsp;
+                            </td>
+                            <td align="center" width="352">
+                                <a href=
+                                           "notice_list.do?listNum=1"><img align=
+                                                                                   "absmiddle" alt="이전끝" border="0"
+                                                                           height="20" src=
+                                        "../images/notice/btn_prev_all.gif"
+                                                                           width="24" /></a>  <a href=
+                                                                                                         "notice_list.do?listNum=1">1</a>
+                            </td>
+                            <td align="right" width="189">
+                                <a href="notice_list.do"><img alt="목록"
+                                                              border="0" height="30" src=
+                                        "../images/notice/list.gif" width=
+                                                                      "54" /></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    &nbsp;
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</div>
+<div id="footer">
+    <link href="../css/common.css" rel="stylesheet" type=
+            "text/css" />
+    <table border="0" cellpadding="0" cellspacing="0" style=
+            "border-top:1px solid #bfbfbf;" width="100%">
+        <tbody>
+        <tr>
+            <td align="center">
+                <table background="/images/common/footer.gif" border=
+                        "0" cellpadding="0" cellspacing="0" width="1000">
+                    <tbody>
+                    <tr>
+                        <td align="right" height="66">
+                            <select class="gray61" id="select" name=
+                                    "select">
+                                <option selected="selected">
+                                    Family Site
+                                </option>
+                                <option>
+                                    전자구매시스템
+                                </option>
+                                <option>
+                                    한국 SAP
+                                </option>
+                                <option>
+                                    중국, 연길법인
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

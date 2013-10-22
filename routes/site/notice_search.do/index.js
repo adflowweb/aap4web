@@ -1,7 +1,7 @@
 /**
  * User: nadir93
- * Date: 13. 7. 22.
- * Time: 오후 12:25
+ * Date: 13. 10. 22.
+ * Time: 오후 7:32
  */
 var parser = require('cheerio'),
     crypto = require('crypto'),
@@ -18,7 +18,7 @@ var opts = {
 
 exports.post = function (req, res, callback) {
     try {
-        logger.debug(__filename + ' called post default/index.js');
+        logger.debug(__filename + ' called post notice_search.do/index.js');
         //logger.debug('req.xhr : ', req.xhr);
         //logger.debug('req.rawBody : ', req.rawBody);
         var $ = parser.load('<html>' + req.rawBody + '</html>');
@@ -46,7 +46,7 @@ exports.post = function (req, res, callback) {
 exports.put = function (req, res, data, callback) {
 
     try {
-        logger.debug(__filename + ' called put default/index.js');
+        logger.debug(__filename + ' called put notice_search.do/index.js');
         var $ = parser.load(data);
         //req 에서 변경데이타를 뽑아
         //virtual dom 에 적용하는 코드
@@ -64,7 +64,7 @@ exports.put = function (req, res, data, callback) {
 }
 
 exports.normalize = function (data) {
-    logger.debug(__filename + ' called normalize default/index.js');
+    logger.debug(__filename + ' called normalize notice_search.do/index.js');
     logger.debug(srcName + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
     $('meta').remove(); //remove meta tag

@@ -6,8 +6,9 @@
 var parser = require('cheerio');
 var fs = require('fs');
 
-var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/ASPN.html');
-
+//var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Downloads/ASPN.html');
+var rawHtml = fs.readFileSync('/Users/nadir93/Doc/Digital/Dev/workspaces/webstorm/aap4web/test/resource/sample01.html');
+//console.log('rawHtml : ', rawHtml.toString());
 var $ = parser.load(rawHtml);
 if ($('html').html()) {
     $('meta').remove(); //remove meta tag
@@ -20,6 +21,9 @@ if ($('html').html()) {
     //$('img[@src$=.png']).removeAtrr('src');
     //console.log("test : ",);
     $('img[src$=".png"]').removeAttr('src');
+    console.log($('option[selected]'));
+    $('option[selected]').removeAttr('selected');
+    console.log($('option[selected]'));
     $('option[selected]').removeAttr('selected');
     $('form[name="searchForm"]').removeAttr('method');
     //$('*[src]').removeAttr('src'); //remove selected attr
