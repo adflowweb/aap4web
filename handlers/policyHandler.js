@@ -91,7 +91,28 @@ policyHandler.prototype = {
 
             var uri = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
             logger.debug(srcName + ' uri : ', uri);
-            if (uri.indexOf('/') > 0) {
+            if (uri == 'uri' || uri == 'content') {
+                //hgetall
+                client.hgetall(uri, function (err, reply) {
+                    try {
+                        if (err) {
+                            logger.error(err.stack);
+                            res.send(err.message, 500);
+                            return;
+                        }
+                        if (reply) {
+                            logger.debug(srcName + ' reply : ', reply);
+                            res.send(reply);
+                        } else {
+                            logger.debug(srcName + ' not found ');
+                            res.send(404);
+                        }
+                    } catch (e) {
+                        logger.debug(e.stack);
+                        res.send(e.message, 500);
+                    }
+                });
+            } else if (uri.indexOf('/') > 0) {
                 var field = uri.substring(uri.indexOf('/'));
                 var key = uri.substring(0, uri.indexOf('/'));
                 logger.debug(srcName + ' key : ', key);

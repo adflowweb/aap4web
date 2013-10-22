@@ -19,6 +19,11 @@ describe('aes128ecb test', function () {
     });
 
     it('aes128ecb', function (done) {
+
+        var m1 = '31yzirrd3bxCx9NokmzTiGEfH7nrZQEstJgoGCDFVoM=';
+        console.log('base64>hex : ', new Buffer(m1, 'base64').toString('hex'));
+
+
         var txid = '8829-e067f846-c592-c20a-dae7-7eceae2ed60a';
         var text = '441EDBA0E5AC63E3B36B8D10E85CDCBC6A7A1B1B18E818411422A75F98F9A2C8';
         console.log('text : ', text);
