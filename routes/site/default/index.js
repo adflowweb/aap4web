@@ -19,7 +19,7 @@ exports.post = function (req, res, callback) {
     try {
         logger.debug(__filename + ' called post default/index.js');
         //logger.debug('req.xhr : ', req.xhr);
-        logger.debug('req.rawBody : ', req.rawBody);
+        //logger.debug('req.rawBody : ', req.rawBody);
         var $ = parser.load('<html>' + req.rawBody + '</html>');
 
         //var testData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
@@ -63,6 +63,7 @@ exports.put = function (req, res, data, callback) {
 }
 
 exports.normalize = function (data) {
+    logger.debug(__filename + ' called normalize default/index.js');
 //logger.debug(srcName + ' before data : ', data);
     var $ = parser.load('<html>' + data + '</html>');
     $('meta').remove(); //remove meta tag
@@ -83,7 +84,7 @@ exports.normalize = function (data) {
 
     //var msg = $('html').text();
     var msg = $('html').html();
-logger.debug(srcName + ' $("html").html() : ', msg);
+    logger.debug(srcName + ' $("html").html() : ', msg);
 
 
     //testCode
