@@ -331,7 +331,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     function logDetail(i) {
                                         if (i < details.length) {
                                             //db insert log_v_detail
-                                            var args2 = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64"), details[i].serverHash != undefined ? details[i].serverHash : null, details[i].clientHash, details[i].result, details[i].policy];
+                                            var args2 = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64"), details[i].serverHash, details[i].clientHash, details[i].result, details[i].policy];
                                             logger.debug(srcName + ' log_v_detail args : ', args2);
                                             conn.execute(INSERT_LOG_DETAIL_SQL, args2, function (err, results) {
                                                 try {
