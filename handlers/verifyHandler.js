@@ -46,9 +46,6 @@ var verifyHandler = function () {
         create: function (callback) {
             try {
                 oracle.connect(initData, function (err, conn) {
-                    if (err) {
-                        throw err;
-                    }
                     callback(err, conn);
                 });
             } catch (e) {
