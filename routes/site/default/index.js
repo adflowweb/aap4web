@@ -7,6 +7,7 @@ var parser = require('cheerio'),
     crypto = require('crypto'),
     tidy = require('htmltidy').tidy,
     logger = require('../../../logger');
+var srcName = __filename.substring(__filename.lastIndexOf('/'));
 
 var opts = {
     //doctype: 'html5',

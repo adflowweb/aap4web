@@ -327,43 +327,6 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     return;
                                 } else {
                                     logger.debug(srcName + ' log inserted : ', results);
-
-                                    function logDetail(i) {
-                                        if (i < details.length) {
-                                            //db insert log_v_detail
-                                            var args2 = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64"), details[i].serverHash, details[i].clientHash, details[i].result, details[i].policy];
-                                            logger.debug(srcName + ' log_v_detail args : ', args2);
-                                            conn.execute(INSERT_LOG_DETAIL_SQL, args2, function (err, results) {
-                                                try {
-                                                    if (err) {
-                                                        logger.error(err.stack);
-                                                        return;
-                                                    } else {
-                                                        logger.debug(srcName + ' logDetail inserted : ', results);
-                                                        //test transaction
-//                                                        conn.commit(function (err) {
-//                                                            if (err) {
-//                                                                logger.error(err);
-//                                                                return;
-//                                                            }
-//                                                            logger.debug(srcName + ' commiting ');
-//                                                            // transaction committed
-//                                                        });
-                                                    }
-                                                } catch (e) {
-                                                    logger.error(e.stack);
-                                                } finally {
-                                                    // return object back to pool
-                                                    pool.release(conn);
-                                                    logger.debug(srcName + ' pool.released ');
-                                                }
-                                                logDetail(++i);
-                                            });
-                                        } else {
-                                            logger.debug(srcName + ' logDetail insert done ');
-                                        }
-                                    }
-
                                     logDetail(0);
                                 }
                             } catch (e) {
@@ -421,6 +384,42 @@ hashCode = function (str) {
     catch (e) {
         logger.error(e.stack);
         throw new Error('hashCodeFuncErr');
+    }
+}
+
+function logDetail(i) {
+    if (i < details.length) {
+        //db insert log_v_detail
+        var args2 = [transaction.txid, crypto.createHash('md5').update(details[i].key).digest("base64"), details[i].serverHash, details[i].clientHash, details[i].result, details[i].policy];
+        logger.debug(srcName + ' log_v_detail args : ', args2);
+        conn.execute(INSERT_LOG_DETAIL_SQL, args2, function (err, results) {
+            try {
+                if (err) {
+                    logger.error(err.stack);
+                    return;
+                } else {
+                    logger.debug(srcName + ' logDetail inserted : ', results);
+                    //test transaction
+//                                                        conn.commit(function (err) {
+//                                                            if (err) {
+//                                                                logger.error(err);
+//                                                                return;
+//                                                            }
+//                                                            logger.debug(srcName + ' commiting ');
+//                                                            // transaction committed
+//                                                        });
+                }
+            } catch (e) {
+                logger.error(e.stack);
+            } finally {
+                // return object back to pool
+                pool.release(conn);
+                logger.debug(srcName + ' pool.released ');
+            }
+            logDetail(++i);
+        });
+    } else {
+        logger.debug(srcName + ' logDetail insert done ');
     }
 }
 
