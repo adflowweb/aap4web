@@ -143,7 +143,7 @@ var verifyHandler = function () {
                 }
             });
         });
-    }, 10000); // 60초 마다 실행
+    }, 60000); // 60초 마다 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
