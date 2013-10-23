@@ -37,7 +37,7 @@ var pool;
 
 var verifyHandler = function () {
     //initData = { "hostname": "192.168.1.39", "user": "aap4web", "password": "aap4web1234", "database": "orcl" };
-    initData = { "hostname": "192.168.1.10", "user": "AAPLUS4WEB_UBITECH", "password": "a4cca5e928f0a72d23d3a44f695fcd46", "database": "orcl" };
+    initData = { "hostname": "192.168.1.10", "user": "AAPLUS4WEB_UBITECH", "password": "KBsec13", "database": "orcl" };
     pool = poolModule.Pool({
         name: 'oracle',
         min: 0,
