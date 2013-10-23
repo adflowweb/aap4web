@@ -13,6 +13,7 @@ policyHandler.prototype = {
     post: function (req, res, client) {
         try {
             logger.debug(srcName + ' method : post ');
+            logger.debug(srcName + ' req : ', req);
             logger.debug(srcName + ' req.url : ', req.url);
             logger.debug(srcName + ' req.rawBody : ', req.rawBody);
             var data = JSON.parse(req.rawBody);
@@ -172,7 +173,7 @@ policyHandler.prototype = {
 //                } else {
                 logger.debug(srcName + ' return all policy');
 
-                var pollingData = ['uri', 'content'];
+                var pollingData = ['uri', 'content', 'unknownUri'];
                 var result = [];
 
                 function getHash(i) {
