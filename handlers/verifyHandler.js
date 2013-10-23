@@ -319,7 +319,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                             return;
                         }
 
-                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], transaction.uri_policy, crypto.createHash('md5').update(clientIP).digest("base64")
+                        var arg = [transaction.txid, transaction.result, req.headers['user-agent'], transaction.uri_policy, clientIP
                             , crypto.createHash('md5').update(req.headers['virtual_page_uri']).digest("base64"), req.headers['filterid'], processID];
                         logger.debug(srcName + ' log_v args : ', arg);
                         conn.execute(INSERT_LOG_SQL, arg, function (err, results) {
