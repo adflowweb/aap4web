@@ -26,7 +26,7 @@ var processID = pid + '@' + hostName;
 var srcName = __filename.substring(__filename.lastIndexOf('/'));
 var DEFAULT_INDEX_JS = '../routes/site/default/index.js';
 //var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, 'Y', :5, :6, :7, :8)";
-var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_ip, cl_uid, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, null, null, :5, :6, :7)";
+var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_ip, cl_uid, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, :5, 'null', :6, :7, :8)";
 
 var INSERT_LOG_DETAIL_SQL = "INSERT INTO log_v_detail (txid, content_key, server_hash, client_hash, content_v_result, content_policy, reg_date) VALUES (:1, :2, :3, :4, :5, :6, SYSDATE)";
 var SELECT_POLICY_CONTENT_SQL = "SELECT b.content_key, b.content_type, b.content_name, b.content_hash, b.reg_date, a.content_policy FROM content_policy a, content_info b where a.content_key = b.content_key";
