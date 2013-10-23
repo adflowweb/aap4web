@@ -91,6 +91,8 @@ describe('verify', function () {
                 if (err) {
                     throw err;
                 }
+
+                console.log(res.body);
                 res.should.have.status(505);
                 done();
             });

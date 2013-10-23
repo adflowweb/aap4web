@@ -17,7 +17,15 @@ policyHandler.prototype = {
             logger.debug(srcName + ' req.rawBody : ', req.rawBody);
             var data = JSON.parse(req.rawBody);
             logger.debug(srcName + ' data : ', data);
-            var key = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
+
+            if (req.url == '/v1/policy/uri/unknown') {
+                var key = 'unknownUri';
+
+            } else {
+                var key = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
+            }
+
+
             logger.debug(srcName + ' key : ', key);
 
             client.hmset(key, data, function (err, reply) {

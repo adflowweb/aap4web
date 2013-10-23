@@ -12,7 +12,7 @@ describe('orcle test', function () {
     var pool;
 
     before(function (done) {
-        initData = { "hostname": "192.168.1.39", "user": "aap4web", "password": "aap4web1234", "database": "orcl" };
+        initData = { "hostname": "192.168.1.10", "user": "AAPLUS4WEB_UBITECH", "password": "a4cca5e928f0a72d23d3a44f695fcd46", "database": "orcl" };
         pool = poolModule.Pool({
             name: 'oracle',
             // connection은 최대 10개까지 생성합니다.
@@ -38,7 +38,6 @@ describe('orcle test', function () {
     });
 
     it('oracle connection', function (done) {
-        this.timeout(10000);
         pool.acquire(function (err, conn) {
             if (err) {
                 console.log('err : ', err);
