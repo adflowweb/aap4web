@@ -191,7 +191,7 @@ var verifyHandler = function () {
                 }
             });
         });
-    }, 10000); // 60초 마다 실행
+    }, 60000); // 60초 마다 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
@@ -252,7 +252,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                             details[i] = {"key": key, "result": "E", "serverHash": "", "clientHash": "", "policy": ""};
                         } else {
                             if (index[i] == 'main') {
-                                //process main page
+                                //메인 페이지 처리
                                 //logger.debug(srcName + ' reply : ', reply);
                                 //정규화
                                 //var nornalizedData = util.normalize(reply);
@@ -295,12 +295,15 @@ verifyHandler.prototype.get = function (req, res, client) {
                                         logger.debug(srcName + ' matched main session :', key);
                                     }
                                 } else {
+                                    // 검증대상 or 모니터대상이 아닐경우
+                                    logger.debug(srcName + ' main 페이지가 검증대상 or 모니터대상이 아닐경우 ');
                                 }
                             } else {
-                                //else process static resource
-                                logger.debug(srcName + ' reply : ', reply);
+                                //정적 자원 처리
+                                logger.debug(srcName + ' static content form redis : ', reply);
                                 var data = JSON.parse(reply);
-                                logger.debug(srcName + ' clientHash : ', hash[index[i]]);
+                                logger.debug(srcName + ' client_hash : ', hash[index[i]]);
+                                logger.debug(srcName + ' content_hash : ', data.content_hash);
                                 logger.debug(srcName + ' content_policy : ', data.content_policy);
 
                                 //policy
@@ -326,6 +329,7 @@ verifyHandler.prototype.get = function (req, res, client) {
                                     }
                                 } else {
                                     // 검증대상 or 모니터대상이 아닐경우
+                                    logger.debug(srcName + ' 정적자원이 검증대상 or 모니터대상이 아닐경우 ');
                                 }
                             }
                         }
