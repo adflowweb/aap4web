@@ -92,7 +92,7 @@ var verifyHandler = function () {
                                 logger.debug(key + " -> " + reply[key]);
                                 logger.debug(" typeof reply : " + typeof reply[key]);
 
-                                conn.execute(INSERT_URL_INFO_SQL, [key, reply[key]], function (err, reply) {
+                                conn.execute(INSERT_URL_INFO_SQL, [crypto.createHash('md5').update(key).digest("base64"), key], function (err, reply) {
                                     try {
                                         if (err) {
                                             logger.error(err.stack);
