@@ -95,4 +95,23 @@ describe('policy test', function () {
 //                done();
 //            });
 //    });
+
+    it('unknown policy 생성하기 : 응답코드 200', function (done) {
+
+        var key = 'unknownUri';
+        var value = {"/service/bc.do": "U"};
+        request(url)
+            .post('/v1/policy/' + key)
+            .send(value)
+            // end handles the response
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                //console.log('response : ',res.text);
+                // this is should.js syntax, very clear
+                res.should.have.status(200);
+                done();
+            });
+    });
 });

@@ -449,7 +449,7 @@ redisHandler.prototype = {
                                                 return;
                                             }
                                             if (reply) {
-                                                logger.debug(srcName + ' reply : ', reply);
+                                                logger.debug(srcName + ' reply : ', utils.inspect(reply));
                                                 res.send(reply);
                                             } else {
                                                 logger.debug(srcName + ' not found ');

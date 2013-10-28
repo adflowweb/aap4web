@@ -13,37 +13,80 @@ policyHandler.prototype = {
     post: function (req, res, client) {
         try {
             logger.debug(srcName + ' method : post ');
-            logger.debug(srcName + ' req : ', req);
+            //logger.debug(srcName + ' req : ', req);
             logger.debug(srcName + ' req.url : ', req.url);
             logger.debug(srcName + ' req.rawBody : ', req.rawBody);
             var data = JSON.parse(req.rawBody);
-            logger.debug(srcName + ' data : ', data);
+            logger.debug(srcName + ' data : ', utils.inspect(data));
+
+            //testCode
+//            for (var key in data) {
+//                if (data.hasOwnProperty(key)) {
+//                    logger.debug(key + " -> " + JSON.stringify(data[key]));
+//                    logger.debug(key + " -> " + data[key]);
+//                }
+//            }
+//            Object.keys(data).forEach(function (key) {
+//                var val = data[key];
+//                logger.debug(' key :', key);
+//                logger.debug(' val :', val);
+//            });
+            //testEnd
+            logger.debug(srcName + ' JSON.stringify(data) : ', JSON.stringify(data));
 
             if (req.url == '/v1/policy/uri/unknown') {
                 var key = 'unknownUri';
-
             } else {
                 var key = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
             }
 
-
             logger.debug(srcName + ' key : ', key);
+            for (var k in data) {
+                if (data.hasOwnProperty(k)) {
 
-            client.hmset(key, data, function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error(err.stack);
-                        res.send(err.message, 500);
-                        return;
+                    if (data[k] instanceof Object) {
+                        var value = JSON.stringify(data[k]);
+
                     } else {
-                        logger.debug(srcName + ' key inserted ', reply);
-                        res.send(200);
+                        value = data[k];
                     }
-                } catch (e) {
-                    logger.error(e.stack);
-                    res.send(e.message, 500);
+                    logger.debug(srcName + k + " -> " + value);
+
+
+                    //redis insert
+                    client.hset(key, k, value, function (err) {
+                        try {
+                            if (err) {
+                                logger.error(err.stack);
+                                res.send(err.message, 500);
+                                return;
+                            } else {
+                                logger.debug(srcName + ' key set ');
+                                res.send(200);
+                            }
+                        } catch (e) {
+                            logger.error(e.stack);
+                            res.send(e.message, 500);
+                        }
+                    });
+
                 }
-            });
+            }
+//            client.hmset(key, data, function (err, reply) {
+//                try {
+//                    if (err) {
+//                        logger.error(err.stack);
+//                        res.send(err.message, 500);
+//                        return;
+//                    } else {
+//                        logger.debug(srcName + ' key inserted ', reply);
+//                        res.send(200);
+//                    }
+//                } catch (e) {
+//                    logger.error(e.stack);
+//                    res.send(e.message, 500);
+//                }
+//            });
         } catch (e) {
             logger.error(e.stack);
             res.send(e.message, 500);
