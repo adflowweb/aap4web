@@ -76,7 +76,7 @@ var verifyHandler = function () {
             }
 
             //unknown_url
-            logger.debug(srcName + ' sending unknownUri ');
+            logger.debug(srcName + ' processing unknownUri ');
             //hgetall
             redis.hgetall('unknownUri', function (err, reply) {
                 try {
@@ -87,10 +87,10 @@ var verifyHandler = function () {
                     }
                     if (reply) {
                         logger.debug(srcName + ' reply : ', reply);
+                        //async -> sync 로 변경바람
                         for (var key in reply) {
                             if (reply.hasOwnProperty(key)) {
                                 logger.debug(key + " -> " + reply[key]);
-                                logger.debug(" typeof reply : " + typeof reply[key]);
 
                                 conn.execute(INSERT_URL_INFO_SQL, [crypto.createHash('md5').update(key).digest("base64"), key], function (err, reply) {
                                     try {
@@ -103,7 +103,7 @@ var verifyHandler = function () {
                                                 if (err) {
                                                     logger.error(err.stack);
                                                 }
-                                                logger.debug(srcName + ' key deleted ');
+                                                logger.debug(srcName + key + ' key deleted ');
                                             } catch (e) {
                                                 logger.error(e.stack);
                                             }
@@ -115,12 +115,10 @@ var verifyHandler = function () {
                             }
                         }
                     } else {
-                        logger.debug(srcName + ' not found ');
-                        //res.send(404);
+                        logger.debug(srcName + ' unknownUri not found ');
                     }
                 } catch (e) {
                     logger.debug(e.stack);
-                    //res.send(e.message, 500);
                 }
             });
 
