@@ -66,7 +66,7 @@ virtualPageHandler.prototype = {
     put: function (req, res, client) {
         try {
 
-            logger.debug(srcName + ' req : ', req);
+            //logger.debug(srcName + ' req : ', req);
 
             if (!req.headers['virtual_page_uri']) {
                 //reponseCode 400 : bad request
