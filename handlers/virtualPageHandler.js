@@ -110,6 +110,7 @@ virtualPageHandler.prototype = {
                         }
 
                         logger.debug(srcName + ' reply : ', reply);
+                        logger.debug(srcName + ' req.params.id : ', req.params.id);
                         client.set(req.params.id, reply, function (err) {
                             try {
                                 if (err) {
