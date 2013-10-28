@@ -65,6 +65,9 @@ virtualPageHandler.prototype = {
     //modify virtualPage
     put: function (req, res, client) {
         try {
+
+            logger.debug(srcName + ' req : ', req);
+
             if (!req.headers['virtual_page_uri']) {
                 //reponseCode 400 : bad request
                 res.send(RESPONSE_MESSAGE, 400);
@@ -109,7 +112,7 @@ virtualPageHandler.prototype = {
                             return;
                         }
 
-                        logger.debug(srcName + ' reply : ', reply);
+                        //logger.debug(srcName + ' reply : ', reply);
                         logger.debug(srcName + ' req.params.id : ', req.params.id);
                         client.set(req.params.id, reply, function (err) {
                             try {
