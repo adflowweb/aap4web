@@ -73,6 +73,7 @@ virtualPageHandler.prototype = {
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
             logger.debug(srcName + ' path : ', path);
+            logger.debug(srcName + ' req.params.id : ', req.params.id);
             client.hget('virtualpage', req.params.id, function (err, reply) {
                 try {
                     if (err) {
@@ -99,6 +100,12 @@ virtualPageHandler.prototype = {
                         if (error) {
                             logger.error('error : ', error.stack);
                             res.send(err.message, 500);
+                            return;
+                        }
+
+                        // reply is null when the key is missing
+                        if (!reply) {
+                            res.send(404);
                             return;
                         }
 

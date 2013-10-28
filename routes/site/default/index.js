@@ -47,6 +47,7 @@ exports.put = function (req, res, data, callback) {
 
     try {
         logger.debug(__filename + ' called put default/index.js');
+        logger.debug(__filename + ' data :', data);
         var $ = parser.load(data);
         //req 에서 변경데이타를 뽑아
         //virtual dom 에 적용하는 코드
