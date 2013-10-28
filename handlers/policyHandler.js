@@ -153,10 +153,10 @@ policyHandler.prototype = {
                             return;
                         }
                         if (reply) {
-                            logger.debug(srcName + ' reply : ', reply);
+                            logger.debug(srcName + uri + ' reply from redis : ', reply);
                             res.send(reply);
                         } else {
-                            logger.debug(srcName + ' not found ');
+                            logger.debug(srcName + uri + ' not found ');
                             res.send(404);
                         }
                     } catch (e) {

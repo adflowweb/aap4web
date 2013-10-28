@@ -13,6 +13,7 @@ exports.put = function (req, res, data, callback) {
 
     try {
         logger.debug(__filename + ' called put service/bcAjax.do/index.js');
+        logger.debug(__filename + ' event :', req.headers['event']);
         //logger.debug(__filename + ' data :', data);
         var $ = parser.load('<html>' + data + '</html>');
         //req 에서 변경데이타를 뽑아
