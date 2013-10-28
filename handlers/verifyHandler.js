@@ -98,6 +98,16 @@ var verifyHandler = function () {
                                             logger.error(err.stack);
                                         }
                                         logger.debug(srcName + ' reply : ', reply);
+                                        redis.hdel('unknownUri', key, function (err) {
+                                            try {
+                                                if (err) {
+                                                    logger.error(err.stack);
+                                                }
+                                                logger.debug(srcName + ' key deleted ');
+                                            } catch (e) {
+                                                logger.error(e.stack);
+                                            }
+                                        });
                                     } catch (e) {
                                         logger.error(e.stack);
                                     }
