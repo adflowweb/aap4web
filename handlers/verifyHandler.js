@@ -23,7 +23,7 @@ var platform = process.platform;
 var arch = process.arch;
 var pid = process.pid;
 var processID = pid + '@' + hostName;
-var srcName = __filename.substring(__filename.lastIndexOf('/'));
+var srcName = __filename.substring(__filename.lastIndexOf('/'))+' ';
 var DEFAULT_INDEX_JS = '../routes/site/default/index.js';
 //var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_policy, cl_key, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, 'Y', :5, :6, :7, :8)";
 var INSERT_LOG_SQL = "INSERT INTO log_v (txid, v_result, cl_ua, reg_date, uri_policy, cl_ip, cl_uid, uri_key, filter_name, daemon_name) VALUES (:1, :2, :3, SYSDATE, :4, :5, 'null', :6, :7, :8)";
@@ -38,160 +38,160 @@ var pool;
 
 var verifyHandler = function () {
     //initData = { "hostname": "192.168.1.39", "user": "aap4web", "password": "aap4web1234", "database": "orcl" };
-    initData = { "hostname": "192.168.1.10", "user": "AAPLUS4WEB_UBITECH", "password": "KBsec13", "database": "orcl" };
-    pool = poolModule.Pool({
-        name: 'oracle',
-        min: 0,
-        // connection은 최대 50개까지 생성합니다.
-        max: 50,
-        // 생성된 connection은 30초 동안 유휴 상태(idle)면 destory됩니다.
-        idleTimeoutMillis: 30000,
-        log: false,
-        create: function (callback) {
-            try {
-                oracle.connect(initData, function (err, conn) {
-                    callback(err, conn);
-                });
-            } catch (e) {
-                logger.error(e.stack);
-            }
-        },
-        destroy: function (conn) {
-            try {
-                conn.close();
-            } catch (e) {
-                logger.error(e.stack);
-            }
-        }
-    });
+//    initData = { "hostname": "192.168.1.10", "user": "AAPLUS4WEB_UBITECH", "password": "KBsec13", "database": "orcl" };
+//    pool = poolModule.Pool({
+//        name: 'oracle',
+//        min: 0,
+//        // connection은 최대 50개까지 생성합니다.
+//        max: 50,
+//        // 생성된 connection은 30초 동안 유휴 상태(idle)면 destory됩니다.
+//        idleTimeoutMillis: 30000,
+//        log: false,
+//        create: function (callback) {
+//            try {
+//                oracle.connect(initData, function (err, conn) {
+//                    callback(err, conn);
+//                });
+//            } catch (e) {
+//                logger.error(e.stack);
+//            }
+//        },
+//        destroy: function (conn) {
+//            try {
+//                conn.close();
+//            } catch (e) {
+//                logger.error(e.stack);
+//            }
+//        }
+//    });
 
     //oracle poller
-    setInterval(function () {
-
-        logger.debug(srcName + ' acquire db conn ');
-        pool.acquire(function (err, conn) {
-            if (err) {
-                logger.error(err.stack);
-                return;
-            }
-
-            //unknown_url
-            logger.debug(srcName + ' processing unknownUri ');
-            //hgetall
-            redis.hgetall('unknownUri', function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error(err.stack);
-                        //res.send(err.message, 500);
-                        return;
-                    }
-                    if (reply) {
-                        logger.debug(srcName + ' reply : ', reply);
-                        //async -> sync 로 변경바람
-                        for (var key in reply) {
-                            if (reply.hasOwnProperty(key)) {
-                                logger.debug(key + " -> " + reply[key]);
-
-                                conn.execute(INSERT_URL_INFO_SQL, [crypto.createHash('md5').update(key).digest("base64"), key], function (err, reply) {
-                                    try {
-                                        if (err) {
-                                            logger.error(err.stack);
-                                        }
-                                        logger.debug(srcName + ' reply : ', reply);
-                                        redis.hdel('unknownUri', key, function (err) {
-                                            try {
-                                                if (err) {
-                                                    logger.error(err.stack);
-                                                }
-                                                logger.debug(srcName + key + ' key deleted ');
-                                            } catch (e) {
-                                                logger.error(e.stack);
-                                            }
-                                        });
-                                    } catch (e) {
-                                        logger.error(e.stack);
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-                        logger.debug(srcName + ' unknownUri not found ');
-                    }
-                } catch (e) {
-                    logger.debug(e.stack);
-                }
-            });
-
-            //content_policy
-            logger.debug(srcName + ' polling content_policy ');
-            conn.execute(SELECT_POLICY_CONTENT_SQL, [], function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error(err.stack);
-                    } else {
-                        logger.debug(srcName + ' reply : ', reply);
-
-                        reply.forEach(function (value, i) {
-                            //logger.debug(srcName + ' value : ', value);
-                            //logger.debug(srcName + ' CONTENT_NAME : ', value.CONTENT_NAME);
-                            //logger.debug(srcName + ' CONTENT_HASH : ', value.CONTENT_HASH);
-                            //redis insert
-                            redis.hset('content', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
-                                try {
-                                    if (err) {
-                                        logger.error(err.stack);
-                                        return;
-                                    } else {
-                                        //logger.debug(srcName + ' key inserted ', reply);
-                                    }
-                                } catch (e) {
-                                    logger.error(e.stack);
-                                }
-                            });
-                        });
-                    }
-                } catch (e) {
-                    logger.error(e.stack);
-                }
-            });
-
-            //uri_policy
-            logger.debug(srcName + ' polling uri_policy ');
-            conn.execute(SELECT_POLICY_URI_SQL, [], function (err, reply) {
-                try {
-                    if (err) {
-                        logger.error(err.stack);
-                    } else {
-                        logger.debug(srcName + ' reply : ', reply);
-
-                        reply.forEach(function (value, i) {
-                            //logger.debug(srcName + ' value : ', value);
-                            //logger.debug(srcName + ' URI_KEY : ', value.URI_KEY);
-                            //logger.debug(srcName + ' URI_POLICY : ', value.URI_POLICY);
-                            //redis insert
-                            redis.hset('uri', value.URI_NAME, '{"uri_key":"' + value.URI_KEY + '","uri_policy":"' + value.URI_POLICY + '"}', function (err) {
-                                try {
-                                    if (err) {
-                                        logger.error(err.stack);
-                                        return;
-                                    } else {
-                                        //logger.debug(srcName + ' key inserted ', reply);
-                                    }
-                                } catch (e) {
-                                    logger.error(e.stack);
-                                }
-                            });
-                        });
-                    }
-                } catch (e) {
-                    logger.error(e.stack);
-                } finally {
-                    // return object back to pool
-                    pool.release(conn);
-                }
-            });
-        });
-    }, 60000); // 60초 마다 실행
+//    setInterval(function () {
+//
+//        logger.debug(srcName + ' acquire db conn ');
+//        pool.acquire(function (err, conn) {
+//            if (err) {
+//                logger.error(err.stack);
+//                return;
+//            }
+//
+//            //unknown_url
+//            logger.debug(srcName + ' processing unknownUri ');
+//            //hgetall
+//            redis.hgetall('unknownUri', function (err, reply) {
+//                try {
+//                    if (err) {
+//                        logger.error(err.stack);
+//                        //res.send(err.message, 500);
+//                        return;
+//                    }
+//                    if (reply) {
+//                        logger.debug(srcName + ' reply : ', reply);
+//                        //async -> sync 로 변경바람
+//                        for (var key in reply) {
+//                            if (reply.hasOwnProperty(key)) {
+//                                logger.debug(key + " -> " + reply[key]);
+//
+//                                conn.execute(INSERT_URL_INFO_SQL, [crypto.createHash('md5').update(key).digest("base64"), key], function (err, reply) {
+//                                    try {
+//                                        if (err) {
+//                                            logger.error(err.stack);
+//                                        }
+//                                        logger.debug(srcName + ' reply : ', reply);
+//                                        redis.hdel('unknownUri', key, function (err) {
+//                                            try {
+//                                                if (err) {
+//                                                    logger.error(err.stack);
+//                                                }
+//                                                logger.debug(srcName + key + ' key deleted ');
+//                                            } catch (e) {
+//                                                logger.error(e.stack);
+//                                            }
+//                                        });
+//                                    } catch (e) {
+//                                        logger.error(e.stack);
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    } else {
+//                        logger.debug(srcName + ' unknownUri not found ');
+//                    }
+//                } catch (e) {
+//                    logger.debug(e.stack);
+//                }
+//            });
+//
+//            //content_policy
+//            logger.debug(srcName + ' polling content_policy ');
+//            conn.execute(SELECT_POLICY_CONTENT_SQL, [], function (err, reply) {
+//                try {
+//                    if (err) {
+//                        logger.error(err.stack);
+//                    } else {
+//                        logger.debug(srcName + ' reply : ', reply);
+//
+//                        reply.forEach(function (value, i) {
+//                            //logger.debug(srcName + ' value : ', value);
+//                            //logger.debug(srcName + ' CONTENT_NAME : ', value.CONTENT_NAME);
+//                            //logger.debug(srcName + ' CONTENT_HASH : ', value.CONTENT_HASH);
+//                            //redis insert
+//                            redis.hset('content', value.CONTENT_NAME, '{"content_hash":"' + value.CONTENT_HASH + '","content_policy":"' + value.CONTENT_POLICY + '"}', function (err) {
+//                                try {
+//                                    if (err) {
+//                                        logger.error(err.stack);
+//                                        return;
+//                                    } else {
+//                                        //logger.debug(srcName + ' key inserted ', reply);
+//                                    }
+//                                } catch (e) {
+//                                    logger.error(e.stack);
+//                                }
+//                            });
+//                        });
+//                    }
+//                } catch (e) {
+//                    logger.error(e.stack);
+//                }
+//            });
+//
+//            //uri_policy
+//            logger.debug(srcName + ' polling uri_policy ');
+//            conn.execute(SELECT_POLICY_URI_SQL, [], function (err, reply) {
+//                try {
+//                    if (err) {
+//                        logger.error(err.stack);
+//                    } else {
+//                        logger.debug(srcName + ' reply : ', reply);
+//
+//                        reply.forEach(function (value, i) {
+//                            //logger.debug(srcName + ' value : ', value);
+//                            //logger.debug(srcName + ' URI_KEY : ', value.URI_KEY);
+//                            //logger.debug(srcName + ' URI_POLICY : ', value.URI_POLICY);
+//                            //redis insert
+//                            redis.hset('uri', value.URI_NAME, '{"uri_key":"' + value.URI_KEY + '","uri_policy":"' + value.URI_POLICY + '"}', function (err) {
+//                                try {
+//                                    if (err) {
+//                                        logger.error(err.stack);
+//                                        return;
+//                                    } else {
+//                                        //logger.debug(srcName + ' key inserted ', reply);
+//                                    }
+//                                } catch (e) {
+//                                    logger.error(e.stack);
+//                                }
+//                            });
+//                        });
+//                    }
+//                } catch (e) {
+//                    logger.error(e.stack);
+//                } finally {
+//                    // return object back to pool
+//                    pool.release(conn);
+//                }
+//            });
+//        });
+//    }, 60000); // 60초 마다 실행
 };
 
 verifyHandler.prototype.get = function (req, res, client) {
@@ -490,6 +490,7 @@ function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 }
+
 //end
 
 module.exports = verifyHandler;

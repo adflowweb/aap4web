@@ -4,7 +4,7 @@
  * Time: 오전 12:42
  */
 var logger = require('../logger');
-var srcName = __filename.substring(__filename.lastIndexOf('/'));
+var srcName = __filename.substring(__filename.lastIndexOf('/'))+' ';
 var utils = require('util');
 var policyHandler = function () {
 };
@@ -12,12 +12,13 @@ var policyHandler = function () {
 policyHandler.prototype = {
     post: function (req, res, client) {
         try {
-            logger.debug(srcName + ' method : post ');
+            logger.debug(srcName + 'method::post');
             //logger.debug(srcName + ' req : ', req);
-            logger.debug(srcName + ' req.url : ', req.url);
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-            var data = JSON.parse(req.rawBody);
-            logger.debug(srcName + ' data : ', utils.inspect(data));
+            logger.debug(srcName + 'req.url::', req.url);
+            logger.debug(srcName + 'req.body::', req.body);
+            //logger.debug(srcName + 'req.rawBody::', req.rawBody);
+            //var data = JSON.parse(req.rawBody);
+            //logger.debug(srcName + 'data::', utils.inspect(data));
 
             //testCode
 //            for (var key in data) {
@@ -32,7 +33,7 @@ policyHandler.prototype = {
 //                logger.debug(' val :', val);
 //            });
             //testEnd
-            logger.debug(srcName + ' JSON.stringify(data) : ', JSON.stringify(data));
+            //logger.debug(srcName + 'JSON.stringify(data)::', JSON.stringify(data));
 
             if (req.url == '/v1/policy/uri/unknown') {
                 var key = 'unknownUri';
@@ -40,37 +41,27 @@ policyHandler.prototype = {
                 var key = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
             }
 
-            logger.debug(srcName + ' key : ', key);
-            for (var k in data) {
-                if (data.hasOwnProperty(k)) {
+            logger.debug(srcName + 'key::', key);
+            for (var k in req.body) {
+                logger.debug(srcName + k);
+                var value   = req.body[k];
 
-                    if (data[k] instanceof Object) {
-                        var value = JSON.stringify(data[k]);
-
-                    } else {
-                        value = data[k];
-                    }
-                    logger.debug(srcName + k + " -> " + value);
-
-
-                    //redis insert
-                    client.hset(key, k, value, function (err) {
-                        try {
-                            if (err) {
-                                logger.error(err.stack);
-                                res.send(err.message, 500);
-                                return;
-                            } else {
-                                logger.debug(srcName + ' key set ');
-                                res.send(200);
-                            }
-                        } catch (e) {
-                            logger.error(e.stack);
-                            res.send(e.message, 500);
+                //redis insert
+                client.hset(key, k, value, function (err) {
+                    try {
+                        if (err) {
+                            logger.error(err.stack);
+                            res.send(err.message, 500);
+                            return;
+                        } else {
+                            logger.debug(srcName + k + "::" + value +'::inserted');
+                            res.send(200);
                         }
-                    });
-
-                }
+                    } catch (e) {
+                        logger.error(e.stack);
+                        res.send(e.message, 500);
+                    }
+                });
             }
 //            client.hmset(key, data, function (err, reply) {
 //                try {
@@ -94,14 +85,14 @@ policyHandler.prototype = {
     },
     put: function (req, res, client) {
         try {
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
+            logger.debug(srcName + 'req.rawBody : ', req.rawBody);
             client.set('uri', req.rawBody, function (err) {
                 try {
                     if (err) {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key set just to be sure');
+                        logger.debug(srcName + 'key set just to be sure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -122,7 +113,7 @@ policyHandler.prototype = {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key deleted just to be sure');
+                        logger.debug(srcName + 'key deleted just to be sure');
                         //console.log(util.inspect(arguments))
                         res.send(200);
                     }
@@ -138,11 +129,11 @@ policyHandler.prototype = {
     },
     get: function (req, res, client) {
         try {
-            logger.debug(srcName + ' method : get ');
-            logger.debug(srcName + ' req.url : ', req.url);
+            logger.debug(srcName + 'method::get');
+            logger.debug(srcName + 'req.url::', req.url);
 
             var uri = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
-            logger.debug(srcName + ' uri : ', uri);
+            logger.debug(srcName + 'uri::', uri);
             if (uri == 'uri' || uri == 'content') {
                 //hgetall
                 client.hgetall(uri, function (err, reply) {
@@ -153,10 +144,10 @@ policyHandler.prototype = {
                             return;
                         }
                         if (reply) {
-                            logger.debug(srcName + uri + ' reply from redis : ', reply);
+                            logger.debug(srcName + uri + 'ReplyFromRedis::', reply);
                             res.send(reply);
                         } else {
-                            logger.debug(srcName + uri + ' not found ');
+                            logger.debug(srcName + uri + 'notFound');
                             res.send(404);
                         }
                     } catch (e) {
@@ -167,8 +158,8 @@ policyHandler.prototype = {
             } else if (uri.indexOf('/') > 0) {
                 var field = uri.substring(uri.indexOf('/'));
                 var key = uri.substring(0, uri.indexOf('/'));
-                logger.debug(srcName + ' key : ', key);
-                logger.debug(srcName + ' field : ', field);
+                logger.debug(srcName + 'key::', key);
+                logger.debug(srcName + 'field::', field);
 
                 //hget
                 client.hget(key, field, function (err, reply) {
@@ -179,11 +170,11 @@ policyHandler.prototype = {
                             return;
                         }
                         if (reply) {
-                            logger.debug(srcName + ' reply : ', reply);
+                            logger.debug(srcName + 'reply::', reply);
                             res.send(reply);
                             //res.send('{"' + field + '":"' + reply + '"}');
                         } else {
-                            logger.debug(srcName + ' not found ');
+                            logger.debug(srcName + 'notFound');
                             res.send(404);
                         }
                     } catch (e) {
@@ -214,7 +205,7 @@ policyHandler.prototype = {
 //                        }
 //                    });
 //                } else {
-                logger.debug(srcName + ' return all policy');
+                logger.debug(srcName + 'returnAllPolicy');
 
                 var pollingData = ['uri', 'content', 'unknownUri'];
                 var result = [];
@@ -228,10 +219,10 @@ policyHandler.prototype = {
                                     logger.error(err.stack);
                                 }
                                 if (reply) {
-                                    logger.debug(srcName + ' reply : ', reply);
+                                    logger.debug(srcName + 'reply::', reply);
                                     result.push(reply);
                                 } else {
-                                    logger.debug(srcName + ' not found ');
+                                    logger.debug(srcName + 'notFound');
                                 }
                             } catch (e) {
                                 logger.debug(e.stack);
@@ -239,7 +230,7 @@ policyHandler.prototype = {
                             getHash(++i);
                         });
                     } else {
-                        logger.debug(srcName + ' result : ', result);
+                        logger.debug(srcName + 'result::', result);
                         res.send({'uri': result[0], "content": result[1]});
                     }
                 }

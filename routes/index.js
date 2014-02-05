@@ -99,4 +99,11 @@ exports.setup = function (app, handlers, client) {
         handlers.policyHandler.delete(req, res, client);
     });
 
+    //route multipart
+    app.get('/upload', function (req, res) {
+        handlers.multiPartHandler.get(req, res);
+    });
+    app.post('/upload', function (req, res) {
+        handlers.multiPartHandler.post(req, res);
+    });
 };

@@ -6,6 +6,7 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
+var fs = require('fs');
 //var mongoose = require('mongoose');
 var winston = require('winston');
 var config = require('../../config');
@@ -26,21 +27,29 @@ describe('검증서버\n\t\tenv : 127.0.0.1:3000\n\t\tfile : virtualpageTest.js'
                 firstName: 'Valerio',
                 lastName: 'Gheri'
             };
-            request(url)
-                .post('/v1/virtualpages/1234567890')
-                .set('virtual_page_uri', '/test001/index.jsp')
-                .attach('nadir', './test/resource/test.html')
-                //.send(profile)
-                // end handles the response
-                .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    //console.log('response : ',res.text);
-                    // this is should.js syntax, very clear
-                    res.should.have.status(200);
-                    done();
-                });
+
+            fs.readFile('./test/resource/test.html','utf-8', function (err, data) {
+                if (err) throw err;
+                //console.log(data);
+
+                request(url)
+                    .post('/v1/virtualpages/1234567890')
+                    .set('content-type', 'text/plain')
+                    .set('virtual_page_uri', '/test001/index.jsp')
+                    .send(data)
+                    //.attach('nadir', './test/resource/test.html')
+                    //.send(profile)
+                    // end handles the response
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        //console.log('response : ',res.text);
+                        // this is should.js syntax, very clear
+                        res.should.have.status(200);
+                        done();
+                    });
+            });
         });
 
         it('가상페이지 수정 테스트 : 응답코드 200', function (done) {

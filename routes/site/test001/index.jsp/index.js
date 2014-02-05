@@ -17,7 +17,7 @@ var opts = {
 }
 
 exports.post = function (req, res, callback) {
-//    //console.log('req.rawBody : ', req.rawBody);
+//console.log('req.text::', req.text);
 //
 //    var $ = parser.load(req.rawBody);
 //    //var xhr = req.headers['x-requested-with'];
@@ -41,7 +41,7 @@ exports.post = function (req, res, callback) {
     try {
 
         //logger.debug('req.rawBody : ', req);
-        var $ = parser.load('<html>' + req.rawBody + '</html>');
+        var $ = parser.load(req.text);
 
         //var testData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
         //logger.debug(__filename + ' testData : ', testData);

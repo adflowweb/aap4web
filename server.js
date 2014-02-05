@@ -9,6 +9,7 @@ var express = require('express')
     , verifyHandler = require('./handlers/verifyHandler')
     , redisHandler = require('./handlers/redisHandler')
     , policyHandler = require('./handlers/policyHandler')
+    , multiPartHandler = require('./handlers/multiPartHandler')
     , routes = require('./routes')
     , http = require('http')
     , redis = require('redis').createClient()
@@ -35,7 +36,19 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.favicon());
 app.use(express.logger('dev'));
 //app.use(express.logger());
-app.use(rawBody);
+//app.use(rawBody);
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: '/Users/nadir93/Downloads' }));
+app.use(function(req, res, next){
+    if (req.is('text/*')) {
+        req.text = '';
+        req.setEncoding('utf8');
+        req.on('data', function(chunk){ req.text += chunk });
+        req.on('end', next);
+    } else {
+        next();
+    }
+});
+
 app.use(express.methodOverride());
 app.use(app.router);
 
@@ -62,7 +75,8 @@ var handlers = {
     verificationuri: new verificationURIHandler(),
     verifyHandler: new verifyHandler(),
     redisHandler: new redisHandler(),
-    policyHandler: new policyHandler()
+    policyHandler: new policyHandler(),
+    multiPartHandler: new multiPartHandler()
 };
 
 function start() {

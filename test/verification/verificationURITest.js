@@ -20,7 +20,7 @@ describe('검증대상 URI', function () {
 //                ]
 //            };
 
-        var body = {'/test001/index.jsp': {options: {'qryStr': 'key=value'}}, '/test001/TestServlet': {options: {'qryStr': 'key=value'}}};
+        var body = {"/test001/index.jsp": "{'options': {'qryStr': 'key=value'}}", "/test001/TestServlet": "{'options': {'qryStr': 'key=value'}}"};
 
         request(url)
             .post('/v1/verificationuri')

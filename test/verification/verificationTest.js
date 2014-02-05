@@ -6,6 +6,7 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
+var fs = require('fs');
 //var mongoose = require('mongoose');
 var winston = require('winston');
 var config = require('../../config');
@@ -15,21 +16,27 @@ describe('verify', function () {
 
     //테스트 수행전 선행작업
     before(function (done) {
-        //가상페이지 생성
-        request(url)
-            .post('/v1/virtualpages/1234567890')
-            .set('virtual_page_uri', '/test001/index.jsp')
-            .attach('nadir', './test/resource/test.html')
-            // end handles the response
-            .end(function (err, res) {
-                if (err) {
-                    console.log('error : ', err);
-                    throw err;
-                }
-                res.should.have.status(200);
-                done()
+        //read file
+        fs.readFile('./test/resource/test.html', function (err, data) {
+            if (err) throw err;
+            console.log(data);
 
-                //create static resource hash
+            //가상페이지 생성
+            request(url)
+                .post('/v1/virtualpages/1234567890')
+                .set('virtual_page_uri', '/test001/index.jsp')
+                .send(data)
+                //.attach('nadir', './test/resource/test.html')     //attach file
+                // end handles the response
+                .end(function (err, res) {
+                    if (err) {
+                        console.log('error : ', err);
+                        throw err;
+                    }
+                    res.should.have.status(200);
+                    done()
+
+                    //create static resource hash
 //                var body = {"/js/script.js": "e4466dfd970b339e7875a15057f24d9528f3e7fc83aa632ab767f4f7489bffff"};
 //                request(url)
 //                    .post('/v1/redis/hash/static')
@@ -45,7 +52,11 @@ describe('verify', function () {
 //                        res.should.have.status(200);
 //                        done();
 //                    });
-            });
+                });
+
+
+        });
+
     });
 
     after(function (done) {

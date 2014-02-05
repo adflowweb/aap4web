@@ -7,7 +7,7 @@ var util = require('util'),
     logger = require('../logger'),
     DEFAULT_INDEX_JS = '../routes/site/default/index.js',
     RESPONSE_MESSAGE = '{"error":{"code":400,"message":"virtual_page_uri header not found"}}';
-var srcName = __filename.substring(__filename.lastIndexOf('/'));
+var srcName = __filename.substring(__filename.lastIndexOf('/'))+' ';
 
 var virtualPageHandler = function () {
 };
@@ -15,6 +15,10 @@ var virtualPageHandler = function () {
 virtualPageHandler.prototype = {
     //create virtualPage
     post: function (req, res, client) {
+
+        //logger.debug(srcName +'req::', util.inspect(req));
+
+
         try {
             if (!req.headers['virtual_page_uri']) {
                 //reponseCode 400 : bad request
@@ -23,7 +27,7 @@ virtualPageHandler.prototype = {
             }
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
-            logger.debug(srcName + ' path : ', path);
+            logger.debug(srcName + 'path::', path);
 
             try {
                 var handler = require(path);
@@ -32,7 +36,7 @@ virtualPageHandler.prototype = {
                 handler = require(DEFAULT_INDEX_JS);
             }
 
-            logger.debug(srcName + ' handler : ', handler);
+            logger.debug(srcName + 'handler::', handler);
 
             handler.post(req, res, function (err, data) {
 
@@ -41,7 +45,7 @@ virtualPageHandler.prototype = {
                     res.send(err.message, 500);
                     return;
                 }
-                //logger.debug(srcName + ' data : ', data);
+                //logger.debug(srcName + 'data::', data);
                 //set page
                 client.hset('virtualpage', req.params.id, data, function (err) {
                     try {
@@ -75,12 +79,12 @@ virtualPageHandler.prototype = {
             }
 
             var path = '../routes/site' + req.headers['virtual_page_uri'];
-            logger.debug(srcName + ' path : ', path);
-            logger.debug(srcName + ' req.params.id : ', req.params.id);
+            logger.debug(srcName + 'path::', path);
+            logger.debug(srcName + 'req.params.id::', req.params.id);
             client.hget('virtualpage', req.params.id, function (err, reply) {
                 try {
                     if (err) {
-                        logger.error('error : ', err.stack);
+                        logger.error(err.toString());
                         res.send(err.message, 500);
                         return;
                     }
@@ -101,7 +105,7 @@ virtualPageHandler.prototype = {
                     handler.put(req, res, reply, function (error, reply) {
 
                         if (error) {
-                            logger.error('error : ', error.stack);
+                            logger.error(error.toString());
                             res.send(err.message, 500);
                             return;
                         }
@@ -113,7 +117,7 @@ virtualPageHandler.prototype = {
                         }
 
                         //logger.debug(srcName + ' reply : ', reply);
-                        logger.debug(srcName + ' req.params.id : ', req.params.id);
+                        logger.debug(srcName + 'req.params.id::', req.params.id);
                         client.set(req.params.id, reply, function (err) {
                             try {
                                 if (err) {
@@ -139,15 +143,15 @@ virtualPageHandler.prototype = {
     //delete virtualPage
     delete: function (req, res, client) {
         try {
-            logger.debug(srcName + ' key : ', req.params.id);
+            logger.debug(srcName + 'key::', req.params.id);
             client.hdel('virtualpage', req.params.id, function (err) {
                 //console.log(util.inspect(arguments))
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error('error::', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key deleted');
+                        logger.debug(srcName + 'keyDeleted');
                         res.send(200);
                     }
                 } catch (e) {
@@ -163,11 +167,11 @@ virtualPageHandler.prototype = {
     //read virtualPage
     get: function (req, res, client) {
         try {
-            logger.debug(srcName + ' key : ', req.params.id);
+            logger.debug(srcName + 'key::', req.params.id);
             client.hget('virtualpage', req.params.id, function (err, reply) {
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error(err.toString());
                         res.send(err.message, 500);
                         return;
                     }
@@ -177,7 +181,7 @@ virtualPageHandler.prototype = {
                         res.send(reply);
                     } else res.send(404);
                 } catch (e) {
-                    logger.error(e.stack);
+                    logger.error(e.toString());
                     res.send(e.message, 500);
                 }
             });

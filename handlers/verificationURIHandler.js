@@ -4,22 +4,23 @@
  * Time: 오전 10:27
  */
 var logger = require('../logger');
+var util = require('util');
 var VERIFICATIONURI = 'verificationURI';
-var srcName = __filename.substring(__filename.lastIndexOf('/'));
+var srcName = __filename.substring(__filename.lastIndexOf('/'))+' ';
 var verificationUri = function () {
 };
 
 verificationUri.prototype = {
     post: function (req, res, client) {
         try {
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-            client.set(VERIFICATIONURI, req.rawBody, function (err) {
+            logger.debug(srcName + 'req.body::', req.body);
+            client.set(VERIFICATIONURI, JSON.stringify(req.body), function (err) {
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error(util.inspect(err));
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key set just to be sure');
+                        logger.debug(srcName + 'keySetJustToBeSure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -34,11 +35,11 @@ verificationUri.prototype = {
     },
     put: function (req, res, client) {
         try {
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
-            client.set(VERIFICATIONURI, req.rawBody, function (err) {
+            logger.debug(srcName + 'req.body::', req.body);
+            client.set(VERIFICATIONURI, JSON.stringify(req.body), function (err) {
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error(util.inspect(err));
                         res.send(err.message, 500);
                     } else {
                         logger.debug(srcName + ' key set just to be sure');
@@ -59,10 +60,10 @@ verificationUri.prototype = {
             client.del(VERIFICATIONURI, function (err) {
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error(util.inspect(err));
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key deleted just to be sure');
+                        logger.debug(srcName + 'keyDeletedJustToBeSure');
                         //console.log(util.inspect(arguments))
                         res.send(200);
                     }
@@ -81,12 +82,12 @@ verificationUri.prototype = {
             client.get(VERIFICATIONURI, function (err, reply) {
                 try {
                     if (err) {
-                        logger.error('error : ', err);
+                        logger.error(util.inspect(err));
                         res.send(err.message, 500);
                         return;
                     }
                     if (reply) {
-                        logger.debug(srcName + ' reponse : ', reply);
+                        logger.debug(srcName + 'reponse::', reply);
                         res.send(reply);
                     } else res.send(404);
                 } catch (e) {
