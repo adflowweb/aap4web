@@ -26,8 +26,13 @@ exports.post = function (req, res, callback) {
         //var testData = $('html').text().replace(/[\n\r]/g, '').replace(/\s+/g, '');
         //logger.debug(__filename + ' testData : ', testData);
 
-
-        $( "#fs_navigation" ).append( '<div id="gnb"></div>' );
+        var str =  '<script language="javascript" src="/AAPlus/js/fs_front_menu_gnbD_web.js"><div id="gnb">';
+        str += '<ul><li class="r1"><a href="#" onclick=\'javascript:goPage("/dashboard/dashboardMain.action");\'><img alt="대시보드" class="menu_on" src="/AAPlus/images/content/topmenu_btn01_off.gif"></a></li>';
+        str += '<li class="r2"><a href="#" onclick=\'javascript:goPage("/system/userManageList.action");\'><img alt="시스템" class="menu_on" src="/AAPlus/images/content/topmenu_btn02_off.gif"></a></li>';
+        str += '<li class="r3"><a href="#" onclick=\'javascript:goPage("/policystandard/urlList.action");\'><img alt=\"정책" class="menu_on" src=\"/AAPlus/images/content/topmenu_btn04_off.gif"></a></li>\<li class="r4"><a href="#" onclick=';
+        str += '\'javascript:goPage("/operation/urlVerificationList.action");\'><img alt="운영관리"class="menu_on" src="/AAPlus/images/content/topmenu_btn05_off.gif"></a></li>';
+        str += '<li class="r5"><a href="#" onclick=\'javascript:goPage("/statis/dayStatisticsUrlList.action");\'><img alt="통계 및 이력" class="menu_on" src="/AAPlus/images/content/topmenu_btn06_off.gif"></a></li></ul></div>';
+        $('#fs_navigation').html(str);
 
 
 
