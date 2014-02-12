@@ -4,7 +4,7 @@
  * Time: 오전 12:42
  */
 var logger = require('../logger');
-var srcName = __filename.substring(__filename.lastIndexOf('/'));
+var srcName = __filename.substring(__filename.lastIndexOf('/'))+' ';
 var utils = require('util');
 var policyHandler = function () {
 };
@@ -12,12 +12,12 @@ var policyHandler = function () {
 policyHandler.prototype = {
     post: function (req, res, client) {
         try {
-            logger.debug(srcName + ' method : post ');
+            logger.debug(srcName + 'method::post::start');
             //logger.debug(srcName + ' req : ', req);
-            logger.debug(srcName + ' req.url : ', req.url);
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
+            logger.debug(srcName + 'req.url::', req.url);
+            logger.debug(srcName + 'req.rawBody::', req.rawBody);
             var data = JSON.parse(req.rawBody);
-            logger.debug(srcName + ' data : ', utils.inspect(data));
+            logger.debug(srcName + 'data::', utils.inspect(data));
 
             //testCode
 //            for (var key in data) {
@@ -32,7 +32,7 @@ policyHandler.prototype = {
 //                logger.debug(' val :', val);
 //            });
             //testEnd
-            logger.debug(srcName + ' JSON.stringify(data) : ', JSON.stringify(data));
+            logger.debug(srcName + 'JSON.stringify(data)::', JSON.stringify(data));
 
             if (req.url == '/v1/policy/uri/unknown') {
                 var key = 'unknownUri';
@@ -40,7 +40,7 @@ policyHandler.prototype = {
                 var key = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
             }
 
-            logger.debug(srcName + ' key : ', key);
+            logger.debug(srcName + 'key::', key);
             for (var k in data) {
                 if (data.hasOwnProperty(k)) {
 
@@ -61,7 +61,7 @@ policyHandler.prototype = {
                                 res.send(err.message, 500);
                                 return;
                             } else {
-                                logger.debug(srcName + ' key set ');
+                                logger.debug(srcName + 'keySet');
                                 res.send(200);
                             }
                         } catch (e) {
@@ -94,14 +94,14 @@ policyHandler.prototype = {
     },
     put: function (req, res, client) {
         try {
-            logger.debug(srcName + ' req.rawBody : ', req.rawBody);
+            logger.debug(srcName + 'req.rawBody::', req.rawBody);
             client.set('uri', req.rawBody, function (err) {
                 try {
                     if (err) {
                         logger.error('error : ', err);
                         res.send(err.message, 500);
                     } else {
-                        logger.debug(srcName + ' key set just to be sure');
+                        logger.debug(srcName + 'keySetjustToBeSure');
                         res.send(200);
                     }
                 } catch (e) {
@@ -138,7 +138,7 @@ policyHandler.prototype = {
     },
     get: function (req, res, client) {
         try {
-            logger.debug(srcName + ' method : get ');
+            logger.debug(srcName + 'method::get');
             logger.debug(srcName + ' req.url : ', req.url);
 
             var uri = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
