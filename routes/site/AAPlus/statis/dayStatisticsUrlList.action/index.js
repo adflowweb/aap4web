@@ -34,11 +34,11 @@ exports.post = function (req, res, callback) {
         str += '<li class="r5"><a href="#" onclick=\'javascript:goPage("/statis/dayStatisticsUrlList.action");\'><img alt="통계 및 이력" class="menu_on" src="/AAPlus/images/content/topmenu_btn06_off.gif"></a></li></ul></div>';
         $('#fs_navigation').html(str);
 
+        logger.debug(__filename+'modifiedData::', $('html').html());
 
 
 
-
-                        tidy($('html').html(), opts, function (err, html) {
+        tidy($('html').html(), opts, function (err, html) {
             //console.log(encodeURIComponent(html.replace(/[\n\r]/g, '').replace(/\s+/g, '')));
             var cleanedHtml = html.replace(/\/\/\<\!\[CDATA\[/g, '').replace(/\/\/\]\]\>/g, '').replace(/\<\!\[CDATA\[/g, '').replace(/\]\]\>/g, '').substring(html.indexOf('<head>'));
             cleanedHtml = cleanedHtml.substring(0, cleanedHtml.indexOf('</html>'));
