@@ -55,6 +55,10 @@ exports.post = function (req, res, callback) {
     str += '><img alt="통계 및 이력" class="menu_on" src="/AAPlus/images/content/topmenu_btn06_off.gif"></a></li></ul></div>';
     $('#fs_navigation').html(str);
 
+    $('#startDate').addClass('hasDatepicker');
+
+    $('body').append('<DIV id=ui-datepicker-div class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></DIV>');
+
     logger.debug(__filename + '자바스크립트처리후데이타::', $('html').html());
     tidy($('html').html(), opts, function (err, html) {
       if (err) {
