@@ -140,6 +140,9 @@ policyHandler.prototype = {
     logger.debug(srcName + '정책조회시작');
     try {
       logger.debug(srcName + '정책요구URL::', req.url);
+      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      logger.debug(srcName + '요청자IP::', ip);
+
       var uri = req.url.substring(req.url.lastIndexOf('/v1/policy') + 11);
       logger.debug(srcName + '정책요구URI::', uri);
       if (uri == 'uri' || uri == 'content') {
