@@ -31,9 +31,8 @@ virtualPageHandler.prototype = {
         var handler = require(path);
         logger.debug(srcName + '가상페이지핸들러가존재함');
       } catch (e) {
-        logger.error(e.message);
+        logger.debug(srcName + '가상페이지핸들러가존재하지않음', e.message);
         handler = require(DEFAULT_INDEX_JS);
-        logger.debug(srcName + '가상페이지핸들러가존재하지않음');
       }
 
       logger.debug(srcName + '가상페이지핸들러::', handler);
